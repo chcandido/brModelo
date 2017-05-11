@@ -265,7 +265,7 @@ public class Ancorador extends FormaElementar{
     }
 
     /**
-     * Mouse over agora.
+     * Is mouseover now?
      */
     private transient Rectangle overRNow = null;
 

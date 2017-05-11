@@ -322,7 +322,7 @@ public class Constraint implements Serializable {
                 for (int i = 0; i < tl; i++) {
                     camposDeOrigem.add(null);
                 }
-                if (!getTabela().getMaster().isCarregando) {
+                if (!getTabela().getMaster().isCarregando && !novalide) {
                     Valide();
                 }
             }
@@ -388,13 +388,17 @@ public class Constraint implements Serializable {
 //        this.listaDeCamposKV = listaDeCamposKV;
 //    }
     public void Add(Campo origem, Campo destino, LogicoLinha lig, Constraint orig) {
+        novalide = true;
         setConstraintOrigem(orig);
+        novalide = false;
         Add(origem, destino, lig);
     }
 
     public void Add(Campo origem, Campo destino, LogicoLinha lig) {
-        Add(origem, destino);
+        novalide = true;
         setLigacao(lig);
+        novalide = false;
+        Add(origem, destino);
     }
 
     public void Add(Campo origem, Campo destino) {
@@ -422,7 +426,7 @@ public class Constraint implements Serializable {
                 destino.setTipo(origem.getTipo());
             }
         }
-        if (!getTabela().getMaster().isCarregando) {
+        if (!getTabela().getMaster().isCarregando && !novalide) {
             Valide();
         }
     }
@@ -494,6 +498,7 @@ public class Constraint implements Serializable {
     private String dicionario = "";
     private boolean selecionado = false;
     private boolean validado = true;
+    private transient boolean novalide = false;
     private LogicoLinha ligacao = null;
 
     public LogicoLinha getLigacao() {
@@ -503,7 +508,7 @@ public class Constraint implements Serializable {
     public void setLigacao(LogicoLinha ligacao) {
         if (this.ligacao != ligacao) {
             this.ligacao = ligacao;
-            if (!getTabela().getMaster().isCarregando) {
+            if (!getTabela().getMaster().isCarregando && !novalide) {
                 Valide();
             }
         }

@@ -514,6 +514,10 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
                 return;
             }
             cmp.SetUnique(chkCampo.isSelected(), getSelConstr());
+            boolean bkp = populando;
+            populando = true;
+            chUnique.setSelected(cmp.isUnique());
+            populando = bkp;
             cmp.getTabela().DoMuda();
             cmp.InvalidateArea();
             Done();
@@ -665,7 +669,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
         populando = true;
         this.selConstr = selConstr;
         Itens.stream().forEach(item -> {
-            item.chkCampo.setEnabled(selConstr != null && !item.campo.isKey());
+            item.chkCampo.setEnabled(selConstr != null);
             item.chkCampo.setSelected(false);
             item.chUnique.setSelected(false);
         });

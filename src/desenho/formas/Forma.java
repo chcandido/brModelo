@@ -1093,23 +1093,24 @@ public class Forma extends FormaElementar {
     private void organizeDiagramaRedistribuaLinhas() {
         Forma tt = this;
         for (int lado = 0; lado < 4; lado++) {
-            final int l = lado;
-            int tl = Math.toIntExact(tt.getListaDePontosLigados().stream().filter(p -> p.getLado() == l).count());
+            final int ld = lado;
+            final boolean sn = ld % 2 == 0;
+            int tl = Math.toIntExact(tt.getListaDePontosLigados().stream().filter(p -> p.getLado() == ld).count());
             if (tl == 0) {
                 continue;
             }
 
-            final int espaco = ((l % 2 == 0 ? tt.getHeight() : tt.getWidth()) - 2 * INI_ORGDIAG) / (tl + 1);
+            final int espaco = ((sn ? tt.getHeight() : tt.getWidth()) - 2 * INI_ORGDIAG) / (tl + 1);
             int ini = INI_ORGDIAG;
 
-            if (l % 2 == 0) {
+            if (sn) {
                 ini += tt.getTop();
             } else {
                 ini += tt.getLeft();
             }
 
-            List<PontoDeLinha> ord = tt.getListaDePontosLigados().stream().filter(p -> p.getLado() == l).sorted((p1, p2) -> {
-                if (l % 2 == 0) {
+            List<PontoDeLinha> ord = tt.getListaDePontosLigados().stream().filter(p -> p.getLado() == ld).sorted((p1, p2) -> {
+                if (sn) {
                     return Integer.compare(p1.getDono().getOutraPonta(p1).getTop(), p2.getDono().getOutraPonta(p2).getTop());
                 } else {
                     return Integer.compare(p1.getDono().getOutraPonta(p1).getLeft(), p2.getDono().getOutraPonta(p2).getLeft());
@@ -1120,7 +1121,7 @@ public class Forma extends FormaElementar {
             for (PontoDeLinha p : ord) {
                 //if (p.getLado() == l) {
                 ini += espaco;
-                if (l % 2 == 0) {
+                if (sn) {
                     p.setTop(ini);
                 } else {
                     p.setLeft(ini);
