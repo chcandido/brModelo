@@ -68,33 +68,16 @@ public class conversorConceitualParaLogico {
         destino.isCarregando = true;
         origem.ClearSelect();
 
-        boolean sn = perguntaCaracteres() && converterEntidades() && converterAtributos() && converterAutoRelacionamento() && converterEspecializacao() && converterUniao()
+        boolean sn = perguntaCaracteres()
+                && converterEntidades()
+                && converterAtributos()
+                && converterAutoRelacionamento()
+                && converterEspecializacao()
+                && converterUniao()
                 && converterRelacionamento()
                 && converterEntidadeAssossiativa()
                 && exportarAssessorios()
                 && processeConstraints();
-//        boolean sn = converterEntidades();
-//        if (sn) {
-//            sn = converterAtributos();
-//        }
-//        if (sn) {
-//            sn = converterAutoRelacionamento();
-//        }
-//        if (sn) {
-//            sn = converterEspecializacao();
-//        }
-//        if (sn) {
-//            sn = converterRelacionamento();
-//        }
-//        if (sn) {
-//            sn = converterEntidadeAssossiativa();
-//        }
-//        if (sn) {
-//            sn = converterUniao();
-//        }
-//        if (sn) {
-//            sn = exportarAssessorios();
-//        }
 
         destino.isCarregando = false; //para facilitar o repaint.
         destino.getEditor().paintImmediately(0, 0, destino.getEditor().getWidth(), destino.getEditor().getHeight());
@@ -429,12 +412,13 @@ public class conversorConceitualParaLogico {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Liga tabelas">
-    private void LinkTable(Tabela origem, Tabela destino, int cardO, int cardD) {
+    private LogicoLinha LinkTable(Tabela origem, Tabela destino, int cardO, int cardD) {
         LogicoLinha lin = Ligue(origem, destino);
         lin.getCardA().setCard(cardO);
         lin.getCardB().setCard(cardD);
 
         lin.ajusteSeta();
+        return lin;
     }
 
     private LogicoLinha Ligue(Tabela A, Tabela B) {
@@ -494,10 +478,12 @@ public class conversorConceitualParaLogico {
 
     private void organizeDiagrama() {
         destino.OrganizeTabelas();
-        destino.getListaDeItens().stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(tt -> {
+        destino.getListaDeTabelas().stream().forEach(tt -> {
             tt.OrganizeDiagrama();
         });
     }
+
+    private ArrayList<Tabela> frutoAutoRelacionamento = new ArrayList<>();
 
     public boolean converterAutoRelacionamento() {
         List<Relacionamento> lst = origem.getListaDeItens().stream().filter(o -> (o instanceof Relacionamento) && ((Relacionamento) o).isAutoRelacionamento())
@@ -551,7 +537,8 @@ public class conversorConceitualParaLogico {
                         if (!C.isKey()) {
                             continue;
                         }
-                        Campo c = ImportaCampo(T, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_");
+//                        Campo c = ImportaCampo(T, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_");
+                        Campo c = ImportaCampo(T, C, T.getTexto() + "_");
                         c.setKey(false);
                         c.setFkey(true);
 //#                        c.setTabelaOrigem(T);
@@ -565,28 +552,26 @@ public class conversorConceitualParaLogico {
                         String ax = removerCaracteresEspeciais(R.getTexto());
                         T2.setTexto(ax);
                         Links.Add(R, xres);
-                        LinkTable(T, T2, Card1, Card2);
+                        //LinkTable(T, T2, Card1, Card2);
+                        LinkTable(T, T2, 0, Card2); //# recursividade sempre cad min = (1,1).
                         final Tabela TT = T2;
                         //duas vezes
                         T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
-                            //ImportaComoCampo(TT, C, "");
-                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_A_");
+                            Campo c = ImportaCampo(TT, C, T.getTexto() + "_A_");
+//                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_A_");
                             c.setKey(false);
                             c.setFkey(true);
-//#                            c.setTabelaOrigem(T);
-//                            c.setCampoOrigem(C);
                             setCampoOrigem(c, C);
                         });
                         //Conforme acima: duas vezes
                         T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
-                            //ImportaComoCampo(TT, C, "");
-                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_B_");
+                            Campo c = ImportaCampo(TT, C, T.getTexto() + "_B_");
+//                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_B_");
                             c.setKey(false);
                             c.setFkey(true);
-//#                            c.setTabelaOrigem(T);
-//                            c.setCampoOrigem(C);
-                            setCampoOrigem(c, C);
+                            setCampoOrigem(c, C); //# desta vez não assossiar
                         });
+                        frutoAutoRelacionamento.add(TT);
                     }
                 }
                 if (!recebaEConvertaAtributos(R, T2, R.getListaDeFormasLigadas().stream()
@@ -662,6 +647,8 @@ public class conversorConceitualParaLogico {
                 .filter(e -> e.LigadaAoPontoPrincipal() != ent)
                 .collect(Collectors.toList());
     }
+
+    private HashMap<Tabela, Campo> campoTipoJaSetado = new HashMap<>();
 
     private boolean converterEspecializacaoProcesse(Especializacao Esp, PreEntidade entP) {
         List<PreEntidade> lst = Esp.getListaDeFormasLigadas().stream().filter(o -> (o instanceof PreEntidade) && o != entP)
@@ -740,11 +727,17 @@ public class conversorConceitualParaLogico {
                         this.destino.Remove(s, true);
                     });
                     if (Esp.isExclusiva()) {
-                        Campo c = principal.Add("");
-                        String ax = removerCaracteresEspeciais(principal.getTexto());
-                        c.setTexto(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.conceitual.sufixo.tipo"));
-                        c.setTipo(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg15"));
-                        c.setObservacao(util.Utilidades.EncapsuleMsg("msg39", principal.getTexto()));
+                        if (!campoTipoJaSetado.containsKey(principal)) {
+                            Campo c = principal.Add("");
+                            String ax = removerCaracteresEspeciais(principal.getTexto());
+                            c.setTexto(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.conceitual.sufixo.tipo"));
+                            c.setTipo(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg15"));
+                            c.setObservacao(util.Utilidades.EncapsuleMsg("msg39", principal.getTexto()));
+                            campoTipoJaSetado.put(principal, c);
+                        } 
+                        //else {
+                        //    campoTipoJaSetado.get(principal).setObservacao(campoTipoJaSetado.get(principal).getObservacao() + ", " + principal.getTexto());
+                        //}
                     }
                     break;
                 case 2:
@@ -1294,12 +1287,22 @@ public class conversorConceitualParaLogico {
      * Algumas tabelas são excluídas no processo de conversão e as FK precisam atender ao novo nome. Só é chamada no fim da conversão.
      */
     private void renomeieFKs() {
-        destino.getListaDeItens().stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(tt -> {
+        destino.getListaDeTabelas().stream().forEach(tt -> {
             tt.getCampos().stream().filter(C -> C.isFkey() && C.getCampoOrigem() != null).forEach(C -> {
                 String ax = removerCaracteresEspeciais(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
                         + C.getTabelaOrigem().getTexto() + "_" + C.getCampoOrigem().getTexto());
                 C.setTexto(ax);
             });
+            if (frutoAutoRelacionamento.indexOf(tt) > -1) {
+                ArrayList<String> ja = new ArrayList<>();
+                tt.getCampos().stream().forEach(cmp -> {
+                    if (ja.indexOf(cmp.getTexto()) > -1) {
+                        cmp.setTexto(cmp.getTexto() + "_" + tt.getTexto());
+                    } else {
+                        ja.add(cmp.getTexto());
+                    }
+                });
+            }
         });
     }
 
@@ -1340,9 +1343,50 @@ public class conversorConceitualParaLogico {
 
                 final LogicoLinha lin = tb_fk.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(tb_fk) == tb_pk)
                         .map(L -> (LogicoLinha) L).findAny().orElse(null);
+
                 constr_fk.Add(cmp_ori, cmp, lin, constr_pk);
                 constr_fk.Valide();
             });
+            if (frutoAutoRelacionamento.indexOf(tb_fk) > -1) {
+                ArrayList<Constraint> ascons = new ArrayList<>(tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK).collect(Collectors.toList()));
+                ascons.stream().forEach(constr_fk -> {
+
+                    ArrayList<Campo> tmp = new ArrayList<>();
+                    ArrayList<Campo> replicado = new ArrayList<>();
+
+                    for (int i = 0; i < constr_fk.getCamposDeOrigem().size(); i++) {
+                        Campo co = constr_fk.getCamposDeOrigem().get(i);
+                        if (tmp.indexOf(co) > -1) {
+                            replicado.add(constr_fk.getCamposDeDestino().get(i));
+                        } else {
+                            tmp.add(co);
+                        }
+                    }
+
+                    if (!replicado.isEmpty()) {
+                        final Constraint nova_fk = new Constraint(tb_fk);
+                        nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+
+                        LogicoLinha lin = constr_fk.getLigacao();
+                        if (lin != null) {
+                            //int Card1 = lin.getCardA().CardToInt();
+                            int Card2 = lin.getCardB().CardToInt();
+                            if (lin.getFormaPontaB() != tb_fk) {
+                                Card2 = lin.getCardA().CardToInt();
+                                //Card1 = lin.getCardB().CardToInt();
+                            }
+                            lin = LinkTable(constr_fk.getConstraintOrigem().getTabela(), tb_fk, 0, Card2);
+                        }
+                        final LogicoLinha lig = lin;
+                        replicado.stream().forEach(rp -> {
+                            Campo cmp_ori = constr_fk.getOrigem(rp);
+                            constr_fk.RemoveFromDestino(rp);
+                            nova_fk.Add(cmp_ori, rp, lig, constr_fk.getConstraintOrigem());
+                        });
+                        nova_fk.Valide();
+                    }
+                });
+            }
         });
         return true;
     }
