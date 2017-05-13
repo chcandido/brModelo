@@ -1262,7 +1262,6 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     /**
      * TO_DO Ao colar: Os baseDrawer não estão persistindo em XML corretamente (ainda não implementado -
      * 09/11/2013).
-     *
      * Salvar como --> excluir extensão. ///???? /
      * Ao converter uma entidade especializada com suas especializações em uma única tabela, ver  a possibilidade de incluir um campo chamado TIPO como nos nomes das generalidades.///????
      */

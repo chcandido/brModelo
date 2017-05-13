@@ -34,8 +34,8 @@ public class RepositorioHtml {
     
     public static String generateSobre() {
         String res = "<html>\n<head>\n<title>Ajuda</title>\n</head>\n<body>\n";
-                res += "<center><h1>BrModelo 3.0</h1>\nCarlos Henrique Cândido<br>\nOrientador: Dr. Ronaldo dos Santos Mello<br>\nAbril de 2017<br/><br/>"
-                        + "Baixe o arquivo de ajuda em www.sis4.com/brmodelo/ajuda</center>\n</body>\n</html>";
+                res += "<center><h1>BrModelo 3.0 (beta v.4)</h1>\nCarlos Henrique Cândido<br>\nOrientador: Dr. Ronaldo dos Santos Mello<br>\nAbril de 2017<br/><br/>"
+                        + "Baixe o arquivo de ajuda em www.sis4.com/brmodelo/ajuda (EM CONSTRUÇÃO)</center>\n</body>\n</html>";
         return res;
     }
 

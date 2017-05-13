@@ -746,13 +746,15 @@ public class Constraint implements Serializable {
             case tpPK:
                 if (isNomeada() && !getNome().trim().isEmpty()) {
                     txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
-                } else {
+                    txt += sepa;
+            } else {
                     txt = "PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
                 }
                 break;
             case tpUNIQUE:
                 if (isNomeada() && !getNome().trim().isEmpty()) {
                     txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " UNIQUE " + getCamposStr(getCamposDeOrigem());
+                    txt += sepa;
                 } else {
                     txt = "UNIQUE " + getCamposStr(getCamposDeOrigem());
                 }
@@ -780,9 +782,9 @@ public class Constraint implements Serializable {
                     txt += !getDdlOnDelete().isEmpty() ? "ON DELETE " + getDdlOnDelete() : "";
                     txt += !getDdlOnUpdate().isEmpty() ? "ON UPDATE " + getDdlOnUpdate() : "";
                 }
+                txt += sepa;
                 break;
         }
-        txt += sepa;
         return txt;
     }
 

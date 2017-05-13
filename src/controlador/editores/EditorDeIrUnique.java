@@ -434,10 +434,11 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
 
     public void AdicionarPainel(Campo cmp) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
-        Principal.add(ItemPan);
-        ItemPan.setSize(530, 47);
-        ItemPan.setLayout(null);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
+        final int altura = 37;
+        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        ItemPan.setSize(530, altura);
+        Principal.add(ItemPan);
 
         InternalItem item = new InternalItem();
         Itens.add(item);
@@ -450,32 +451,32 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
         javax.swing.JCheckBox chUnique = item.chUnique;
 
         chkCampo.setText(cmp.getTexto()); // NOI18N
+        chkCampo.setPreferredSize(new Dimension(120, 23));
         ItemPan.add(chkCampo);
-        chkCampo.setBounds(10, 12, 97, 23);
 
         chkPK.setText(bundle.getString("EditorDeIR.chkPK")); // NOI18N
+        chkPK.setSize(new Dimension(97, 23));
         ItemPan.add(chkPK);
-        chkPK.setBounds(150, 12, 101, 23);
 
         chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
+        chkfk.setSize(new Dimension(115, 23));
         ItemPan.add(chkfk);
-        chkfk.setBounds(270, 12, 115, 23);
 
         chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
+        chUnique.setSize(new Dimension(51, 23));
         ItemPan.add(chUnique);
-        chUnique.setBounds(405, 12, 51, 23);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
         btnExcluir.setToolTipText(bundle.getString("EditorDeCampos.tooltip.excluir")); // NOI18N
+        btnExcluir.setPreferredSize(new Dimension(49, 25));
         ItemPan.add(btnExcluir);
-        btnExcluir.setBounds(470, 10, 49, 25);
 
         Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 530, 47);
-        v += 50;
-        Principal.setSize(new Dimension(530, v));
+        ItemPan.setBounds(0, v, 530, altura);
+        v += altura + 3;
+        //Principal.setSize(new Dimension(530, v));
         Principal.setPreferredSize(new Dimension(530, v));
-
+        
         chkCampo.setSelected(false);
         chkfk.setSelected(cmp.isFkey());
         chkPK.setSelected(cmp.isKey());

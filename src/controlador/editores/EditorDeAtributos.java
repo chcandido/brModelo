@@ -287,8 +287,11 @@ public class EditorDeAtributos extends javax.swing.JDialog {
     public void AdicionarPainel(Atributo attr) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
         Principal.add(ItemPan);
-        ItemPan.setSize(580, 47);
-        ItemPan.setLayout(null);
+        
+        final int altura = 37;
+        
+        ItemPan.setSize(580, altura);
+        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
         javax.swing.JCheckBox chkIdentificador = new javax.swing.JCheckBox();
@@ -298,42 +301,42 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         javax.swing.JLabel lblTipo = new javax.swing.JLabel();
         javax.swing.JButton btnExcluir = new javax.swing.JButton();
 
-        chkIdentificador.setText(bundle.getString("EditorDeAtributos.chkIdentificador")); // NOI18N
-        ItemPan.add(chkIdentificador);
-        chkIdentificador.setBounds(420, 10, 97, 23);
+        lblNome.setText(bundle.getString("EditorDeAtributos.lblAtributo")); // NOI18N
+        lblNome.setSize(new Dimension(50, 14));
+        ItemPan.add(lblNome);
 
         txtNome.setToolTipText("");
+        txtNome.setPreferredSize(new Dimension(190, 20));
         ItemPan.add(txtNome);
-        txtNome.setBounds(57, 12, 190, 20);
-
-        lblNome.setText(bundle.getString("EditorDeAtributos.lblAtributo")); // NOI18N
-        ItemPan.add(lblNome);
-        lblNome.setBounds(10, 15, 50, 14);
 
         lblTipo.setText(bundle.getString("EditorDeAtributos.lbldominio")); // NOI18N
+        lblTipo.setSize(new Dimension(24, 14));
         ItemPan.add(lblTipo);
-        lblTipo.setBounds(260, 15, 80, 14);
-
+        
         comboTipo.setEditable(true);
         String tipo_txt = attr.getTipoAtributo();
         if (!tipo_txt.trim().isEmpty() && tipos.indexOf(tipo_txt) < 0) {
             tipos.add(tipo_txt);
         }
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel(tipos.toArray()));
+        comboTipo.setPreferredSize(new Dimension(73, 20));
         ItemPan.add(comboTipo);
-        comboTipo.setBounds(330, 12, 73, 20);
+
+        chkIdentificador.setText(bundle.getString("EditorDeAtributos.chkIdentificador")); // NOI18N
+        chkIdentificador.setSize(new Dimension(97, 23));
+        ItemPan.add(chkIdentificador);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
         btnExcluir.setToolTipText(bundle.getString("EditorDeAtributos.tooltip.excluir")); // NOI18N
+        btnExcluir.setPreferredSize(new Dimension(49, 25));
         ItemPan.add(btnExcluir);
-        btnExcluir.setBounds(525, 10, 49, 25);
 
         Principal.add(ItemPan);
 
         //Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 580, 47);
-        v += 50;
-        Principal.setSize(new Dimension(580, v));
+        ItemPan.setBounds(0, v, 580, altura);
+        v += altura + 3;
+        //Principal.setSize(new Dimension(580, v));
         Principal.setPreferredSize(new Dimension(580, v));
 
         btnExcluir.addActionListener((java.awt.event.ActionEvent evt) -> {

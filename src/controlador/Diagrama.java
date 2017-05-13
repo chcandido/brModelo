@@ -333,33 +333,49 @@ public class Diagrama implements Serializable, ClipboardOwner {
     }
 
     private void PinteGrade(Graphics2D g) {
-//        g.setStroke(new BasicStroke(
-//                1f,
-//                BasicStroke.CAP_ROUND,
-//                BasicStroke.JOIN_ROUND,
-//                3f,
-//                new float[]{2f, 1f},
-//                0f));
-
-        int w = master.getGridWidth();
-        int gW = (getWidth() / w) + 1;
-        int gH = (getHeight() / w) + 1;
-
-        int ww = getWidth();
-        int hh = getHeight();
-
         Paint bkppaint = g.getPaint();
         g.setColor(new Color(241, 246, 251));
-
-        for (int i = 1; i < gW; i++) {
-            g.drawLine(w * i, 0, w * i, hh);
-        }
-
-        for (int i = 1; i < gH; i++) {
-            g.drawLine(0, w * i, ww, w * i);
-        }
+        final Rectangle rv = getEditor().getBox().getVisibleRect();
         
-       g.setPaint(bkppaint);
+        int w = master.getGridWidth();
+        int gW = (rv.width / w) + 2;
+        int gH = (rv.height / w) + 2;
+        
+        int le = (rv.x - (rv.x % w));
+        final int hh = rv.y + rv.height;
+        for (int i = 0; i < gW; i++) {
+            g.drawLine(le, rv.y, le, hh);
+            le+= w;
+        }
+
+        int to = (rv.y - (rv.y % w));
+        final int ww = rv.x + rv.width;
+        for (int i = 0; i < gH; i++) {
+            g.drawLine(rv.x, to, ww, to);
+            to+= w;
+        }
+
+//        int w = master.getGridWidth();
+//        int gW = (getWidth() / w) + 1;
+//        int gH = (getHeight() / w) + 1;
+//        Rectangle rv = getEditor().getBox().getVisibleRect();
+//        
+//        int ww = getWidth();
+//        int hh = getHeight();
+//
+//        Paint bkppaint = g.getPaint();
+//        g.setColor(new Color(241, 246, 251));
+//
+//        for (int i = 1; i < gW; i++) {
+//            
+//            g.drawLine(w * i, 0, w * i, hh);
+//        }
+//
+//        for (int i = 1; i < gH; i++) {
+//            g.drawLine(0, w * i, ww, w * i);
+//        }
+
+        g.setPaint(bkppaint);
     }
 
     /**
@@ -1206,7 +1222,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
                 }
                 getEditor().getInspectorEditor().PerformSelect(ppr);
                 if (ppr instanceof InspectorItemExtender) {
-                    ((InspectorItemExtender)ppr).ExternalRun();
+                    ((InspectorItemExtender) ppr).ExternalRun();
                 }
             }
             return;
@@ -1269,7 +1285,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
         if (itensSelecionados.isEmpty()) {
             return;
         }
-        
+
         FormaElementar item = itensSelecionados.get(0);
         if (item.isAncorado()) {
             return;
@@ -2431,8 +2447,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
     public void ExternalSuperAncorador() {
         superAncorador.Posicione(getSelecionado());
     }
-    
-    
+
     //# Introduzino em 21/04/2017
     public void InfoDiagrama_ToXmlValores(Document doc, Element me) {
     }

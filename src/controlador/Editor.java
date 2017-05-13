@@ -752,8 +752,11 @@ public class Editor extends BaseControlador implements KeyListener {
      * @param co - Coordenadas
      */
     public void Mostre(Point co) {
+        scrolling = true;
         parente.getHorizontalScrollBar().setValue(co.x);
         parente.getVerticalScrollBar().setValue(co.y);
+        scrolling = false;
+        RegistePosicao();
     }
 
     /**
@@ -1317,6 +1320,8 @@ public class Editor extends BaseControlador implements KeyListener {
         return Diagrama.Factory(tipo, this);
     }
 
+    private transient boolean scrolling = false;
+
     public void setParente(JScrollPane parente) {
         this.parente = parente;
         parente.getHorizontalScrollBar().setBlockIncrement(100);
@@ -1325,10 +1330,14 @@ public class Editor extends BaseControlador implements KeyListener {
         parente.getVerticalScrollBar().setUnitIncrement(10);
 
         parente.getHorizontalScrollBar().addAdjustmentListener((AdjustmentEvent ae) -> {
-            RegistePosicao();
+            if (!scrolling) {
+                RegistePosicao();
+            }
         });
         parente.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent ae) -> {
-            RegistePosicao();
+            if (!scrolling) {
+                RegistePosicao();
+            }
         });
     }
 
@@ -1354,8 +1363,10 @@ public class Editor extends BaseControlador implements KeyListener {
         try {
             SetZoom(diagramaAtual.getZoom());
             if (parente != null) {
+                scrolling = true;
                 parente.getHorizontalScrollBar().setValue(diagramaAtual.ScrPosicao.x);
                 parente.getVerticalScrollBar().setValue(diagramaAtual.ScrPosicao.y);
+                scrolling = false;
             }
 
             controler.makeEnableComands();
@@ -1843,8 +1854,8 @@ public class Editor extends BaseControlador implements KeyListener {
             try (ObjectInput in = new ObjectInputStream(fi)) {
                 ArrayList<byte[]> salvado = (ArrayList<byte[]>) in.readObject();
                 if (!salvado.isEmpty()) {
-                    if (!util.Dialogos.ShowMessageConfirmYES(getRootPane(), 
-                            Editor.fromConfiguracao.getValor(salvado.size() > 1 ? "Controler.MSG_CONFIRM_LOAD_AUTOSAVE_PLURAL" : "Controler.MSG_CONFIRM_LOAD_AUTOSAVE"), 
+                    if (!util.Dialogos.ShowMessageConfirmYES(getRootPane(),
+                            Editor.fromConfiguracao.getValor(salvado.size() > 1 ? "Controler.MSG_CONFIRM_LOAD_AUTOSAVE_PLURAL" : "Controler.MSG_CONFIRM_LOAD_AUTOSAVE"),
                             false)) {
                         in.close();
                         return false;

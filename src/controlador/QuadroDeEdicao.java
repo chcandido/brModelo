@@ -13,6 +13,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -225,11 +226,6 @@ public class QuadroDeEdicao extends BaseControlador {
         if (getDiagramaAtual() == null) {
             return;
         }
-//        if (master.isShowGrid()) {
-//            PinteGrade(Canvas);
-//        } else {
-//            grade = null;
-//        }
         getDiagramaAtual().ProcessPaint(Canvas);
     }
 
@@ -237,10 +233,10 @@ public class QuadroDeEdicao extends BaseControlador {
 //    int gradeW = -1;
 //    int gradeWidth = -1;
 //    int gradeHeigth = -1;
-    /**
-     * Pinta a grade.
-     * @param e
-     */
+//    /**
+//     * Pinta a grade.
+//     * @param e
+//     */
 //    private void PinteGrade(Graphics2D gx) {
 //        Editor ma = master;
 //        if (ma == null) {
@@ -289,6 +285,7 @@ public class QuadroDeEdicao extends BaseControlador {
 //        gx.drawImage(grade, null, 0, 0);
 //            //grade = null;
 //    }
+    
     @Override
     public void mouseClick(MouseEvent e) {
         if (getDiagramaAtual() == null) {

@@ -664,33 +664,48 @@ public class Tabela extends baseDrawerFromForma {
             String tmp = createTable + getTexto() + " (";
             texto.add(tmp);
 
-            int tl = getCampos().size() - 1;
-            int i = 0;
+            int total_campos = getCampos().size() - 1;
             Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
             boolean nomeada = (pk != null && pk.isNomeada());
             boolean chaveSimples = (pk != null && pk.getCamposDeOrigem().size() == 1 && !nomeada);
+            boolean pk_noNome_simples = (pk != null && !nomeada && !chaveSimples);
 
-            Constraint pkU = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).findFirst().orElse(null);
-            boolean nomeadaU = (pkU != null && pkU.isNomeada());
-            boolean chaveSimplesU = (pkU != null && pkU.getCamposDeOrigem().size() == 1 && !nomeadaU);
+            List<Constraint> uniao_noNome_complex = getConstraints().stream()
+                    .filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE && !c.isNomeada() && c.getCamposDeOrigem().size() > 1)
+                    .collect(Collectors.toList());
+            boolean u_noNomea_complex = !uniao_noNome_complex.isEmpty();
 
+            int contador_campos = 0;
             for (Campo c : getCampos()) {
-                boolean s = i != tl;
+                boolean eh_ultimo_campo = contador_campos != total_campos;
                 tmp = c.getTexto() + (c.getTipo().isEmpty() ? "" : " " + c.getTipo()) + (!c.getComplemento().isEmpty() ? " " + c.getComplemento() : "");
                 if (c.isKey() && chaveSimples) {
-                    tmp += " " + pktxt + (s ? ", " : "");
+                    tmp += " " + pktxt;
                 }
-                if (c.isUnique() && chaveSimplesU) {
-                    tmp += " " + utxt + (s ? ", " : "");
+                if (c.isUnique()) {
+                    List<Constraint> ux = getPresentAsUN(c);
+                    tmp = ux.stream().filter((u) -> (!u.isNomeada() && u.getCamposDeOrigem().size() == 1)).map((_item) -> " " + utxt).reduce(tmp, String::concat);
+                }
+                if (eh_ultimo_campo) {
+                    if (pk_noNome_simples || u_noNomea_complex) {
+                        tmp += ",";
+                    }
+                } else {
+                    tmp += ",";
                 }
                 texto.add(em_branco + tmp);
-                i++;
+                contador_campos++;
             }
-            if (pk != null && !nomeada && !chaveSimples) {
-                texto.add(em_branco + pk.getDDL());
+            if (pk_noNome_simples) {
+                texto.add(em_branco + pk.getDDL() + (u_noNomea_complex ? "," : ""));
             }
-            if (pkU != null && !nomeadaU && !chaveSimplesU) {
-                texto.add(em_branco + pkU.getDDL());
+            if (u_noNomea_complex) {
+                int total_uniao = uniao_noNome_complex.size();
+                int contador_uniao = 0;
+                for (Constraint c : uniao_noNome_complex) {
+                    contador_uniao++;
+                    texto.add(em_branco + c.getDDL() + (contador_uniao != total_uniao ? "," : ""));
+                }
             }
             if (texto.size() == 1) {
                 texto.add(" ");

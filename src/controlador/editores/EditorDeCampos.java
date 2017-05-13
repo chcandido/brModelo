@@ -214,9 +214,11 @@ public class EditorDeCampos extends javax.swing.JDialog {
 
     public void AdicionarPainel(Campo cmp) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
+        final int altura = 37;
+
+        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        ItemPan.setSize(736, altura);
         Principal.add(ItemPan);
-        ItemPan.setSize(736, 47);
-        ItemPan.setLayout(null);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
         javax.swing.JCheckBox chkpk = new javax.swing.JCheckBox();
@@ -228,29 +230,18 @@ public class EditorDeCampos extends javax.swing.JDialog {
         javax.swing.JButton btnExcluir = new javax.swing.JButton();
         javax.swing.JCheckBox chUnique = new javax.swing.JCheckBox();
         
-        chkpk.setText(bundle.getString("EditorDeCampos.chkPK")); // NOI18N
-        ItemPan.add(chkpk);
-        chkpk.setBounds(390, 10, 97, 23);
-
-        chkfk.setText(bundle.getString("EditorDeCampos.chkFK")); // NOI18N
-        ItemPan.add(chkfk);
-        chkfk.setBounds(500, 10, 115, 23);
-        
-        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
-        ItemPan.add(chUnique);
-        chUnique.setBounds(625, 10, 51, 23);
-
-        txtNome.setToolTipText("");
-        ItemPan.add(txtNome);
-        txtNome.setBounds(53, 12, 190, 20);
 
         lblNome.setText(bundle.getString("EditorDeCampos.lblCampo")); // NOI18N
+        lblNome.setSize(new Dimension(37, 14));
         ItemPan.add(lblNome);
-        lblNome.setBounds(10, 15, 37, 14);
 
+        txtNome.setToolTipText("");
+        txtNome.setPreferredSize(new Dimension(190, 20));
+        ItemPan.add(txtNome);
+        
         lblTipo.setText(bundle.getString("EditorDeCampos.lblTipo")); // NOI18N
+        lblTipo.setSize(new Dimension(24, 14));
         ItemPan.add(lblTipo);
-        lblTipo.setBounds(260, 15, 24, 14);
 
         comboTipo.setEditable(true);
         String tipo_txt = cmp.getTipo();
@@ -258,20 +249,29 @@ public class EditorDeCampos extends javax.swing.JDialog {
             tipos.add(tipo_txt);
         }
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel(tipos.toArray()));
+        comboTipo.setPreferredSize(new Dimension(73, 20));
         ItemPan.add(comboTipo);
-        comboTipo.setBounds(290, 12, 73, 20);
+        
+        chkpk.setText(bundle.getString("EditorDeCampos.chkPK")); // NOI18N
+        chkpk.setSize(new Dimension(97, 23));
+        ItemPan.add(chkpk);
+
+        chkfk.setText(bundle.getString("EditorDeCampos.chkFK")); // NOI18N
+        chkfk.setSize(new Dimension(115, 23));
+        ItemPan.add(chkfk);
+        
+        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
+        chUnique.setSize(new Dimension(51, 23));
+        ItemPan.add(chUnique);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
         btnExcluir.setToolTipText(bundle.getString("EditorDeCampos.tooltip.excluir")); // NOI18N
         ItemPan.add(btnExcluir);
-        btnExcluir.setBounds(690, 10, 49, 25);
+        btnExcluir.setPreferredSize(new Dimension(49, 25));
 
-        Principal.add(ItemPan);
-
-        //Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 750, 47);
-        v += 50;
-        Principal.setSize(new Dimension(750, v));
+        ItemPan.setBounds(0, v, 750, altura);
+        v += altura + 3;
+        //Principal.setSize(new Dimension(750, v));
         Principal.setPreferredSize(new Dimension(750, v));
 
         

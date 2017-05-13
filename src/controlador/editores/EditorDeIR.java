@@ -258,10 +258,6 @@ public class EditorDeIR extends javax.swing.JDialog {
     ArrayList<InternalItem> Itens = new ArrayList<>();
 
     public void AdicionarPainel(Campo cmp) {
-        javax.swing.JPanel ItemPan = new javax.swing.JPanel();
-        Principal.add(ItemPan);
-        ItemPan.setSize(400, 47);
-        ItemPan.setLayout(null);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
 
         InternalItem item = new InternalItem();
@@ -275,40 +271,22 @@ public class EditorDeIR extends javax.swing.JDialog {
         javax.swing.JButton btnExcluir = item.btnExcluirCampo;
         javax.swing.JComboBox<String> comboTipo = new javax.swing.JComboBox<>();
 
-        chkCampo.setText(cmp.getTexto()); // NOI18N
-        ItemPan.add(chkCampo);
-        chkCampo.setBounds(10, 12, 97, 23);
 
-        lblTipo.setText(bundle.getString("EditorDeCampos.lblTipo")); // NOI18N
-        ItemPan.add(lblTipo);
-        lblTipo.setBounds(125, 15, 24, 14);
-        comboTipo.setBounds(155, 13, 73, 20);
-
-        chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
-        ItemPan.add(chkfk);
-        chkfk.setBounds(240, 12, 115, 23);
-
-        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
-        ItemPan.add(chUnique);
-        chUnique.setBounds(365, 12, 51, 23);
-
-        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
-        btnExcluir.setToolTipText(bundle.getString("EditorDeCampos.tooltip.excluir")); // NOI18N
-        ItemPan.add(btnExcluir);
-        btnExcluir.setBounds(440, 10, 49, 25);
+        javax.swing.JPanel ItemPan = new javax.swing.JPanel();
+        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        final int altura = 37;
+        ItemPan.setSize(500, altura);
 
         Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 500, 47);
-        v += 50;
-        Principal.setSize(new Dimension(500, v));
-        Principal.setPreferredSize(new Dimension(500, v));
 
-        chkCampo.setSelected(cmp.isKey());
-        chkfk.setSelected(cmp.isFkey());
-        chUnique.setSelected(cmp.isUnique());
-        //chUnique.setEnabled(false);
-        chUnique.setToolTipText(Editor.fromConfiguracao.getValor("Inspector.dica.campo.unique"));
-        
+        chkCampo.setText(cmp.getTexto());
+        chkCampo.setPreferredSize(new Dimension(120, 23));
+        ItemPan.add(chkCampo);
+
+        lblTipo.setText(bundle.getString("EditorDeCampos.lblTipo")); // NOI18N
+        lblTipo.setSize(new Dimension(24, 14));
+        ItemPan.add(lblTipo);
+
         comboTipo.setEditable(true);
         String tipo_txt = cmp.getTipo();
         if (!tipo_txt.trim().isEmpty() && tipos.indexOf(tipo_txt) < 0) {
@@ -316,9 +294,33 @@ public class EditorDeIR extends javax.swing.JDialog {
         }
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel(tipos.toArray()));
         comboTipo.setSelectedItem(tipo_txt);
+        comboTipo.setPreferredSize(new Dimension(73, 20));
         ItemPan.add(comboTipo);
 
-        
+        chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
+        chkfk.setSize(new Dimension(115, 23));
+        ItemPan.add(chkfk);
+
+        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
+        chUnique.setSize(new Dimension(51, 23));
+        ItemPan.add(chUnique);
+
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
+        btnExcluir.setToolTipText(bundle.getString("EditorDeCampos.tooltip.excluir")); // NOI18N
+        btnExcluir.setPreferredSize(new Dimension(49, 25));
+        ItemPan.add(btnExcluir);
+
+        Principal.add(ItemPan);
+        ItemPan.setBounds(0, v, 500, altura);
+        v += altura + 3;
+        //Principal.setSize(new Dimension(500, v));
+        Principal.setPreferredSize(new Dimension(500, v));
+
+        chkCampo.setSelected(cmp.isKey());
+        chkfk.setSelected(cmp.isFkey());
+        chUnique.setSelected(cmp.isUnique());
+        //chUnique.setEnabled(false);
+        chUnique.setToolTipText(Editor.fromConfiguracao.getValor("Inspector.dica.campo.unique"));
         
         chkfk.addItemListener((java.awt.event.ItemEvent evt) -> {
             if (populando) {

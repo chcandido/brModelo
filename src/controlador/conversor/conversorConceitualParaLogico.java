@@ -613,8 +613,8 @@ public class conversorConceitualParaLogico {
             i++;
         }
         i = 0;
-        //Verifica se a especialização tem uma entidade principal que é especializada de outra especialização: 
-        //  se não especializada -> processa; se é especializada mas já se processou a especialização superior -> precessa; se não: continue em busca da especialização superior.
+        //# Verifica se a especialização tem uma entidade principal que é especializada de outra especialização: 
+        //# se não especializada -> processa; se é especializada mas já se processou a especialização superior -> precessa; se não: continue em busca da especialização superior.
         while (lst.size() > 0 && i < lst.size()) {
             //se i >= lst.size() -> cíclico!
             Especializacao Esp = lst.get(i);
@@ -720,6 +720,13 @@ public class conversorConceitualParaLogico {
                     });
                     break;
                 case 1:
+                    String st = "";
+                    for (Tabela s: secundarias) {
+                        if ( s != principal) {
+                            st = " [" + s.getTexto() + "]";
+                        }
+                    }
+                    secundarias.stream().filter(s -> s != principal).map(s -> ", " + s.getTexto()).reduce(st, String::concat);
                     secundarias.stream().filter(s -> s != principal).forEach(s -> {
                         MoverLigacoes(s, principal);
                         ImportaCampo(s, principal);
@@ -735,9 +742,7 @@ public class conversorConceitualParaLogico {
                             c.setObservacao(util.Utilidades.EncapsuleMsg("msg39", principal.getTexto()));
                             campoTipoJaSetado.put(principal, c);
                         } 
-                        //else {
-                        //    campoTipoJaSetado.get(principal).setObservacao(campoTipoJaSetado.get(principal).getObservacao() + ", " + principal.getTexto());
-                        //}
+                        campoTipoJaSetado.get(principal).setObservacao(campoTipoJaSetado.get(principal).getObservacao() + st);
                     }
                     break;
                 case 2:
@@ -1192,8 +1197,8 @@ public class conversorConceitualParaLogico {
         Opcoes.opcDefault = 0;
 
         String tmp = (lst_tex.isEmpty() ? "" : String.valueOf(lst_tex.size()) + " " + (lst_tex.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg66") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg67")));
-        tmp += (lst_des.isEmpty() ? "" : (tmp.isEmpty() ? "" : ", ") + " " + String.valueOf(lst_des.size()) + (lst_des.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg68") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg69")));
-        tmp += (lst_leg.isEmpty() ? "" : (tmp.isEmpty() ? "" : ", ") + " " + String.valueOf(lst_leg.size()) + (lst_leg.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg70") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg71")));
+        tmp += (lst_des.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_des.size())  + " " + (lst_des.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg68") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg69")));
+        tmp += (lst_leg.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_leg.size())  + " " + (lst_leg.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg70") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg71")));
 
         Opcoes.Questoes.add(util.Utilidades.EncapsuleMsg("msg72", tmp));
         Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg73"));

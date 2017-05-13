@@ -894,12 +894,14 @@ public class EditorDeIrFK extends javax.swing.JDialog {
     }
 
     public void AdicionarPainel(Campo cmp) {
-        javax.swing.JPanel ItemPan = new javax.swing.JPanel();
-        Principal.add(ItemPan);
-        ItemPan.setSize(530, 47);
-        ItemPan.setLayout(null);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
+        javax.swing.JPanel ItemPan = new javax.swing.JPanel();
+        final int altura = 37;
+        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
 
+        ItemPan.setSize(675, altura);
+        Principal.add(ItemPan);
+        
         InternalItem item = new InternalItem();
         Itens.add(item);
         item.campo = cmp;
@@ -913,42 +915,42 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         javax.swing.JLabel lblCmpOrigem = new javax.swing.JLabel();
 
         chkCampo.setText(cmp.getTexto()); // NOI18N
+        chkCampo.setPreferredSize(new Dimension(120, 23));
         ItemPan.add(chkCampo);
-        chkCampo.setBounds(10, 12, 97, 23);
-
-        chkPK.setText(bundle.getString("EditorDeIR.chkPK")); // NOI18N
-        ItemPan.add(chkPK);
-        chkPK.setBounds(302, 12, 101, 23);
-
-        chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
-        ItemPan.add(chkfk);
-        chkfk.setBounds(412, 12, 115, 23);
-
-        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
-        ItemPan.add(chUnique);
-        chUnique.setBounds(542, 12, 51, 23);
 
         lblCmpOrigem.setText(bundle.getString("EditorDeIrFk.lblCmpOrigem")); // NOI18N
+        lblCmpOrigem.setSize(new Dimension(34, 14));
         ItemPan.add(lblCmpOrigem);
-        lblCmpOrigem.setBounds(150, 16, 34, 14);
 
         final String ori_txt = cmp.getCampoOrigem() == null ? bundle.getString("EditorDeIrFk.selecione") : cmp.getCampoOrigem().getTexto();
 
         comboCmpOrigem.setModel(new javax.swing.DefaultComboBoxModel());
+        comboCmpOrigem.setPreferredSize(new Dimension(120, 20));
         ItemPan.add(comboCmpOrigem);
-        comboCmpOrigem.setBounds(192, 13, 95, 20);
+
+        chkPK.setText(bundle.getString("EditorDeIR.chkPK")); // NOI18N
+        chkPK.setSize(new Dimension(97, 23));
+        ItemPan.add(chkPK);
+        
+        chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
+        chkfk.setSize(new Dimension(115, 23));
+        ItemPan.add(chkfk);
+
+        chUnique.setText(bundle.getString("EditorDeIR.chkUNIQUE")); // NOI18N
+        chUnique.setSize(new Dimension(51, 23));
+        ItemPan.add(chUnique);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/excluir.png"))); // NOI18N
         btnExcluir.setToolTipText(bundle.getString("EditorDeCampos.tooltip.excluir")); // NOI18N
+        btnExcluir.setPreferredSize(new Dimension(49, 25));
         ItemPan.add(btnExcluir);
-        btnExcluir.setBounds(620, 10, 49, 25);
 
         Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 675, 47);
-        v += 50;
-        Principal.setSize(new Dimension(675, v));
+        ItemPan.setBounds(0, v, 675, altura);
+        v += altura + 3;
+        //Principal.setSize(new Dimension(675, v));
         Principal.setPreferredSize(new Dimension(675, v));
-
+        
         chkCampo.setSelected(cmp.isFkey());
         chkfk.setSelected(cmp.isFkey());
         chkPK.setSelected(cmp.isKey());
