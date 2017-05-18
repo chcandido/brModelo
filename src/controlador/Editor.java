@@ -308,6 +308,14 @@ public class Editor extends BaseControlador implements KeyListener {
             tmp = Integer.valueOf(a);
             setTipoDefaultInt(tmp);
 
+            a = fromConfiguracao.getValor("cfg.mostrarids");
+            sn = a.equals("cfg.mostrarids") ? false : Boolean.valueOf(a);
+            setMostrarIDs(sn);
+            
+            a = fromConfiguracao.getValor("cfg.mostrartooltips");
+            sn = a.equals("cfg.mostrartooltips") ? false : Boolean.valueOf(a);
+            setMostrarTooltips(sn);
+            
             a = fromConfiguracao.getValor("cfg.autosalvarintervalo");
             if (a.equals("cfg.autosalvarintervalo")) {
                 a = "5";
@@ -569,10 +577,13 @@ public class Editor extends BaseControlador implements KeyListener {
 
         res.add(InspectorProperty.PropertyFactorySN("cfg.location.salvar", "setSalvarLocation", isSalvarLocation()));
 
-        res.add(InspectorProperty.PropertyFactorySN("cfg.ancorador", "setAncorador", isAncorador()));
-
-        res.add(InspectorProperty.PropertyFactorySeparador("cfg.autosalvartitulo"));
+        //res.add(InspectorProperty.PropertyFactorySeparador("cfg.autosalvartitulo")); ///???? remover cfg.autosalvartitulo
         res.add(InspectorProperty.PropertyFactoryNumero("cfg.autosalvarintervalo", "setAutoSaveInterval", getAutoSaveInterval()));
+
+        res.add(InspectorProperty.PropertyFactorySeparador("cfg.exibicao", true));
+        res.add(InspectorProperty.PropertyFactorySN("cfg.ancorador", "setAncorador", isAncorador()));
+        res.add(InspectorProperty.PropertyFactorySN("cfg.mostrarids", "setMostrarIDs", isMostrarIDs()));
+        res.add(InspectorProperty.PropertyFactorySN("cfg.mostrartooltips", "setMostrarTooltips", isMostrarTooltips()));
 
         return res;
     }
@@ -1924,6 +1935,38 @@ public class Editor extends BaseControlador implements KeyListener {
         if (diagramaAtual != null) {
             diagramaAtual.ExternalSuperAncorador();
         }
+    }
+
+    /**
+     * Mostrar os ID's dos artefatos no diagrama
+     */
+    private boolean mostrarIDs = false;
+
+    public boolean isMostrarIDs() {
+        return mostrarIDs;
+    }
+
+    public void setMostrarIDs(boolean mostrarIDs) {
+        if (this.mostrarIDs == mostrarIDs) {
+            return;
+        }
+        this.mostrarIDs = mostrarIDs;
+    }
+
+    /**
+     * Mostrar hints (tooltips) no inspector
+     */
+    private boolean mostrarTooltips = false;
+
+    public boolean isMostrarTooltips() {
+        return mostrarTooltips;
+    }
+
+    public void setMostrarTooltips(boolean mostrarTooltips) {
+        if (this.mostrarTooltips == mostrarTooltips) {
+            return;
+        }
+        this.mostrarTooltips = mostrarTooltips;
     }
 
 //</editor-fold>

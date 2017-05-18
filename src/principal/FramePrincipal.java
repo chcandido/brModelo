@@ -741,17 +741,21 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 
         SplitDiagramas.setLeftComponent(jPanel1);
 
+        jTabbedPane1.setToolTipText(bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle")); // NOI18N
+
         ScrollerBarraDeBotoes.setBorder(null);
         ScrollerBarraDeBotoes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        ScrollerBarraDeBotoes.setToolTipText(bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle")); // NOI18N
         ScrollerBarraDeBotoes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         BarraDeBotoes.setMinimumSize(new java.awt.Dimension(70, 0));
         BarraDeBotoes.setLayout(new java.awt.GridLayout(15, 1));
         ScrollerBarraDeBotoes.setViewportView(BarraDeBotoes);
 
-        jTabbedPane1.addTab(bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle"), ScrollerBarraDeBotoes); // NOI18N
+        jTabbedPane1.addTab(getBarraBotoesTexto(), ScrollerBarraDeBotoes);
 
         SplitDiagramas.setRightComponent(jTabbedPane1);
+        jTabbedPane1.getAccessibleContext().setAccessibleName(getBarraBotoesTexto());
 
         SplitMaster.setRightComponent(SplitDiagramas);
 
@@ -1259,10 +1263,17 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         return Manager;
     }
 
+    public String getBarraBotoesTexto(){
+        if (util.OS.isUnix()) {
+            return "   ";
+        }
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
+        return bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle");
+    }
+    
     /**
      * TO_DO Ao colar: Os baseDrawer não estão persistindo em XML corretamente (ainda não implementado -
      * 09/11/2013).
      * Salvar como --> excluir extensão. ///???? /
-     * Ao converter uma entidade especializada com suas especializações em uma única tabela, ver  a possibilidade de incluir um campo chamado TIPO como nos nomes das generalidades.///????
      */
 }

@@ -4,8 +4,6 @@ package controlador.apoios;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import controlador.Diagrama;
 import controlador.inspector.InspectorProperty;
 import desenho.formas.Forma;
@@ -41,20 +39,20 @@ public class InfoDiagrama extends Forma {
         diagramaUniversalUnicID = geraUnicDiagramaID();
         realDiagramaUniversalUnicID = diagramaUniversalUnicID;
     }
-    
+
     private String geraUnicDiagramaID() {
         java.util.Random r = new Random();
         String res = "";
-        for (int i =0; i < 10; i++) {
-           res += Integer.toHexString(r.nextInt(256)) + (i%3 !=0 ?"-":"");
+        for (int i = 0; i < 10; i++) {
+            res += Integer.toHexString(r.nextInt(256)) + (i % 3 != 0 ? "-" : "");
         }
         return res.toUpperCase();
     }
-    
-    public final void ReGeraGuardaUnicDiagramaID(){
+
+    public final void ReGeraGuardaUnicDiagramaID() {
         diagramaUniversalUnicID = geraUnicDiagramaID();
     }
-    
+
     @Override
     public void DoPaint(Graphics2D g) {
         g.setPaint(this.getForeColor());
@@ -69,7 +67,9 @@ public class InfoDiagrama extends Forma {
         res.add(InspectorProperty.PropertyFactorySeparador("diagrama.versao.titulo"));
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("diagrama.versao", getMaster().getVersao()));
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("diagrama.nome", getMaster().getNome()));
-        res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("diagrama.unicid", getRealDiagramaUniversalUnicID()));
+        if (getMaster().getEditor().isMostrarIDs()) {
+            res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("diagrama.unicid", getRealDiagramaUniversalUnicID()));
+        }
         String arq = ("".equals(getMaster().getArquivo()) ? "" : (new File(getMaster().getArquivo())).getName());
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("diagrama.arquivo", arq));
         res.add(InspectorProperty.PropertyFactoryTextoL("diagrama.autores", "setAutores", getAutores()));
@@ -80,15 +80,15 @@ public class InfoDiagrama extends Forma {
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("height", Integer.toString(getMaster().getHeight())));
 
         ArrayList<String> vl = new ArrayList<>();
-        for (int i = 0; i < getMaster().getEditor().zoonsd.length; i++){
-            vl.add(Double.toString(getMaster().getEditor().zoonsd[i] *100) + "%");
+        for (int i = 0; i < getMaster().getEditor().zoonsd.length; i++) {
+            vl.add(Double.toString(getMaster().getEditor().zoonsd[i] * 100) + "%");
         }
         res.add(InspectorProperty.PropertyFactoryMenu("zoom", "setZoonInt", getZoonInt(), vl));
         //res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("zoom", Double.toString(getMaster().getZoom()*100) + "%"));
         res.add(InspectorProperty.PropertyFactorySeparador("diagrama.alinhamento"));
         res.add(InspectorProperty.PropertyFactoryNumero("diagrama.alinhamento_h", "setAlinhamento_h", getAlinhamento_h()));
         res.add(InspectorProperty.PropertyFactoryNumero("diagrama.alinhamento_v", "setAlinhamento_v", getAlinhamento_v()));
-        
+
         res.add(InspectorProperty.PropertyFactorySeparador("fonte"));
         Font f = getFont();
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("fonte.nome", f.getName()));
@@ -98,7 +98,7 @@ public class InfoDiagrama extends Forma {
             //# res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdFonte.name()));
             res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdFonte.name(), nomeComandos.cmdFonte.name().toLowerCase(), getFont().getFontName()));
         }
-        
+
         getMaster().EndProperty(res);
         return res;
     }
@@ -106,8 +106,8 @@ public class InfoDiagrama extends Forma {
     public int getZoonInt() {
         int res = 4;
         double z = getMaster().getZoom();
-        for (int i = 0; i < getMaster().getEditor().zoonsd.length; i++){
-            if (getMaster().getEditor().zoonsd[i] ==  z) {
+        for (int i = 0; i < getMaster().getEditor().zoonsd.length; i++) {
+            if (getMaster().getEditor().zoonsd[i] == z) {
                 res = i;
             }
         }
@@ -117,7 +117,7 @@ public class InfoDiagrama extends Forma {
     public void setZoonInt(int zoonInt) {
         getMaster().getEditor().setZoom(getMaster().getEditor().zoonsd[zoonInt]);
     }
-    
+
     private String autores = "";
 
     public String getAutores() {
@@ -127,32 +127,33 @@ public class InfoDiagrama extends Forma {
     public void setAutores(String autores) {
         this.autores = autores;
     }
-    
+
     /**
      * No momento em que se estiver colando o XML verifica-se se o ato de colar está acontecendo no mesmo diagrama por meio do UnicID do diagrama atual
+     *
      * @return true se é o mesmo.
      */
     public boolean IsTheShame() {
-        return  diagramaUniversalUnicID.equals(diagramaOldUniversalUnicID);
+        return diagramaUniversalUnicID.equals(diagramaOldUniversalUnicID);
     }
-    
+
     /**
-     * Verifiquei que precisava garantir que o diagramaUniversalUnicID fosse único porém, ao copiar um arquivo do modelo o diagramaUniversalUnicID se tornava duplicado.
-     * Os dois modelos poderiam vir a ser abertos pelo mesmo editor ao mesmo tempo, causando problemas.
-     * Por isso, decidi que todas as vezes que um diagrama fosse carregado, um novo diagramaUniversalUnicID seria gerado para ele. Porém, resolvi preserva aquele primeiro gerado.
+     * Verifiquei que precisava garantir que o diagramaUniversalUnicID fosse único porém, ao copiar um arquivo do modelo o diagramaUniversalUnicID se tornava duplicado. Os dois modelos poderiam vir a
+     * ser abertos pelo mesmo editor ao mesmo tempo, causando problemas. Por isso, decidi que todas as vezes que um diagrama fosse carregado, um novo diagramaUniversalUnicID seria gerado para ele.
+     * Porém, resolvi preserva aquele primeiro gerado.
      */
     private String realDiagramaUniversalUnicID = "";
 
     public String getRealDiagramaUniversalUnicID() {
         return realDiagramaUniversalUnicID;
     }
-    
+
     private String diagramaUniversalUnicID;
 
     public void setDiagramaUniversalUnicID(String diagramaUniversalUnicID) {
         this.diagramaUniversalUnicID = diagramaUniversalUnicID;
     }
-    
+
     /**
      * Qual era o ID anterior? Setado apenas se estiver colando.
      */
@@ -169,9 +170,9 @@ public class InfoDiagrama extends Forma {
     public void setDiagramaOldUniversalUnicID(String uid) {
         this.diagramaOldUniversalUnicID = uid;
     }
-       
+
     private int alinhamento_v = 50, alinhamento_h = 60;
-    
+
     @Override
     protected void ToXmlValores(Document doc, Element me) {
         //super.InfoDiagrama_ToXmlValores(doc, me);
@@ -183,7 +184,7 @@ public class InfoDiagrama extends Forma {
         me.appendChild(util.XMLGenerate.ValorInteger(doc, "Height", getMaster().getHeight()));
         me.appendChild(util.XMLGenerate.ValorInteger(doc, "Alinhamento_v", getAlinhamento_v()));
         me.appendChild(util.XMLGenerate.ValorInteger(doc, "Alinhamento_h", getAlinhamento_h()));
-        me.appendChild(util.XMLGenerate.ValorInteger(doc, "Zoom", (int)(getMaster().getZoom() * 100)));
+        me.appendChild(util.XMLGenerate.ValorInteger(doc, "Zoom", (int) (getMaster().getZoom() * 100)));
         me.appendChild(util.XMLGenerate.ValorFonte(doc, getFont()));
         me.appendChild(util.XMLGenerate.ValorPoint(doc, "Localizacao", getMaster().ScrPosicao));
         getMaster().InfoDiagrama_ToXmlValores(doc, me);
@@ -194,7 +195,7 @@ public class InfoDiagrama extends Forma {
         if (!super.LoadFromXML(me, colando)) {
             return false;
         }
-        if (!colando){
+        if (!colando) {
             diagramaUniversalUnicID = me.getAttribute("UniversalUnicID");
             realDiagramaUniversalUnicID = diagramaUniversalUnicID;
         }
@@ -202,13 +203,13 @@ public class InfoDiagrama extends Forma {
         setAutores(util.XMLGenerate.getValorTextoFrom(me, "Autores"));
         setObservacao(util.XMLGenerate.getValorTextoFrom(me, "Observacao"));
         setFont(util.XMLGenerate.getValorFonte(me));
-        getMaster().setZoom((double)util.XMLGenerate.getValorIntegerFrom(me, "Zoom")/100.0);
+        getMaster().setZoom((double) util.XMLGenerate.getValorIntegerFrom(me, "Zoom") / 100.0);
         getMaster().ScrPosicao = util.XMLGenerate.getValorPointFrom(me, "Localizacao");
         setAlinhamento_h(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento_h"));
         setAlinhamento_v(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento_v"));
         return getMaster().InfoDiagrama_LoadFromXML(me, colando);
     }
-    
+
     @Override
     public boolean MostreSeParaExibicao(TreeItem root) {
         return false;
@@ -254,7 +255,7 @@ public class InfoDiagrama extends Forma {
     public void setAlinhamento_h(int alinhamento_h) {
         this.alinhamento_h = alinhamento_h;
     }
-    
+
     public void setFromString(String str) {
         int tag = getMaster().getEditor().getInspectorEditor().getSelecionado().getTag();
         getMaster().setFromString(str, tag);

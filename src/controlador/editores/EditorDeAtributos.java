@@ -283,15 +283,16 @@ public class EditorDeAtributos extends javax.swing.JDialog {
 //        getSelecionada().DoMuda();
         Popule(getSelecionada());
     }//GEN-LAST:event_AdbtxtActionPerformed
-
+    
+    private int largura = 0;
+    
     public void AdicionarPainel(Atributo attr) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
-        Principal.add(ItemPan);
-        
         final int altura = 37;
         
-        ItemPan.setSize(580, altura);
-        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        ItemPan.setSize(largura, altura);
+        java.awt.FlowLayout lay = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5);
+        ItemPan.setLayout(lay);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
         javax.swing.JCheckBox chkIdentificador = new javax.swing.JCheckBox();
@@ -332,12 +333,12 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         ItemPan.add(btnExcluir);
 
         Principal.add(ItemPan);
-
-        //Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 580, altura);
+        if (largura == 0) {
+            largura = lay.preferredLayoutSize(ItemPan).width;
+        }
+        ItemPan.setBounds(0, v, largura, altura);
         v += altura + 3;
-        //Principal.setSize(new Dimension(580, v));
-        Principal.setPreferredSize(new Dimension(580, v));
+        Principal.setPreferredSize(new Dimension(largura, v));
 
         btnExcluir.addActionListener((java.awt.event.ActionEvent evt) -> {
 

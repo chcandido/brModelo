@@ -12,7 +12,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -130,7 +129,7 @@ public class InspectorItemBase extends BaseControlador {
     public void paint2D(Graphics2D g) {
         int esq = (int) (getWidth() * Criador.getDivisor()) - 2;
         int dir = getWidth() - (esq + 2);
-        if (isSelecionado() && ondeEditar != null && ondeEditar.isVisible() && ondeEditar.getWidth() != dir -2) {
+        if (isSelecionado() && ondeEditar != null && ondeEditar.isVisible() && ondeEditar.getWidth() != dir - 2) {
             Dimension d = new Dimension(dir - 2, Criador.altura - 2);
             ondeEditar.setPreferredSize(d);
             ondeEditar.setSize(d);
@@ -261,9 +260,10 @@ public class InspectorItemBase extends BaseControlador {
     public void setPropriedade(InspectorProperty propriedade) {
         this.propriedade = propriedade;
         setCanEdit(true);
-        
-        ///////?????Não gostei do tootip.
-        //this.setToolTipText(getTransValor());
+
+        if (Criador.getEditor().isMostrarTooltips()) {
+            this.setToolTipText(getTransValor());
+        }
     }
 
     public String getTexto() {
@@ -309,7 +309,7 @@ public class InspectorItemBase extends BaseControlador {
         propriedade.setTag(tag);
     }
     //</editor-fold>
-    
+
     public String Traduza(String texto) {
         return texto;
     }
@@ -418,7 +418,7 @@ public class InspectorItemBase extends BaseControlador {
             setCursor(Cursor.getDefaultCursor());
         }
     }
-    
+
     public void Caucule(int movido) {
         if (movido > getWidth() - 20) {
             movido = getWidth() - 20;

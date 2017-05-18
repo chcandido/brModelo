@@ -397,7 +397,7 @@ public class Tabela extends baseDrawerFromForma {
     /**
      * Mostrar as IR de maneira simplificada
      */
-    private boolean plainIR = true;
+    private boolean plainIR = false;
 
     public boolean isPlainIR() {
         return plainIR;
@@ -412,7 +412,6 @@ public class Tabela extends baseDrawerFromForma {
     }
 
     private void FillCampos(Graphics2D g, Rectangle r, boolean normal) {
-
         Composite originalComposite = g.getComposite();
         float alfa = 1f - getAlfa();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));

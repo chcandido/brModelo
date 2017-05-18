@@ -257,6 +257,8 @@ public class EditorDeIR extends javax.swing.JDialog {
 
     ArrayList<InternalItem> Itens = new ArrayList<>();
 
+    private int largura = 0;
+    
     public void AdicionarPainel(Campo cmp) {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
 
@@ -273,11 +275,11 @@ public class EditorDeIR extends javax.swing.JDialog {
 
 
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
-        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
         final int altura = 37;
-        ItemPan.setSize(500, altura);
 
-        Principal.add(ItemPan);
+        ItemPan.setSize(largura, altura);
+        java.awt.FlowLayout lay = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5);
+        ItemPan.setLayout(lay);
 
         chkCampo.setText(cmp.getTexto());
         chkCampo.setPreferredSize(new Dimension(120, 23));
@@ -311,10 +313,12 @@ public class EditorDeIR extends javax.swing.JDialog {
         ItemPan.add(btnExcluir);
 
         Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 500, altura);
+        if (largura == 0) {
+            largura = lay.preferredLayoutSize(ItemPan).width;
+        }
+        ItemPan.setBounds(0, v, largura, altura);
         v += altura + 3;
-        //Principal.setSize(new Dimension(500, v));
-        Principal.setPreferredSize(new Dimension(500, v));
+        Principal.setPreferredSize(new Dimension(largura, v));
 
         chkCampo.setSelected(cmp.isKey());
         chkfk.setSelected(cmp.isFkey());

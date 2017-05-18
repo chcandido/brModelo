@@ -33,7 +33,7 @@ public class FormaElementar extends Elementar {
     /**
      * Futuro
      */
-    public FormaElementar() { 
+    public FormaElementar() {
     }
 
     public FormaElementar(FormaElementar pai) {
@@ -138,7 +138,7 @@ public class FormaElementar extends Elementar {
     public List<Elementar> getSubItens() {
         return subItens;
     }
-    
+
     /**
      * Define se o objeto ficará fixo no diagrama
      */
@@ -275,10 +275,9 @@ public class FormaElementar extends Elementar {
             }
         }
     }
-    
+
 //    public void paintAncora(Graphics2D g) {
 //    }
-
     /**
      * Rearranja o componente de acordao com a posição dos pontos que o circunda quando selecionado.
      */
@@ -392,13 +391,15 @@ public class FormaElementar extends Elementar {
     //<editor-fold defaultstate="collapsed" desc="Tratamento da propriedade">
     /**
      * Carrega as propriedades para o Inspector, veja GenerateFullProperty (FormaElementar)
-     * @return 
+     *
+     * @return
      */
     public ArrayList<InspectorProperty> GenerateProperty() {
         ArrayList<InspectorProperty> res = new ArrayList<>();
 
-        res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("id", Integer.toString(ID)));
-
+        if (getMaster().getEditor().isMostrarIDs()) {
+            res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("id", Integer.toString(ID)));
+        }
         res.add(InspectorProperty.PropertyFactorySeparador("dimensoes", true));
 
         res.add(InspectorProperty.PropertyFactoryNumero("left", "setLeft", getLeft()));
@@ -419,7 +420,8 @@ public class FormaElementar extends Elementar {
 
     /**
      * Método principal para carregar as propriedades de um objeto para o Inspector (FormaElementar)
-     * @return 
+     *
+     * @return
      */
     public ArrayList<InspectorProperty> GenerateFullProperty() {
         ArrayList<InspectorProperty> res = GenerateProperty();
@@ -431,8 +433,9 @@ public class FormaElementar extends Elementar {
 
     /**
      * É executado após o método GenerateProperty, veja em GenerateFullProperty (FormaElementar)
+     *
      * @param GP
-     * @return 
+     * @return
      */
     public ArrayList<InspectorProperty> CompleteGenerateProperty(ArrayList<InspectorProperty> GP) {
         return GP;
@@ -460,12 +463,13 @@ public class FormaElementar extends Elementar {
     public boolean getIsLoadedFromXML() {
         return true;
     }
-    
+
     /**
-    * Para que possa ser utilizado por softwares de terceiros e de diferentes linguagens, preferi este modelo ao de persistir o objeto em XLM usando o writer do próprio java.
-    * @param doc
-    * @param root 
-    */
+     * Para que possa ser utilizado por softwares de terceiros e de diferentes linguagens, preferi este modelo ao de persistir o objeto em XLM usando o writer do próprio java.
+     *
+     * @param doc
+     * @param root
+     */
     public void ToXlm(Document doc, Element root) {
         Element me = doc.createElement(Editor.getClassTexto(this));
         ToXmlAtributos(doc, me);
@@ -518,8 +522,9 @@ public class FormaElementar extends Elementar {
 
     /**
      * Dado um objeto, este método gera XLM para sua propriedades a partir de campos determinados
+     *
      * @param doc
-     * @param me 
+     * @param me
      */
     protected void ToXmlValores(Document doc, Element me) {
         me.appendChild(util.XMLGenerate.ValorRect(doc, "Bounds", getBounds()));
@@ -527,8 +532,9 @@ public class FormaElementar extends Elementar {
 
     /**
      * Serializa os atributos do objeto.
+     *
      * @param doc
-     * @param me 
+     * @param me
      */
     protected void ToXmlAtributos(Document doc, Element me) {
         me.setAttribute("ID", Integer.toString(ID));
@@ -536,9 +542,10 @@ public class FormaElementar extends Elementar {
 
     /**
      * Carrega um elemento a partir de um código XML.
+     *
      * @param me
      * @param colando
-     * @return 
+     * @return
      */
     public boolean LoadFromXML(Element me, boolean colando) {
         String aID = me.getAttribute("ID");
@@ -547,9 +554,9 @@ public class FormaElementar extends Elementar {
         }
         Rectangle bounds = util.XMLGenerate.getValorRectFrom(me, "Bounds");
         if (bounds != null) {
-        /**
-         * Referencia igual em Ligacao.LoadFromXML
-         */
+            /**
+             * Referencia igual em Ligacao.LoadFromXML
+             */
             SetBounds(bounds);
         }
         return true;
@@ -557,10 +564,11 @@ public class FormaElementar extends Elementar {
 
     /**
      * É executado após o carregamento do XML (quer colando, quer carregando de uma arquivo).
+     *
      * @param me
      * @param mapa
-     * @return 
-     */ 
+     * @return
+     */
     public boolean CommitXML(Element me, HashMap<Element, FormaElementar> mapa) {
         reSetBounds();
         BringToFront();
@@ -568,10 +576,10 @@ public class FormaElementar extends Elementar {
     }
 
     /**
-     * Dado um objeto que não pode ser apagado por conta de uma dependência, 
-     * o método AskToDelete pede para que a dependência seja desfeita (caso em que importará o retorno do método: true = a dependência foi desfeita),
-     * ou que o objeto providencie a sua auto-exclusão, caso em que o retorno seria irrelevante 
-     * @return 
+     * Dado um objeto que não pode ser apagado por conta de uma dependência, o método AskToDelete pede para que a dependência seja desfeita (caso em que importará o retorno do método: true = a
+     * dependência foi desfeita), ou que o objeto providencie a sua auto-exclusão, caso em que o retorno seria irrelevante
+     *
+     * @return
      */
     public boolean AskToDelete() {
         return false;
@@ -579,6 +587,7 @@ public class FormaElementar extends Elementar {
 
     /**
      * Para ser executado pelo Inspector.
+     *
      * @param idx: tag ou índice do componente a ser removido.
      */
     public void ExcluirSubItem(int idx) {
@@ -587,29 +596,32 @@ public class FormaElementar extends Elementar {
 
     /**
      * Para ser executado pelo Inspector.
+     *
      * @param idx: posição onde o subitem será incluído.
      */
     public void AdicionarSubItem(int idx) {
 
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="Ancorador">
-    
     /**
      * Quais botões âncoras (botões que ficam ao lado do artefato selecionado no diagrama) deverão ser mostrados.
      */
     private final ArrayList<Integer> ancorasCode = new ArrayList<>();
-    
+
     /**
      * Quais botões âncoras (botões que ficam ao lado do artefato selecionado no diagrama) deverão ser mostrados.
+     *
      * @return
      */
     public final ArrayList<Integer> getAncorasCode() {
         return ancorasCode;
     }
-    
-    /***
+
+    /**
+     * *
      * É chamado quando clica-se em um dos botões ancorados no artefato selecionado
+     *
      * @param cod
      */
     public void runAncorasCode(int cod) {
@@ -626,9 +638,11 @@ public class FormaElementar extends Elementar {
                 break;
         }
     }
-    
-    /***
+
+    /**
+     * *
      * É chamado quando um artefato é selecionado no diagrama
+     *
      * @param c - diz o que desenhar para cada um dos botões de ancoragem.
      * @return o caminho para desenho da imagem: getMaster().getEditor().getControler().ImagemDeDiagrama.get( RETURN ).getImage()
      */

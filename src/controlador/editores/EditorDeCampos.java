@@ -212,13 +212,15 @@ public class EditorDeCampos extends javax.swing.JDialog {
         Popule(getSelecionada());
     }//GEN-LAST:event_AdbtxtActionPerformed
 
+    private int largura = 0;
+    
     public void AdicionarPainel(Campo cmp) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
         final int altura = 37;
 
-        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
-        ItemPan.setSize(736, altura);
-        Principal.add(ItemPan);
+        ItemPan.setSize(largura, altura);
+        java.awt.FlowLayout lay = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5);
+        ItemPan.setLayout(lay);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
         javax.swing.JCheckBox chkpk = new javax.swing.JCheckBox();
@@ -269,11 +271,13 @@ public class EditorDeCampos extends javax.swing.JDialog {
         ItemPan.add(btnExcluir);
         btnExcluir.setPreferredSize(new Dimension(49, 25));
 
-        ItemPan.setBounds(0, v, 750, altura);
+        Principal.add(ItemPan);
+        if (largura == 0) {
+            largura = lay.preferredLayoutSize(ItemPan).width;
+        }
+        ItemPan.setBounds(0, v, largura, altura);
         v += altura + 3;
-        //Principal.setSize(new Dimension(750, v));
-        Principal.setPreferredSize(new Dimension(750, v));
-
+        Principal.setPreferredSize(new Dimension(largura, v));
         
         txtNome.setText(cmp.getTexto());
         chkfk.setSelected(cmp.isFkey());

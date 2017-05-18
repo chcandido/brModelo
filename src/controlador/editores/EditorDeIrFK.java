@@ -355,8 +355,8 @@ public class EditorDeIrFK extends javax.swing.JDialog {
                 .addGap(0, 434, Short.MAX_VALUE))
             .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                    .addGap(0, 50, Short.MAX_VALUE)
-                    .addComponent(jSplitPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(50, 50, 50)
+                    .addComponent(jSplitPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)))
         );
 
         mostrador.setEditable(false);
@@ -723,7 +723,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         comboTabelasLigadas.removeAllItems();
         comboTabelasLigadas.addItem(strSelecione);
         tabelasLigadas.forEach(t -> {
-            comboTabelasLigadas.addItem(String.valueOf(comboTabelasLigadas.getItemCount() + 1) + " - " + t.getTexto());
+            comboTabelasLigadas.addItem((t != tabelaSelecionada ? String.valueOf(comboTabelasLigadas.getItemCount()) + " - " : "[AUTO] - ") + t.getTexto());
         });
 
         //Constraint da tabela selecionada
@@ -842,7 +842,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
                 int idx = Ligacoes.indexOf(linha) + 1;
                 comboLigacoes.setSelectedIndex(idx);
             }
-        } 
+        }
 //        else {
 //            Ligacoes = new ArrayList<>();
 //            constrDaTabOrigem = new ArrayList<>();
@@ -893,15 +893,17 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         });
     }
 
+    private int largura = 0;
+
     public void AdicionarPainel(Campo cmp) {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR");
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
         final int altura = 37;
-        ItemPan.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        java.awt.FlowLayout lay = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5);
+        ItemPan.setLayout(lay);
 
         ItemPan.setSize(675, altura);
-        Principal.add(ItemPan);
-        
+
         InternalItem item = new InternalItem();
         Itens.add(item);
         item.campo = cmp;
@@ -931,7 +933,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         chkPK.setText(bundle.getString("EditorDeIR.chkPK")); // NOI18N
         chkPK.setSize(new Dimension(97, 23));
         ItemPan.add(chkPK);
-        
+
         chkfk.setText(bundle.getString("EditorDeIR.chkFK")); // NOI18N
         chkfk.setSize(new Dimension(115, 23));
         ItemPan.add(chkfk);
@@ -946,11 +948,14 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         ItemPan.add(btnExcluir);
 
         Principal.add(ItemPan);
-        ItemPan.setBounds(0, v, 675, altura);
+        if (largura == 0) {
+            largura = lay.preferredLayoutSize(ItemPan).width;
+        }
+        ItemPan.setBounds(0, v, largura, altura);
         v += altura + 3;
         //Principal.setSize(new Dimension(675, v));
-        Principal.setPreferredSize(new Dimension(675, v));
-        
+        Principal.setPreferredSize(new Dimension(largura, v));
+
         chkCampo.setSelected(cmp.isFkey());
         chkfk.setSelected(cmp.isFkey());
         chkPK.setSelected(cmp.isKey());
@@ -1160,8 +1165,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         idx--;
         return camposOrigem.get(idx);
     }
-    
-    
+
     private void ManualMudaTabela(Tabela novaOrigem) {
         tabelaDeOrigem = novaOrigem;
         constrSelecionada.setConstraintOrigem(null);
