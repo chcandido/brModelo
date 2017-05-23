@@ -32,12 +32,15 @@ public class FormaTextoBase extends Forma {
 
     private AlinhamentoTexto Alinhamento = AlinhamentoTexto.alCentro;
 
+    private boolean centrarVertical = false;
+    
     public boolean isCentrarVertical() {
-        return getTextoFormatado().isCentrarTextoVertical();
+        return centrarVertical;
     }
 
     public void setCentrarVertical(boolean centrar) {
-        if (centrar != isCentrarVertical()) {
+        if (centrar != centrarVertical) {
+            centrarVertical = centrar;
             DesenhadorDeTexto edt = getTextoFormatado();
             edt.setCentrarTextoVertical(centrar);
             InvalidateArea();
@@ -54,12 +57,12 @@ public class FormaTextoBase extends Forma {
         } catch (Exception e) {
         }
     }
-    
+
     public void setAlinhamento(AlinhamentoTexto Alinhamento) {
         if (this.Alinhamento != Alinhamento) {
             this.Alinhamento = Alinhamento;
             DesenhadorDeTexto edt = getTextoFormatado();
-            switch(Alinhamento) {
+            switch (Alinhamento) {
                 case alCentro:
                     edt.setCentrarTextoHorizontal(true);
                     break;
@@ -74,6 +77,22 @@ public class FormaTextoBase extends Forma {
         }
     }
 
+    public void ReSetAlinhamento(DesenhadorDeTexto edt) {
+        switch (Alinhamento) {
+            case alCentro:
+                edt.setCentrarTextoHorizontal(true);
+                break;
+            case alDireita:
+                edt.setAlinharDireita(true);
+                break;
+            case alEsquerda:
+                edt.setAlinharEsquerda(true);
+                break;
+        }
+        edt.LimitarAreaDePintura = true;
+        edt.setCentrarTextoVertical(isCentrarVertical());
+    }
+
     @Override
     public void DoPaint(Graphics2D g) {
         g.setPaint(this.getForeColor());
@@ -81,9 +100,7 @@ public class FormaTextoBase extends Forma {
     }
 
     /**
-     * Usado para dizer como o artefato se comporta: se true: como uma caixa de
-     * dezenho que não pode ser ligada a nada. Se false: como uma caixa de
-     * dezenho que poderá ser ligada.
+     * Usado para dizer como o artefato se comporta: se true: como uma caixa de dezenho que não pode ser ligada a nada. Se false: como uma caixa de dezenho que poderá ser ligada.
      */
     private boolean simplesDezenho = true;
 
@@ -110,9 +127,12 @@ public class FormaTextoBase extends Forma {
         return false;
     }
 
-//    @Override
-//    public boolean CanLiga(Forma forma, Linha lin) {
-//        return false;
-//    }
-
+    @Override
+    public DesenhadorDeTexto getTextoFormatado() {
+        DesenhadorDeTexto edt = super.getTextoFormatado();
+        ReSetAlinhamento(edt);
+        return edt;
+    }
+    
+    
 }

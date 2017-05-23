@@ -17,7 +17,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 
 /**
@@ -150,47 +149,17 @@ public class PreTexto extends FormaTextoBase {
         InvalidateArea();
     }
 
-//    private boolean textoSimples = true;
-//
-//    public boolean isTextoSimples() {
-//        return textoSimples;
-//    }
-//
-//    public final void setTextoSimples(boolean textoSimples) {
-//        this.textoSimples = textoSimples;
-//    }
-
     @Override
     public void DoPaint(Graphics2D g) {
         FontMetrics fm = g.getFontMetrics();
 
-//        Composite originalComposite = g.getComposite();
-//        int type = AlphaComposite.SRC_OVER;
-//        g.setComposite(AlphaComposite.getInstance(type, alfa));
         Composite originalComposite = g.getComposite();
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
+//        if (Tipo != TipoTexto.tpEmBranco){
+//            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
+//        }
 
         switch (Tipo) {
 //            case tpEmBranco:
-//                if (isAutosize()) {
-//                    int x = -1, y = -1;
-//                    if (getTextoFormatado().getMaxWidth() != getWidth()) {
-//                        x = getTextoFormatado().getMaxWidth() + 20;// + distSelecao;
-//                    }
-//                    if (getTextoFormatado().getMaxHeigth() != getHeight()) {
-//                        y = getTextoFormatado().getMaxHeigth() + distSelecao;
-//                    }
-//                    if (y != -1 || x != -1) {
-//                        setStopRaize(true);
-//                        if (x != -1) setWidth(x);
-//                        if (y != -1) setHeight(y);
-//                        setStopRaize(false);
-//                        needRecalPts = true;
-//                        if (isSelecionado()) {
-//                            Reposicione();
-//                        }
-//                    }
-//                }
 //                break;
             case tpNota:
 //                if (isGradiente() && !isTextoSimples()) {
@@ -208,6 +177,7 @@ public class PreTexto extends FormaTextoBase {
                     //g.setColor(this.getForeColor());
                     g.setColor(this.getBackColor());
                 }
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
 
                 GeneralPath pa = new GeneralPath();
                 pa.setWindingRule(GeneralPath.WIND_NON_ZERO);
@@ -235,52 +205,61 @@ public class PreTexto extends FormaTextoBase {
                     g.setColor(this.getForeColor());
                     g.draw(pa);
                 }
-
-//                g.setPaint(this.getForeColor());
-//                Rectangle rec = getBounds();
-//                int tam = Math.min(rec.width/6, rec.height/6);
-//                int curv = tam /4;
-//                int lw = rec.x + rec.width;
-//                int[] px = new int[] {rec.x,  lw - tam, lw,          lw,                 rec.x};
-//                int[] py = new int[] {rec.y,  rec.y,    rec.y + tam, rec.y + rec.height, rec.y + rec.height};
-//                g.drawPolygon(px, py, 5);
-//                QuadCurve2D q = new QuadCurve2D.Float();
-//                q.setCurve(lw- tam, rec.y, lw- tam + curv, rec.y + curv, lw- tam, rec.y + tam - (1));
-//                g.draw(q);
-//                g.drawLine(lw- tam, rec.y + tam - (1), lw, rec.y + tam);
                 break;
             case tpRetangulo:
                 //getTextoFormatado().CorretorPosicao = new Point(-2, -2);
                 if (sombra) {
                     g.setPaint(getCorSombra());
-                    g.fillRect(getLeft() + distSelecao, getTop() + distSelecao, getWidth(), getHeight());
+                    for (int i = 0; i < distSelecao; i++) {
+                        g.drawLine(getLeft() + distSelecao, getTopHeight() + i, getLeftWidth() + distSelecao - 1, getTopHeight() + i);
+                        g.drawLine(getLeftWidth() + i, getTop() + distSelecao, getLeftWidth() + i, getTopHeight() + distSelecao - 1);
+                    }
                 }
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
                 g.setPaint(this.getBackColor());
                 if (isGradiente()) {
                     PaintGradiente(g, false);
                 } else {
                     g.fillRect(getLeft(), getTop(), getWidth(), getHeight());
+                    if (sombra) {
+                        g.setPaint(getCorSombra());
+                    } else {
+                        g.setPaint(getForeColor());
+                    }
+                    g.drawRect(getLeft(), getTop(), getWidth(), getHeight());
                 }
                 break;
             case tpRetanguloArred:
                 //getTextoFormatado().CorretorPosicao = new Point(-2, -2);
                 if (sombra) {
+                    int rx = roundRectSize / 2;
                     g.setPaint(getCorSombra());
-                    g.fillRoundRect(getLeft() + distSelecao, getTop() + distSelecao,
-                            getWidth(), getHeight(), roundRectSize, roundRectSize);
+                    for (int i = 0; i < distSelecao; i++) {
+                        g.drawLine(getLeft() + rx, getTopHeight() + i, getLeftWidth() + distSelecao - 1, getTopHeight() + i);
+                        g.drawLine(getLeftWidth() + i, getTop() + rx, getLeftWidth() + i, getTopHeight() + distSelecao - 1);
+                    }
+                    g.fillPolygon(new int[]{getLeftWidth() - rx, getLeftWidth(), getLeftWidth()},
+                            new int[]{getTopHeight(), getTopHeight() - rx, getTopHeight()}, 3);
                 }
                 g.setPaint(this.getBackColor());
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
                 if (isGradiente()) {
                     PaintGradiente(g, true);
                 } else {
                     g.fillRoundRect(getLeft(), getTop(), getWidth(), getHeight(), roundRectSize, roundRectSize);
+                    if (sombra) {
+                        g.setPaint(getCorSombra());
+                    } else {
+                        g.setPaint(getForeColor());
+                    }
+                    g.drawRoundRect(getLeft(), getTop(), getWidth(), getHeight(), roundRectSize, roundRectSize);
                 }
                 break;
         }
+        g.setColor(this.getForeColor());
         if (isPaintTitulo()) {
-            g.setColor(this.getForeColor());
             g.setFont(getFont());
-            int db = distSelecao;
+            int db = distSelecao * 2;
             Rectangle bkp = g.getClipBounds();
             Rectangle cl = getClientRectangle();
             g.clipRect(cl.x, cl.y, cl.width, cl.height);
@@ -288,17 +267,12 @@ public class PreTexto extends FormaTextoBase {
             g.drawString(getTitulo(), getLeft() + db, getTop() + db + (fm.getHeight() / 2) + 2 + des);
             g.setClip(bkp);
             int av = fm.getHeight() + fm.getDescent() - db - 2 + des;
-            getTextoFormatado().CorretorPosicao = new Point(0, av);
+            getTextoFormatado().CorretorPosicao = new Point(db, av + db);
         } else {
-            getTextoFormatado().CorretorPosicao = new Point(0, 0);
+            getTextoFormatado().CorretorPosicao = new Point(distSelecao, distSelecao);
         }
-
         g.setComposite(originalComposite);
-
         super.DoPaint(g);
-
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
-
         if (Tipo == TipoTexto.tpEmBranco) {
             if (isAutosize()) {
                 int x = -1, y = -1;
@@ -327,7 +301,7 @@ public class PreTexto extends FormaTextoBase {
                 }
             }
         }
-        g.setComposite(originalComposite);
+        //g.setComposite(originalComposite);
     }
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
@@ -445,5 +419,13 @@ public class PreTexto extends FormaTextoBase {
     }
 
     public void SetLinhaMestre(SuperLinha LinhaMestre) {
+    }
+
+    @Override
+    public void PinteTexto(Graphics2D g) {
+        super.PinteTexto(g);
+        if (getTextoFormatado().CorretorPosicao.equals(new Point(0, 0))) { //# foi destruído o TextoFormatado e perdeu-se a correcao.
+            InvalidateArea();
+        }
     }
 }

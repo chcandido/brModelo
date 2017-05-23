@@ -64,34 +64,6 @@ public class Texto extends PreTexto {
                 
         res.add(InspectorProperty.PropertyFactorySeparador("texto.gradiente"));
         
-//        String[] grupo = new String[] {"setGradienteStartColor","setGradienteEndColor","setGradientePinteDetalhe",
-//            "setGradienteCorDetalhe", "setGDirecao"//, "SetAlfa"
-//        };
-//        
-//        res.add(InspectorProperty.PropertyFactorySN("texto.gradiente.is", "setGradiente", isGradiente()).AddCondicaoForFalse(new String[] {"setBackColor"}).AddCondicaoForTrue(grupo));
-//
-//        res.add(InspectorProperty.PropertyFactoryCor("texto.gradiente.startcor", "setGradienteStartColor", getGradienteStartColor()));
-//        
-//        res.add(InspectorProperty.PropertyFactoryCor("texto.gradiente.endcor", "setGradienteEndColor", getGradienteEndColor()));
-//
-//        res.add(InspectorProperty.PropertyFactorySN("texto.gradiente.detalhe", "setGradientePinteDetalhe", isGradientePinteDetalhe()).AddCondicaoForTrue(new String[] {"setGradienteCorDetalhe"}));
-//
-//        res.add(InspectorProperty.PropertyFactoryCor("texto.gradiente.detalhecor", "setGradienteCorDetalhe", getGradienteCorDetalhe()));
-//
-//        res.add(InspectorProperty.PropertyFactoryMenu("texto.gradiente.direcao", "setGDirecao", getGDirecao(), Editor.fromConfiguracao.getLstDirecao(Controler.Comandos.cmdTexto)));
-//
-//        ArrayList<String> ngrp = new ArrayList<>(Arrays.asList(grupo));
-//        ngrp.add("setGradiente");
-//        ngrp.add("setCorSombra");
-//        ngrp.add("setSombra");
-//        ngrp.add("setBackColor");
-//        
-//        txtTipo.AddCondicao(new String[] {"2", "3"}, ngrp.toArray(new String[] {}));
-//        txtTipo.AddCondicao(new String[] {"0"}, new String[] {"setAutosize"});
-//        //txtTipo.AddCondicao(new String[] {"1","2", "3"}, new String[] {"setBackColor"});
-//        //tpEmBranco, tpNota, tpRetangulo, tpRetanguloArred
-
-
         String[] grupo = new String[]{"setGradienteStartColor", "setGradienteEndColor",
             "setGDirecao"
         };
@@ -108,20 +80,15 @@ public class Texto extends PreTexto {
         ArrayList<String> ngrp = new ArrayList<>(Arrays.asList(grupo));
         ngrp.add("setGradiente");
         ngrp.add("SetAlfa");
+        ngrp.add("setBackColor");
 
         txtTipo.AddCondicao(new String[]{"2", "3"}, new String[]{"setGradientePinteDetalhe", "setGradienteCorDetalhe", "setCorSombra", "setSombra"
         });
         txtTipo.AddCondicao(new String[]{"1", "2", "3"}, ngrp.toArray(new String[]{}));
         txtTipo.AddCondicao(new String[]{"0"}, new String[]{"setAutosize"});
 
-        
-        
-
         tmp = InspectorProperty.FindByProperty(res, "setTextoAdicional");
         res.remove(tmp);
-
-        //res.add(InspectorProperty.PropertyFactorySeparador("texto.autosize"));
-        //res.add(InspectorProperty.PropertyFactorySN("texto.autosize", "setAutosize", isAutosize()));
 
         res.add(InspectorProperty.PropertyFactorySeparador("texto.atreladoalinha"));
         if (LinhaMestre != null) {

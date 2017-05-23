@@ -1226,6 +1226,3 @@ public class Forma extends FormaElementar {
         return true;
     }
 }
-
-//////???? mostrar ID no Inspector -> colocar campo boolean no config do diagrama.
-///////Mostrar o UNIQUE_ID do modelo no inspector.
