@@ -29,18 +29,15 @@ import java.io.ObjectOutputStream;
  *
  * @author chcan
  */
-public class AjudaManager extends ItemAjuda {
+public class AjudaManager extends ParteAjuda {
 
-    private static final long serialVersionUID = -3897772703895330791L;
+    private static final long serialVersionUID = -3897772703895330700L;
 
-    public AjudaManager(int id, String titulo, String texto) {
-        super(id, titulo, texto);
+    public AjudaManager(int id, String titulo) {
+        super(id, titulo);
+        master = this;
     }
 
-    public AjudaManager(int id) {
-        super(id);
-    }
-    
     //<editor-fold defaultstate="collapsed" desc="Abrir e Salvar">
     public static AjudaManager LoadDataHelp() {
         String tmp = System.getProperty("user.dir") + File.separator + "Ajuda.brMh";
@@ -94,5 +91,10 @@ public class AjudaManager extends ItemAjuda {
 
     public void setMudou(boolean mudou) {
         this.mudou = mudou;
+    }
+    
+    @Override
+    public void doMuda() {
+        setMudou(true);
     }
 }

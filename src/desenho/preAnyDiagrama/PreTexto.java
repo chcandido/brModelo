@@ -149,14 +149,11 @@ public class PreTexto extends FormaTextoBase {
         InvalidateArea();
     }
 
+    private transient int fonteH = 0;
+    
     @Override
     public void DoPaint(Graphics2D g) {
-        FontMetrics fm = g.getFontMetrics();
-
         Composite originalComposite = g.getComposite();
-//        if (Tipo != TipoTexto.tpEmBranco){
-//            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
-//        }
 
         switch (Tipo) {
 //            case tpEmBranco:
@@ -259,22 +256,27 @@ public class PreTexto extends FormaTextoBase {
         g.setColor(this.getForeColor());
         if (isPaintTitulo()) {
             g.setFont(getFont());
-            int db = distSelecao * 2;
+            if (fonteH == 0) {
+                FontMetrics fm = g.getFontMetrics();
+                fonteH = fm.getHeight();
+            }
+            int db = distSelecao * 3;
             Rectangle bkp = g.getClipBounds();
             Rectangle cl = getClientRectangle();
             g.clipRect(cl.x, cl.y, cl.width, cl.height);
-            int des = isGradiente() ? 2 : 0;
-            g.drawString(getTitulo(), getLeft() + db, getTop() + db + (fm.getHeight() / 2) + 2 + des);
+            int des = fonteH + fonteH/2;
+            g.drawString(getTitulo(), getLeft() + db, getTop() + des);
             g.setClip(bkp);
-            int av = fm.getHeight() + fm.getDescent() - db - 2 + des;
+            int av = db + des;
             getTextoFormatado().CorretorPosicao = new Point(db, av + db);
         } else {
-            getTextoFormatado().CorretorPosicao = new Point(distSelecao, distSelecao);
+            getTextoFormatado().CorretorPosicao = new Point(distSelecao*2, distSelecao*2);
         }
         g.setComposite(originalComposite);
         super.DoPaint(g);
         if (Tipo == TipoTexto.tpEmBranco) {
             if (isAutosize()) {
+                FontMetrics fm = g.getFontMetrics();
                 int x = -1, y = -1;
                 int a = getTextoFormatado().getMaxWidth() + (distSelecao * 2) + fm.charWidth('W');
                 if (a != getWidth()) {

@@ -1032,7 +1032,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 //        }
         FrameSobre fs = new FrameSobre(this, true);
         fs.setLocationRelativeTo(this);
-        fs.Inicie(formAjuda.AjudaMng.getTexto());
+        fs.Inicie(formAjuda.AjudaMng.getTitulo());
         fs.setVisible(true);
     }//GEN-LAST:event_menuSobreActionPerformed
 

@@ -145,7 +145,7 @@ public class GerenciadorPartes implements Serializable{
     //</editor-fold>
 
     public void Edit(GerenciadorSubParte Parte, String txt) {
-        Parte.setTexto(txt);
+        Parte.setTitulo(txt);
         setMudou(true);
     }
 }

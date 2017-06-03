@@ -92,12 +92,8 @@ public class Texto extends PreTexto {
 
         res.add(InspectorProperty.PropertyFactorySeparador("texto.atreladoalinha"));
         if (LinhaMestre != null) {
-           //res.add(InspectorProperty.PropertyFactoryApenasLeituraSN("texto.comotag", true));
            res.add(InspectorProperty.PropertyFactorySN("texto.movimentacaomanual", "setMovimentacaoManual", isMovimentacaoManual()));
-        } //else { 
-            //res.add(InspectorProperty.PropertyFactoryApenasLeituraSN("texto.comotag", false));
-            //res.add(InspectorProperty.PropertyFactoryApenasLeituraSN("texto.movimentacaomanual", false));
-        //}
+        } 
         ArrayList<SuperLinha> lins = getListaDeLinhas();
         if (lins.size() > 0) {
             int a = lins.indexOf(getLinhaMestre());
@@ -154,12 +150,10 @@ public class Texto extends PreTexto {
         if (l != -1) {
             SetAlfa(l);
         }
-
-        setTitulo(util.XMLGenerate.getValorStringFrom(me, "Titulo"));
+        setTitulo(util.XMLGenerate.getValorTextoFrom(me, "Titulo"));
         setPaintTitulo(util.XMLGenerate.getValorBooleanFrom(me, "PaintTitulo"));
         setCentrarVertical(util.XMLGenerate.getValorBooleanFrom(me, "CentrarVertical"));
         setTipobyInt(util.XMLGenerate.getValorIntegerFrom(me, "Tipo"));
-        setPaintTitulo(util.XMLGenerate.getValorBooleanFrom(me, "PaintTitulo"));
         setAlinhamentoByInt(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento"));
         Color c = util.XMLGenerate.getValorColorFrom(me, "BackColor");
         if (c != null) setBackColor(c);
@@ -309,15 +303,9 @@ public class Texto extends PreTexto {
 
     // </editor-fold>
 
-//    @Override
-//    public boolean Destroy() {
-//        setLinhaMestre(null);
-//        return super.Destroy();
-//    }
-
     @Override
     protected void ReSizedByAutoSize() {
-        super.ReSizedByAutoSize(); //To change body of generated methods, choose Tools | Templates.
+        super.ReSizedByAutoSize();
             if (this.MovimentacaoManual || (LinhaMestre == null) || getMaster().IsMultSelecionado()) {
                 return;
             }

@@ -18,6 +18,7 @@ package partepronta;
 
 import controlador.Diagrama;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -26,37 +27,42 @@ import java.io.Serializable;
 public class GerenciadorSubParte implements Serializable{
 
     private static final long serialVersionUID = 8170769009687181088L;
-    private String texto, titulo;
-    
-    public String getTitulo() {
-        return titulo;
-    }
+
+    private String titulo = "";
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
-    private final byte[] byteImage;
-    private final String XMLCopiado;
-    private final String versaoDiagrama;
-    private final Diagrama.TipoDeDiagrama tipo;
-
-    public GerenciadorSubParte(String texto, byte[] byteImage, String XMLCopiado, String versaoDiagrama, Diagrama.TipoDeDiagrama tipo) {
+    
+    private byte[] byteImage = null;
+    private String XMLCopiado = "";
+    private String versaoDiagrama = "";
+    private Diagrama.TipoDeDiagrama tipoDeDiagrama = Diagrama.TipoDeDiagrama.tpConceitual;
+    
+    public GerenciadorSubParte(String titulo, byte[] byteImage, String XMLCopiado, String versaoDiagrama, Diagrama.TipoDeDiagrama tipoDeDiagrama) {
         this.byteImage = byteImage;
         this.XMLCopiado = XMLCopiado;
-        this.texto = texto;
+        this.titulo = titulo;
         this.versaoDiagrama = versaoDiagrama;
-        this.tipo = tipo;
-        this.titulo = texto.length() > 20? texto.substring(20): texto;
+        this.tipoDeDiagrama = tipoDeDiagrama;
+    }
+    
+    public GerenciadorSubParte() {
+        //# Futuro
+    }
+    
+    public void InitGerenciadorSubParte(String titulo, byte[] byteImage, String XMLCopiado, String versaoDiagrama, Diagrama.TipoDeDiagrama tipo) {
+        this.byteImage = byteImage;
+        this.XMLCopiado = XMLCopiado;
+        this.titulo = titulo;
+        this.versaoDiagrama = versaoDiagrama;
+        this.tipoDeDiagrama = tipo;
     }
 
-    public String getTexto() {
-        return texto;
+    public String getTitulo() {
+        return titulo;
     }
-
+    
     public byte[] getByteImage() {
         return byteImage;
     }
@@ -69,7 +75,21 @@ public class GerenciadorSubParte implements Serializable{
         return versaoDiagrama;
     }
     
-    public Diagrama.TipoDeDiagrama getTipo() {
-        return tipo;
+    public Diagrama.TipoDeDiagrama getTipoDeDiagrama() {
+        return tipoDeDiagrama;
     }
+
+    public void setXMLCopiado(String XMLCopiado) {
+        this.XMLCopiado = XMLCopiado;
+    }
+
+    public void setVersaoDiagrama(String versaoDiagrama) {
+        this.versaoDiagrama = versaoDiagrama;
+    }
+
+    public void setTipoDeDiagrama(Diagrama.TipoDeDiagrama tipoDeDiagrama) {
+        this.tipoDeDiagrama = tipoDeDiagrama;
+    }
+    
+    
 }

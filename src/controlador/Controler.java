@@ -188,6 +188,8 @@ public class Controler {
         ImagemDeDiagrama.put("diagrama.Constraint_UN.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_UN.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_UNFK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_UNFK.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_see.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_see.img", true));
+        
+        ImagemDeDiagrama.put("Controler.interface.ajuda.icone", TratadorDeImagens.loadFromResource("Controler.interface.ajuda.icone", true));
     }
 
     private JComponent Barra;

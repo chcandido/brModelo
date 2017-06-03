@@ -35,7 +35,7 @@ public class Mostrador extends BaseControlador {
     private int scroll = tabRecuo;
     private int selectedIndex = 0;
 
-    public static String Img = "Controler.interface.mostrador.fechar.img";
+    public final static String Img = "Controler.interface.mostrador.fechar.img";
 
     public int getSelectedIndex() {
         return selectedIndex;
@@ -166,12 +166,18 @@ public class Mostrador extends BaseControlador {
             
             //# g2.setClip(r);
             g2.clipRect(r.x, r.y, r.width, r.height);
-            g2.drawString((m.getMudou()? "*":"") + m.getNomeFormatado(), imgw + r.x, r.y + txL);
-//            if ("".equals(m.getNome())) {
-//                g2.drawString("[" + Integer.toString(i - 1) + "] <<" + m.getTipoDeDiagramaFormatado() + ">>", imgw + r.x, r.y + txL);
-//            } else {
-//                g2.drawString("[" + Integer.toString(i - 1) + "] " + m.getNome(), imgw + r.x, r.y + txL);
-//            }
+            String tmp = (m.getMudou()? "*":"") + m.getNomeFormatado();
+            int tamtxt = g.getFontMetrics().stringWidth(tmp);
+            if (tamtxt > r.width -imgw) {
+                tmp = tmp.substring(0, tmp.length() -3) + "...";
+                tamtxt = g.getFontMetrics().stringWidth(tmp);
+                while (tamtxt  > r.width -imgw) {
+                    tmp = tmp.substring(0, tmp.length() -4) + "...";
+                    tamtxt = g.getFontMetrics().stringWidth(tmp);
+                }
+            }
+            g2.drawString(tmp, imgw + r.x, r.y + txL);
+
             g2.setClip(bkp);
             if (esse || (overRNow != null && overRNow.equals(r))) {
                 g2.setColor(Color.WHITE);

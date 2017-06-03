@@ -268,6 +268,8 @@ public class conversorDialogo extends javax.swing.JDialog {
     private void prepareQuestao() {
         conversorDrawer1.setObjAtivo(Opcoes.obj);
         conversorDrawer1.Escreve(Opcoes);
-        pack();
+        conversorDrawer1.revalidate();
+        conversorDrawer1.repaint();
+        //pack();
     }
 }

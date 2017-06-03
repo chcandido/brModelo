@@ -78,6 +78,7 @@ public class FormaTextoBase extends Forma {
     }
 
     public void ReSetAlinhamento(DesenhadorDeTexto edt) {
+        if (edt == null || Alinhamento == null) return;
         switch (Alinhamento) {
             case alCentro:
                 edt.setCentrarTextoHorizontal(true);

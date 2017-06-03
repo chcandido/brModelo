@@ -281,7 +281,7 @@ public class FormPartes extends javax.swing.JFrame {
     private void btnEdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdtActionPerformed
         ParteBtn btn = getBtnSelecionado();
         if (btn != null) {
-            String txt = util.Dialogos.ShowDlgInputText(this.getRootPane(), btn.Parte.getTexto());
+            String txt = util.Dialogos.ShowDlgInputText(this.getRootPane(), btn.Parte.getTitulo());
             if (!"".equals(txt)) {
                 Partes.Edit(btn.Parte, txt);
                 btn.setText(txt);
@@ -301,9 +301,10 @@ public class FormPartes extends javax.swing.JFrame {
                 Partes.Remova(sb);
                 Barra.removeAll();
                 HabiliteBtns(-1);
-                Partes.getLista().stream().filter(e -> e.getTipo() == TipoDeDiagrama).forEach(pa -> criaBtn(pa));
+                Partes.getLista().stream().filter(e -> e.getTipoDeDiagrama() == TipoDeDiagrama).forEach(pa -> criaBtn(pa));
                 Pan.removeAll();
-                pack();
+                Pan.revalidate();
+                Pan.repaint();
                 repaint();
                 if (!(Barra.getComponentCount() > idx)) {
                     idx--;
@@ -337,7 +338,7 @@ public class FormPartes extends javax.swing.JFrame {
                 Partes.getLista().add(idx - 1, sb);
 
                 Barra.removeAll();
-                Partes.getLista().stream().filter(e -> e.getTipo().equals(TipoDeDiagrama)).forEach(pa -> criaBtn(pa));
+                Partes.getLista().stream().filter(e -> e.getTipoDeDiagrama().equals(TipoDeDiagrama)).forEach(pa -> criaBtn(pa));
 
                 ParteBtn btn2 = ((ParteBtn) Barra.getComponent(idx - 1));
                 Barra.repaint();
@@ -360,7 +361,7 @@ public class FormPartes extends javax.swing.JFrame {
                 Partes.getLista().add(idx + 1, sb);
 
                 Barra.removeAll();
-                Partes.getLista().stream().filter(e -> e.getTipo().equals(TipoDeDiagrama)).forEach(pa -> criaBtn(pa));
+                Partes.getLista().stream().filter(e -> e.getTipoDeDiagrama().equals(TipoDeDiagrama)).forEach(pa -> criaBtn(pa));
                 btn = ((ParteBtn) Barra.getComponent(idx + 1));
                 Barra.repaint();
                 btn.doClick();
@@ -434,7 +435,7 @@ public class FormPartes extends javax.swing.JFrame {
     }
 
     private ParteBtn criaBtn(GerenciadorSubParte sp) {
-        String texto = sp.getTexto();
+        String texto = sp.getTitulo();
         ParteBtn btn = new ParteBtn(texto);
         btn.setFocusable(false);
         btn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -454,8 +455,8 @@ public class FormPartes extends javax.swing.JFrame {
             Pan.removeAll();
             //picLabel.setLocation(10, 10);
             Pan.add(picLabel);//, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+            Pan.revalidate();
             Pan.repaint();
-            pack();
             HabiliteBtns(Partes.getLista().indexOf(sp));
         });
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -480,12 +481,13 @@ public class FormPartes extends javax.swing.JFrame {
         TipoDeDiagrama = tp;
         Barra.removeAll();
         HabiliteBtns(-1);
-        Partes.getLista().stream().filter(e -> e.getTipo().equals(tp)).forEach(pa -> criaBtn(pa));
+        Partes.getLista().stream().filter(e -> e.getTipoDeDiagrama().equals(tp)).forEach(pa -> criaBtn(pa));
         Pan.removeAll();
         if (Barra.getComponentCount() > 0) {
             ((ParteBtn) Barra.getComponent(0)).doClick();
         }
-        pack();
+        Pan.revalidate();
+        Pan.repaint();
         repaint();
     }
 

@@ -333,49 +333,68 @@ public class Diagrama implements Serializable, ClipboardOwner {
     }
 
     private void PinteGrade(Graphics2D g) {
+        int w = master.getGridWidth();
+        int gW = (getWidth() / w) + 1;
+        int gH = (getHeight() / w) + 1;
+
+        int ww = getWidth();
+        int hh = getHeight();
+
         Paint bkppaint = g.getPaint();
         g.setColor(new Color(241, 246, 251));
-        final Rectangle rv = getEditor().getBox().getVisibleRect();
-        
-        int w = master.getGridWidth();
-        int gW = (rv.width / w) + 2;
-        int gH = (rv.height / w) + 2;
-        
-        int le = (rv.x - (rv.x % w));
-        final int hh = rv.y + rv.height;
-        for (int i = 0; i < gW; i++) {
-            g.drawLine(le, rv.y, le, hh);
-            le+= w;
+
+        for (int i = 1; i < gW; i++) {
+            g.drawLine(w * i, 0, w * i, hh);
         }
 
-        int to = (rv.y - (rv.y % w));
-        final int ww = rv.x + rv.width;
-        for (int i = 0; i < gH; i++) {
-            g.drawLine(rv.x, to, ww, to);
-            to+= w;
+        for (int i = 1; i < gH; i++) {
+            g.drawLine(0, w * i, ww, w * i);
         }
-
-//        int w = master.getGridWidth();
-//        int gW = (getWidth() / w) + 1;
-//        int gH = (getHeight() / w) + 1;
-//        Rectangle rv = getEditor().getBox().getVisibleRect();
-//        
-//        int ww = getWidth();
-//        int hh = getHeight();
-//
-//        Paint bkppaint = g.getPaint();
-//        g.setColor(new Color(241, 246, 251));
-//
-//        for (int i = 1; i < gW; i++) {
-//            
-//            g.drawLine(w * i, 0, w * i, hh);
-//        }
-//
-//        for (int i = 1; i < gH; i++) {
-//            g.drawLine(0, w * i, ww, w * i);
-//        }
 
         g.setPaint(bkppaint);
+//        Paint bkppaint = g.getPaint();
+//        g.setColor(new Color(241, 246, 251));
+//        final Rectangle rv = getEditor().getBox().getVisibleRect();
+//        
+//        int w = master.getGridWidth();
+//        int gW = (rv.width / w) + 2;
+//        int gH = (rv.height / w) + 2;
+//        
+//        int le = (rv.x - (rv.x % w));
+//        final int hh = rv.y + rv.height;
+//        for (int i = 0; i < gW; i++) {
+//            g.drawLine(le, rv.y, le, hh);
+//            le+= w;
+//        }
+//
+//        int to = (rv.y - (rv.y % w));
+//        final int ww = rv.x + rv.width;
+//        for (int i = 0; i < gH; i++) {
+//            g.drawLine(rv.x, to, ww, to);
+//            to+= w;
+//        }
+//
+////        int w = master.getGridWidth();
+////        int gW = (getWidth() / w) + 1;
+////        int gH = (getHeight() / w) + 1;
+////        Rectangle rv = getEditor().getBox().getVisibleRect();
+////        
+////        int ww = getWidth();
+////        int hh = getHeight();
+////
+////        Paint bkppaint = g.getPaint();
+////        g.setColor(new Color(241, 246, 251));
+////
+////        for (int i = 1; i < gW; i++) {
+////            
+////            g.drawLine(w * i, 0, w * i, hh);
+////        }
+////
+////        for (int i = 1; i < gH; i++) {
+////            g.drawLine(0, w * i, ww, w * i);
+////        }
+//
+//        g.setPaint(bkppaint);
     }
 
     /**
@@ -862,8 +881,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
     // <editor-fold defaultstate="collapsed" desc="Trata Elementar">
     /**
-     * Verifica que componente está na posição "ponto" obedecendo a ordem z [melhoria: 16/05/2014] Dá preferência ao obj selecionado, independentemente da ordem z para fins de melhor seleção e
-     * movimentação com o mouse.
+     * Verifica que componente está na posição "ponto" obedecendo a ordem z [melhoria: 16/05/2014] Dá preferência ao obj selecionado, independentemente da ordem z para fins de melhor seleção e movimentação com o mouse.
      *
      * @param ponto = local. Poder ser a posição x e y do mouse
      * @return o Componente.
@@ -2311,9 +2329,11 @@ public class Diagrama implements Serializable, ClipboardOwner {
                 });
 
                 //Seleciona novamente.
-                lst.stream().forEach(el -> DiagramaDoSelecao(el, false, true));
-                PromoveToFirstSelect(lst.get(0));
-            };
+                if (!lst.isEmpty()) {
+                    lst.stream().forEach(el -> DiagramaDoSelecao(el, false, true));
+                    PromoveToFirstSelect(lst.get(0));
+                }
+            }
             return true;
         }
         return false;

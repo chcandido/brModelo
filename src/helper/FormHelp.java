@@ -20,19 +20,28 @@ import controlador.Diagrama;
 import controlador.Editor;
 import controlador.apoios.TreeItem;
 import desenho.FormaElementar;
-import helper.data.Handler;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
+import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
-import javax.imageio.ImageIO;
-import javax.swing.event.HyperlinkEvent;
+import java.util.Map;
+import java.util.Objects;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import principal.FramePrincipal;
+import util.ItemIntStringToList;
 
 /**
  *
@@ -46,6 +55,18 @@ public class FormHelp extends javax.swing.JFrame {
     public FormHelp() {
         initComponents();
         setTitle("brModelo: " + Editor.fromConfiguracao.getValor("Controler.interface.help"));
+
+//        addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosed(WindowEvent e) {
+//
+//            }
+//
+//            @Override
+//            public void windowClosing(WindowEvent e) {
+//                btnOKActionPerformed(null);
+//            }
+//        });
     }
 
     /**
@@ -56,6 +77,7 @@ public class FormHelp extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane2 = new javax.swing.JSplitPane();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
         btnEditar = new javax.swing.JToggleButton();
@@ -66,37 +88,54 @@ public class FormHelp extends javax.swing.JFrame {
         btnAdd = new javax.swing.JButton();
         btnDel = new javax.swing.JButton();
         jSeparator9 = new javax.swing.JToolBar.Separator();
-        btnReload = new javax.swing.JButton();
-        btnSalvarII = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         Tree = new javax.swing.JTree();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstEncontrados = new javax.swing.JList<>();
+        jPanel3 = new javax.swing.JPanel();
+        txtFinder = new javax.swing.JTextField();
+        btnFinder = new javax.swing.JButton();
         Tabs = new javax.swing.JTabbedPane();
         PanPrincipal = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        htmlEditorPanel2 = new helper.HtmlEditorPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Pan = new javax.swing.JPanel();
         PanEditor = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        btnImagem = new javax.swing.JButton();
-        btnAbrir = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         btnOK = new javax.swing.JButton();
         btnDefazerTudo = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        btnSalvar = new javax.swing.JButton();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        comboTopicosAlterar = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        edtTitulo = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        EditorTxt = new javax.swing.JTextArea();
-        jPanel3 = new javax.swing.JPanel();
-        jToolBar2 = new javax.swing.JToolBar();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
-        btnAtualizarBrownser = new javax.swing.JButton();
-        jSeparator6 = new javax.swing.JToolBar.Separator();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        comboLinks = new javax.swing.JComboBox<>();
+        jPanel11 = new javax.swing.JPanel();
+        jToolBar4 = new javax.swing.JToolBar();
+        jSeparator10 = new javax.swing.JToolBar.Separator();
+        btnAdd1 = new javax.swing.JButton();
+        btnDel1 = new javax.swing.JButton();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
+        btnUP3 = new javax.swing.JButton();
+        btnDown3 = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
         jScrollPane4 = new javax.swing.JScrollPane();
-        htmlEditorPanel1 = new helper.HtmlEditorPanel();
+        lstLinks = new javax.swing.JList<>();
+        jPanel12 = new javax.swing.JPanel();
+        edtTitulo = new javax.swing.JTextField();
+        jPanel13 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        editorHtml = new javax.swing.JTextArea();
+        jPanel7 = new javax.swing.JPanel();
+        jToolBar2 = new javax.swing.JToolBar();
+        btnToDiag = new javax.swing.JButton();
+        btnFromDiag = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtEditor = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         btnFechar = new javax.swing.JButton();
         panNav = new javax.swing.JPanel();
@@ -105,8 +144,8 @@ public class FormHelp extends javax.swing.JFrame {
         menuSalvar = new javax.swing.JMenuItem();
         menuFechar = new javax.swing.JMenuItem();
 
-        jSplitPane2.setDividerLocation(230);
-        jSplitPane2.setDividerSize(2);
+        jSplitPane2.setDividerLocation(250);
+        jSplitPane2.setDividerSize(4);
         jSplitPane2.setResizeWeight(0.1);
 
         jToolBar3.setFloatable(false);
@@ -184,31 +223,18 @@ public class FormHelp extends javax.swing.JFrame {
         jToolBar3.add(btnDel);
         jToolBar3.add(jSeparator9);
 
-        btnReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/atualizar.png"))); // NOI18N
-        btnReload.setText(bundle.getString("FormHelp.btnReload.text")); // NOI18N
-        btnReload.setToolTipText(bundle.getString("FormHelp.btnReload.toolTipText")); // NOI18N
-        btnReload.setFocusable(false);
-        btnReload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReload.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnReload.addActionListener(new java.awt.event.ActionListener() {
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_salvar.png"))); // NOI18N
+        btnSalvar.setText(bundle.getString("FormHelp.btnSalvar.text")); // NOI18N
+        btnSalvar.setToolTipText(bundle.getString("FormHelp.btnSalvar.toolTipText")); // NOI18N
+        btnSalvar.setFocusable(false);
+        btnSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalvar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReloadActionPerformed(evt);
+                btnSalvarActionPerformed(evt);
             }
         });
-        jToolBar3.add(btnReload);
-
-        btnSalvarII.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_salvar.png"))); // NOI18N
-        btnSalvarII.setText(bundle.getString("FormHelp.btnSalvarII.text")); // NOI18N
-        btnSalvarII.setToolTipText(bundle.getString("FormHelp.btnSalvarII.toolTipText")); // NOI18N
-        btnSalvarII.setFocusable(false);
-        btnSalvarII.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSalvarII.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSalvarII.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarIIActionPerformed(evt);
-            }
-        });
-        jToolBar3.add(btnSalvarII);
+        jToolBar3.add(btnSalvar);
 
         Tree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -229,34 +255,91 @@ public class FormHelp extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+            .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
         );
 
-        jSplitPane2.setLeftComponent(jPanel4);
+        jTabbedPane2.addTab(bundle.getString("ajuda.painel.tab.topicos"), jPanel4); // NOI18N
 
-        htmlEditorPanel2.setEditable(false);
-        htmlEditorPanel2.setDoubleBuffered(true);
-        htmlEditorPanel2.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-                htmlEditorPanel2HyperlinkUpdate(evt);
+        lstEncontrados.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lstEncontrados);
+
+        txtFinder.setText(bundle.getString("FormHelp.txtFinder.text")); // NOI18N
+
+        btnFinder.setForeground(new java.awt.Color(255, 255, 255));
+        btnFinder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/find.png"))); // NOI18N
+        btnFinder.setToolTipText(bundle.getString("ajuda.procurar.tooltip.btnprocurar")); // NOI18N
+        btnFinder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinderActionPerformed(evt);
             }
         });
-        jScrollPane5.setViewportView(htmlEditorPanel2);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(txtFinder, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFinder, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFinder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFinder))
+                .addGap(1, 1, 1))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab(bundle.getString("ajuda.painel.tab.procurar"), jPanel1); // NOI18N
+
+        jSplitPane2.setLeftComponent(jTabbedPane2);
+        jTabbedPane2.getAccessibleContext().setAccessibleName(bundle.getString("ajuda.tabs.topicos")); // NOI18N
+
+        jScrollPane3.setBackground(new java.awt.Color(255, 255, 255));
+
+        Pan.setBackground(new java.awt.Color(255, 255, 255));
+        Pan.setLayout(null);
+        jScrollPane3.setViewportView(Pan);
 
         javax.swing.GroupLayout PanPrincipalLayout = new javax.swing.GroupLayout(PanPrincipal);
         PanPrincipal.setLayout(PanPrincipalLayout);
         PanPrincipalLayout.setHorizontalGroup(
             PanPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
         );
         PanPrincipalLayout.setVerticalGroup(
             PanPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanPrincipalLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
         );
 
         Tabs.addTab(bundle.getString("FormHelp.PanPrincipal.TabConstraints.tabTitle"), PanPrincipal); // NOI18N
@@ -266,32 +349,6 @@ public class FormHelp extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
-
-        btnImagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem_16.png"))); // NOI18N
-        btnImagem.setText(bundle.getString("FormHelp.btnImagem.text")); // NOI18N
-        btnImagem.setToolTipText(bundle.getString("FormHelp.btnImagem.toolTipText")); // NOI18N
-        btnImagem.setFocusable(false);
-        btnImagem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnImagem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnImagem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnImagemMouseClicked(evt);
-            }
-        });
-        jToolBar1.add(btnImagem);
-
-        btnAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_abrir.png"))); // NOI18N
-        btnAbrir.setText(bundle.getString("FormHelp.btnAbrir.text")); // NOI18N
-        btnAbrir.setToolTipText(bundle.getString("FormHelp.btnAbrir.toolTipText")); // NOI18N
-        btnAbrir.setFocusable(false);
-        btnAbrir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnAbrir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnAbrir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAbrirActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btnAbrir);
         jToolBar1.add(jSeparator4);
 
         btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/check.png"))); // NOI18N
@@ -319,115 +376,267 @@ public class FormHelp extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(btnDefazerTudo);
-        jToolBar1.add(jSeparator3);
 
-        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_salvar.png"))); // NOI18N
-        btnSalvar.setText(bundle.getString("FormHelp.btnSalvar.text")); // NOI18N
-        btnSalvar.setToolTipText(bundle.getString("FormHelp.btnSalvar.toolTipText")); // NOI18N
-        btnSalvar.setFocusable(false);
-        btnSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSalvar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ajuda.edicao.painel.arvore"))); // NOI18N
+
+        comboTopicosAlterar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(comboTopicosAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 84, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(comboTopicosAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ajuda.editor.label.topico.editor"))); // NOI18N
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ajuda.editor.label.links"))); // NOI18N
+
+        comboLinks.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addComponent(comboLinks, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 172, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addComponent(comboLinks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1))
+        );
+
+        jToolBar4.setFloatable(false);
+        jToolBar4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jToolBar4.setRollover(true);
+        jToolBar4.add(jSeparator10);
+
+        btnAdd1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/mais.png"))); // NOI18N
+        btnAdd1.setText(bundle.getString("FormHelp.btnAdd1.text")); // NOI18N
+        btnAdd1.setToolTipText(bundle.getString("FormHelp.btnAdd1.toolTipText")); // NOI18N
+        btnAdd1.setActionCommand(bundle.getString("FormHelp.btnAdd1.actionCommand")); // NOI18N
+        btnAdd1.setFocusable(false);
+        btnAdd1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnAdd1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnAdd1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
+                btnAdd1ActionPerformed(evt);
             }
         });
-        jToolBar1.add(btnSalvar);
+        jToolBar4.add(btnAdd1);
 
-        jSplitPane1.setDividerLocation(250);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(0.1);
+        btnDel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menos.png"))); // NOI18N
+        btnDel1.setText(bundle.getString("FormHelp.btnDel1.text")); // NOI18N
+        btnDel1.setToolTipText(bundle.getString("FormHelp.btnDel1.toolTipText")); // NOI18N
+        btnDel1.setFocusable(false);
+        btnDel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDel1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDel1ActionPerformed(evt);
+            }
+        });
+        jToolBar4.add(btnDel1);
+        jToolBar4.add(jSeparator11);
 
-        jLabel1.setText(bundle.getString("FormHelp.jLabel1.text")); // NOI18N
+        btnUP3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/up.png"))); // NOI18N
+        btnUP3.setText(bundle.getString("FormHelp.btnUP3.text")); // NOI18N
+        btnUP3.setToolTipText(bundle.getString("FormHelp.btnUP3.toolTipText")); // NOI18N
+        btnUP3.setFocusable(false);
+        btnUP3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnUP3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnUP3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUP3ActionPerformed(evt);
+            }
+        });
+        jToolBar4.add(btnUP3);
+
+        btnDown3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/down.png"))); // NOI18N
+        btnDown3.setToolTipText(bundle.getString("FormHelp.btnDown3.toolTipText")); // NOI18N
+        btnDown3.setFocusable(false);
+        btnDown3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDown3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDown3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDown3ActionPerformed(evt);
+            }
+        });
+        jToolBar4.add(btnDown3);
+        jToolBar4.add(jSeparator12);
+
+        lstLinks.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(lstLinks);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addComponent(jToolBar4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jScrollPane4))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ajuda.editor.painel.titulo"))); // NOI18N
 
         edtTitulo.setText(bundle.getString("FormHelp.edtTitulo.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addComponent(edtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(edtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("ajuda.editor.label.html"))); // NOI18N
+
+        editorHtml.setColumns(20);
+        editorHtml.setRows(5);
+        jScrollPane6.setViewportView(editorHtml);
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6)
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 222, Short.MAX_VALUE))
+            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(edtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(1, 1, 1))
         );
 
-        EditorTxt.setColumns(20);
-        EditorTxt.setRows(5);
-        jScrollPane1.setViewportView(EditorTxt);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE))
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
-        jSplitPane1.setTopComponent(jPanel1);
+        jTabbedPane1.addTab(bundle.getString("ajuda.painel.tab.titulo.principal"), jPanel6); // NOI18N
 
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
-        jToolBar2.add(jSeparator5);
 
-        btnAtualizarBrownser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/down.png"))); // NOI18N
-        btnAtualizarBrownser.setToolTipText(bundle.getString("FormHelp.btnAtualizarBrownser.toolTipText")); // NOI18N
-        btnAtualizarBrownser.setFocusable(false);
-        btnAtualizarBrownser.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnAtualizarBrownser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnAtualizarBrownser.addActionListener(new java.awt.event.ActionListener() {
+        btnToDiag.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/down.png"))); // NOI18N
+        btnToDiag.setText(bundle.getString("ajuda.editor.btnNoDiagrama")); // NOI18N
+        btnToDiag.setFocusable(false);
+        btnToDiag.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnToDiag.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnToDiag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtualizarBrownserActionPerformed(evt);
+                btnToDiagActionPerformed(evt);
             }
         });
-        jToolBar2.add(btnAtualizarBrownser);
-        btnAtualizarBrownser.getAccessibleContext().setAccessibleDescription(bundle.getString("FormHelp.btnAtualizarBrownser.AccessibleContext.accessibleDescription")); // NOI18N
+        jToolBar2.add(btnToDiag);
 
-        jToolBar2.add(jSeparator6);
+        btnFromDiag.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/up.png"))); // NOI18N
+        btnFromDiag.setText(bundle.getString("ajuda.editor.btn.carregar")); // NOI18N
+        btnFromDiag.setFocusable(false);
+        btnFromDiag.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnFromDiag.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnFromDiag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFromDiagActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(btnFromDiag);
 
-        htmlEditorPanel1.setEditable(false);
-        htmlEditorPanel1.setDoubleBuffered(true);
-        htmlEditorPanel1.setPreferredSize(new java.awt.Dimension(800, 400));
-        jScrollPane4.setViewportView(htmlEditorPanel1);
+        txtEditor.setColumns(20);
+        txtEditor.setRows(5);
+        jScrollPane5.setViewportView(txtEditor);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+            .addComponent(jScrollPane5)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(2, 2, 2)
-                    .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(158, Short.MAX_VALUE)))
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
         );
 
-        jSplitPane1.setBottomComponent(jPanel3);
+        jTabbedPane1.addTab(bundle.getString("ajuda.painel.tabs.titulo.XML"), jPanel7); // NOI18N
 
         javax.swing.GroupLayout PanEditorLayout = new javax.swing.GroupLayout(PanEditor);
         PanEditor.setLayout(PanEditorLayout);
@@ -435,17 +644,13 @@ public class FormHelp extends javax.swing.JFrame {
             PanEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanEditorLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 563, Short.MAX_VALUE))
-            .addGroup(PanEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanEditorLayout.createSequentialGroup()
-                    .addGap(26, 26, 26)
-                    .addComponent(jSplitPane1)))
+                .addGap(1, 1, 1)
+                .addComponent(jTabbedPane1))
         );
         PanEditorLayout.setVerticalGroup(
             PanEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
-            .addGroup(PanEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         Tabs.addTab(bundle.getString("FormHelp.PanPrincipal.TabConstraints.tabTitleEditor"), PanEditor); // NOI18N
@@ -525,18 +730,28 @@ public class FormHelp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
-        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
-
-        if (tv == null) {
-            return;
-        }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
+        ParteAjuda v = getSelecionado();
         if (v == null) {
             return;
         }
-        v.setTexto(EditorTxt.getText());
+        if (evt != null && !emEdicao(v)) {
+            return;
+        }
+
         v.setTitulo(edtTitulo.getText());
+        if (!editorHtml.getText().equals(RepositorioHtml.generateHtml())) {
+            v.setHtml(editorHtml.getText());
+        }
+        v.setXMLCopiado(txtEditor.getText());
+        v.getLinks().clear();
+        oslinks.forEach(k -> v.getLinks().add(k));
+        int idx = topicos.get(comboTopicosAlterar.getSelectedIndex()).getID();
+        ParteAjuda pai = AjudaMng.findByID(idx);
+        if (v.getID() != 0 && pai != v) {
+            v.SetSuperior(pai);
+        }
         DoMuda(true);
+        previo = null;
         PopuleTree();
         SelectNodeByID(v.getID());
     }//GEN-LAST:event_btnOKActionPerformed
@@ -551,28 +766,32 @@ public class FormHelp extends javax.swing.JFrame {
     }//GEN-LAST:event_TreeMouseClicked
 
     TreeItem previo = null;
-    final ArrayList<ItemAjuda> nav = new ArrayList<>();
+    final ArrayList<ParteAjuda> nav = new ArrayList<>();
 
     private void ChangeTreeItemSelection() {
+        if (disableEv) {
+            return;
+        }
+
         TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
         if (tv == null) {
             return;
         }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
+        ParteAjuda v = AjudaMng.findByID(tv.getId());
         if (v == null) {
             return;
         }
         if (previo != null && previo != tv) {
-            ItemAjuda iap = AjudaMng.findByID(previo.getId());
-            if (iap != null) {
-                if (!iap.getTitulo().equals(edtTitulo.getText()) || !iap.getTexto().equals(EditorTxt.getText())) {
-                    if (util.Dialogos.ShowMessageConfirmYES(this, ": " + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg201"))) {
-                        iap.setTexto(EditorTxt.getText());
-                        iap.setTitulo(edtTitulo.getText());
-                        DoMuda(true);
-                        PopuleTree();
-                        SelectNodeByID(v.getID());
-                    }
+            ParteAjuda iap = AjudaMng.findByID(previo.getId());
+            if (iap != null && emEdicao(iap)) {
+                if (util.Dialogos.ShowMessageConfirmYES(this, ": " + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg201"))) {
+                    disableEv = true;
+                    SelectNodeByID(iap.getID());
+                    disableEv = false;
+                    btnOKActionPerformed(null);
+                    disableEv = true;
+                    SelectNodeByID(v.getID());
+                    disableEv = false;
                 }
             }
             int idx = nav.indexOf(iap);
@@ -597,15 +816,9 @@ public class FormHelp extends javax.swing.JFrame {
                 }
             });
             panNav.add(lb);
-            pack();
+            panNav.revalidate();
+            panNav.repaint();
         }
-        EditorTxt.setText(v.getTexto());
-        edtTitulo.setText(v.getTitulo());
-        htmlEditorPanel1.setText(v.getTexto());
-        htmlEditorPanel2.setText(v.getTexto());
-        htmlEditorPanel1.repaint();
-        htmlEditorPanel2.repaint();
-        //maxImgID = v.getImageMaxID();
         previo = tv;
 
         btnUP2.setEnabled(false);
@@ -614,12 +827,13 @@ public class FormHelp extends javax.swing.JFrame {
         if (btnEditar.isSelected()) {
             btnDel.setEnabled(v.getID() != 0);
             if (btnDel.isEnabled()) {
-                int tmp = v.getPai().getChilds().indexOf(v);
-                int tmp2 = v.getPai().getChilds().size();
+                int tmp = v.getSuperior().getSubs().indexOf(v);
+                int tmp2 = v.getSuperior().getSubs().size();
                 btnUP2.setEnabled(tmp > 0);
                 btnDown2.setEnabled(tmp2 > 1 && tmp < tmp2 - 1);
             }
         }
+        populeEditor(v);
     }
 
     private void TreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_TreeValueChanged
@@ -627,30 +841,6 @@ public class FormHelp extends javax.swing.JFrame {
     }//GEN-LAST:event_TreeValueChanged
 
     private int maxID = -1;
-    //private int maxImgID = -1;
-
-    private int W = 40;
-    private int H = 40;
-    private void btnImagemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImagemMouseClicked
-        if (!fmp.getEditor().diagramaAtual.TemSelecionado()) {
-            util.Dialogos.ShowMessageInform(getParent(), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg202"));
-            return;
-        }
-
-        //Zera para pegar o tamanho da imagem!
-        W = 0;
-        H = 0;
-        String img = Base64.getEncoder().encodeToString(ImagemDaSelecao());
-        int pos = EditorTxt.getCaretPosition();
-        int tam = EditorTxt.getText().length();
-        String txt = RepositorioHtml.InserirImagem(EditorTxt.getText(), img, pos, W, H);
-        EditorTxt.setText(txt);
-        tam = EditorTxt.getText().length() - tam;
-        EditorTxt.setCaretPosition(pos + tam);
-        htmlEditorPanel1.setText(txt);
-        htmlEditorPanel1.repaint();
-        DoMuda(true);
-    }//GEN-LAST:event_btnImagemMouseClicked
 
     private void btnUP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUP2ActionPerformed
         performMove(-1);
@@ -661,29 +851,26 @@ public class FormHelp extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDown2ActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
-
-        if (tv == null) {
-            return;
-        }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
+        ParteAjuda v = getSelecionado();
         if (v == null) {
             return;
         }
+        if (emEdicao(v)) {
+            btnOKActionPerformed(null);
+        }
         maxID++;
-        v.Add(maxID, Editor.fromConfiguracao.getValor("Controler.interface.texto.empyhtmltext"), RepositorioHtml.generateBaseHtml(Editor.fromConfiguracao.getValor("Controler.interface.texto.empyhtmltext")));
+        ParteAjuda pa = v.Add(maxID, Editor.fromConfiguracao.getValor("Controler.interface.texto.empyhtmltext"));
+        //pa.setHtml(RepositorioHtml.generateHtml());
+        populeEditor(pa);
+
         DoMuda(true);
+        previo = null;
         PopuleTree();
         SelectNodeByID(maxID);
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
-        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
-
-        if (tv == null) {
-            return;
-        }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
+        ParteAjuda v = getSelecionado();
         if (v == null) {
             return;
         }
@@ -692,42 +879,29 @@ public class FormHelp extends javax.swing.JFrame {
             return;
         }
         if (util.Dialogos.ShowMessageConfirmYES(this, Editor.fromConfiguracao.getValor("Controler.MSG_DELETE_TOPICO_HELP"))) {
-            int id = v.getPai().getID();
-            v.getPai().getChilds().remove(v);
+            v.getSuperior().getSubs().remove(v);
 
             int idx = nav.indexOf(v);
             if (idx > -1) {
                 nav.remove(idx);
                 panNav.remove(idx);
-                pack();
+                panNav.revalidate();
+                panNav.repaint();
             }
 
             DoMuda(true);
             PopuleTree();
-            SelectNodeByID(id);
+            SelectNodeByID(v.getSuperior().getID());
         }
     }//GEN-LAST:event_btnDelActionPerformed
 
     private void btnDefazerTudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefazerTudoActionPerformed
-        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
-        if (tv == null) {
+        ParteAjuda v = getSelecionado();
+        if (v == null || !emEdicao(v)) {
             return;
         }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
-        if (v == null) {
-            return;
-        }
-
-        EditorTxt.setText(v.getTexto());
-        edtTitulo.setText(v.getTitulo());
-        htmlEditorPanel1.setText(v.getTexto());
-        htmlEditorPanel1.repaint();
+        ChangeTreeItemSelection();
     }//GEN-LAST:event_btnDefazerTudoActionPerformed
-
-    private void btnAtualizarBrownserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarBrownserActionPerformed
-        htmlEditorPanel1.setText(EditorTxt.getText());
-        htmlEditorPanel1.repaint();
-    }//GEN-LAST:event_btnAtualizarBrownserActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         if (!Salva()) {
@@ -735,56 +909,20 @@ public class FormHelp extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private void btnSalvarIIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarIIActionPerformed
-        btnSalvarActionPerformed(evt);
-    }//GEN-LAST:event_btnSalvarIIActionPerformed
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-//        btnUP2.setEnabled(btnEditar.isSelected());
-//        btnDown2.setEnabled(btnEditar.isSelected());
         btnAdd.setEnabled(btnEditar.isSelected());
-//        btnDel.setEnabled(btnEditar.isSelected());
 
         ChangeTreeItemSelection();
         Tabs.setSelectedIndex(0);
         Tabs.setEnabledAt(1, btnEditar.isSelected());
         for (int i = 0; i < panNav.getComponentCount(); i++) {
             LabelNav ln = (LabelNav) panNav.getComponent(i);
-            ItemAjuda it = nav.get(i);
+            ParteAjuda it = nav.get(i);
             String ps = LabelNav.textoFormatado(it.getTitulo());
             ps = " [" + ps + (btnEditar.isSelected() ? " (ID: " + String.valueOf(it.getID()) + ")" : "") + "]";
             ln.setText(ps);
         }
     }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-        if (util.Dialogos.ShowMessageConfirmYES(this, Editor.fromConfiguracao.getValor("Controler.MSG_RELOAD_HELP"))) {
-            setVisible(false);
-            dispose();
-            fmp.ReloadHelp();
-        }
-    }//GEN-LAST:event_btnReloadActionPerformed
-
-    private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        //Zera para pegar o tamanho da imagem!
-        W = 0;
-        H = 0;
-        byte[] aimg = LoadImageFromFile();
-        if (aimg == null) {
-            return;
-        }
-        String img = Base64.getEncoder().encodeToString(aimg);
-
-        int pos = EditorTxt.getCaretPosition();
-        int tam = EditorTxt.getText().length();
-        String txt = RepositorioHtml.InserirImagem(EditorTxt.getText(), img, pos, W, H);
-        EditorTxt.setText(txt);
-        tam = EditorTxt.getText().length() - tam;
-        EditorTxt.setCaretPosition(pos + tam);
-        htmlEditorPanel1.setText(txt);
-        htmlEditorPanel1.repaint();
-        DoMuda(true);
-    }//GEN-LAST:event_btnAbrirActionPerformed
 
     private void menuFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFecharActionPerformed
         btnFecharActionPerformed(evt);
@@ -794,122 +932,275 @@ public class FormHelp extends javax.swing.JFrame {
         btnSalvarActionPerformed(evt);
     }//GEN-LAST:event_menuSalvarActionPerformed
 
-    private void htmlEditorPanel2HyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_htmlEditorPanel2HyperlinkUpdate
-        if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            int id = util.Utilidades.TryIntStr(evt.getDescription(), -1);
-            if (id > -1) {
-                SelectNodeByID(id);
-            }
-            //util.Dialogos.ShowMessageInform(this, evt.getURL() + "\n" + evt.getDescription() + "\n" + evt.getSourceElement().getName());
+    private void btnFinderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinderActionPerformed
+        ArrayList<ParteAjuda> achados = new ArrayList<>();
+        encontrados.clear();
+        final DefaultListModel lst = new DefaultListModel();
+        lstEncontrados.setModel(lst);
+        if (txtFinder.getText().isEmpty()) {
+            return;
         }
-    }//GEN-LAST:event_htmlEditorPanel2HyperlinkUpdate
+        AjudaMng.ProcurarPorTexto(txtFinder.getText(), achados);
+        achados.stream().forEach(a -> {
+            ItemIntStringToList toa = new ItemIntStringToList(a.getID(), a.getTitulo(), a);
+            encontrados.add(toa);
+            lst.addElement(a.getTitulo());
+        });
+    }//GEN-LAST:event_btnFinderActionPerformed
+
+    private void btnUP3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUP3ActionPerformed
+        performLinks(-1);
+    }//GEN-LAST:event_btnUP3ActionPerformed
+
+    private void btnDown3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDown3ActionPerformed
+        performLinks(1);
+    }//GEN-LAST:event_btnDown3ActionPerformed
+
+    final ArrayList<Integer> oslinks = new ArrayList<>();
+
+    private void btnAdd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd1ActionPerformed
+        ParteAjuda v = getSelecionado();
+        if (v == null) {
+            return;
+        }
+        int idx = comboLinks.getSelectedIndex();
+        int oid = topicos.get(idx).getID();
+        if (oid != v.getID() && oslinks.indexOf(oid) < 0) {
+            oslinks.add(topicos.get(idx).getID());
+        }
+        PopuleLinks(v);
+        lstLinks.setSelectedIndex(oslinks.size() - 1);
+    }//GEN-LAST:event_btnAdd1ActionPerformed
+
+    private void btnDel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDel1ActionPerformed
+        ParteAjuda v = getSelecionado();
+        if (v == null) {
+            return;
+        }
+        int idx = lstLinks.getSelectedIndex();
+        if (idx < 0) {
+            return;
+        }
+        oslinks.remove(idx);
+        PopuleLinks(v);
+        if (idx < oslinks.size() - 1) {
+            lstLinks.setSelectedIndex(idx);
+        } else if (!oslinks.isEmpty()) {
+            lstLinks.setSelectedIndex(oslinks.size() - 1);
+        }
+    }//GEN-LAST:event_btnDel1ActionPerformed
+
+    private void btnToDiagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToDiagActionPerformed
+        ParteAjuda v = getSelecionado();
+        if (v == null) {
+            return;
+        }
+        fmp.getEditor().AddAsAtual(v.getTipoDeDiagrama().name());
+        if (!fmp.getEditor().diagramaAtual.doPaste(v.getXMLCopiado())) {
+            util.Dialogos.ShowMessageERROR(this, Editor.fromConfiguracao.getValor("Controler.MSG_ERRO_PASTE"));
+        }
+    }//GEN-LAST:event_btnToDiagActionPerformed
+
+    private void btnFromDiagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFromDiagActionPerformed
+        ParteAjuda v = getSelecionado();
+        if (v == null) {
+            return;
+        }
+        String XMLCopiado = Diagrama.SaveToXml(fmp.getEditor().diagramaAtual, false);
+        String versaoDiagrama = fmp.getEditor().diagramaAtual.getVersao();
+        Diagrama.TipoDeDiagrama tipo = fmp.getEditor().diagramaAtual.getTipo();
+
+        v.InitParteAjuda(ImagemFull(), XMLCopiado, versaoDiagrama, tipo);
+        DoMuda(true);
+        populeEditor(v);
+    }//GEN-LAST:event_btnFromDiagActionPerformed
 
     public FramePrincipal fmp = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea EditorTxt;
+    private javax.swing.JPanel Pan;
     private javax.swing.JPanel PanEditor;
     private javax.swing.JPanel PanPrincipal;
     private javax.swing.JTabbedPane Tabs;
     private javax.swing.JTree Tree;
-    private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnAtualizarBrownser;
+    private javax.swing.JButton btnAdd1;
     private javax.swing.JButton btnDefazerTudo;
     private javax.swing.JButton btnDel;
+    private javax.swing.JButton btnDel1;
     private javax.swing.JButton btnDown2;
+    private javax.swing.JButton btnDown3;
     private javax.swing.JToggleButton btnEditar;
     private javax.swing.JButton btnFechar;
-    private javax.swing.JButton btnImagem;
+    private javax.swing.JButton btnFinder;
+    private javax.swing.JButton btnFromDiag;
     private javax.swing.JButton btnOK;
-    private javax.swing.JButton btnReload;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSalvarII;
+    private javax.swing.JButton btnToDiag;
     private javax.swing.JButton btnUP2;
+    private javax.swing.JButton btnUP3;
+    private javax.swing.JComboBox<String> comboLinks;
+    private javax.swing.JComboBox<String> comboTopicosAlterar;
+    private javax.swing.JTextArea editorHtml;
     private javax.swing.JTextField edtTitulo;
-    private helper.HtmlEditorPanel htmlEditorPanel1;
-    private helper.HtmlEditorPanel htmlEditorPanel2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JToolBar.Separator jSeparator10;
+    private javax.swing.JToolBar.Separator jSeparator11;
+    private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator4;
-    private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar.Separator jSeparator9;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
+    private javax.swing.JToolBar jToolBar4;
+    private javax.swing.JList<String> lstEncontrados;
+    private javax.swing.JList<String> lstLinks;
     private javax.swing.JMenuItem menuFechar;
     private javax.swing.JMenuItem menuSalvar;
     private javax.swing.JPanel panNav;
+    private javax.swing.JTextArea txtEditor;
+    private javax.swing.JTextField txtFinder;
     // End of variables declaration//GEN-END:variables
 
     //<editor-fold defaultstate="collapsed" desc="Ultil">
-    public byte[] ImagemDaSelecao() {
+    public byte[] ImagemFull() {
         Diagrama diagramaAtual = fmp.getEditor().diagramaAtual;
         final int borda = 2;
-        Point p2 = diagramaAtual.getPontoExtremoSelecionado();
+        Point p2 = diagramaAtual.getPontoExtremo();
         int minX = p2.x;
         int minY = p2.y;
 
-        for (int i = diagramaAtual.getItensSelecionados().size() - 1; i > -1; i--) {
-            FormaElementar el = diagramaAtual.getItensSelecionados().get(i);
+        for (int i = diagramaAtual.getListaDeItens().size() - 1; i > -1; i--) {
+            FormaElementar el = diagramaAtual.getListaDeItens().get(i);
             minX = Math.min(minX, el.getLeft());
             minY = Math.min(minY, el.getTop());
         }
 
         minX = Math.max(minX - borda, 0);
         minY = Math.max(minY - borda, 0);
-        W = p2.x - minX;
-        H = p2.y - minY;
-        BufferedImage cp_img = util.ImageGenerate.geraImagemForPrnSelecao(diagramaAtual, p2.x + borda, p2.y + borda);
+//        W = p2.x - minX;
+//        H = p2.y - minY;
+        BufferedImage cp_img = util.ImageGenerate.geraImagemForPrn(diagramaAtual, p2.x + borda, p2.y + borda);
         return util.TratadorDeImagens.toByteArray(cp_img.getSubimage(minX, minY, p2.x - minX, p2.y - minY));
     }
     //</editor-fold>
 
+    public ParteAjuda getSelecionado() {
+        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
+        if (tv == null) {
+            return null;
+        }
+        ParteAjuda v = AjudaMng.findByID(tv.getId());
+        if (v == null) {
+            return null;
+        }
+        return v;
+    }
+
     public boolean LoadData() {
-
-        htmlEditorPanel1.setContentType("text/html");
-        htmlEditorPanel2.setContentType("text/html");
         AjudaMng = AjudaManager.LoadDataHelp();
-
-        Handler.install();
-
         boolean res = true;
         if (AjudaMng == null) {
-            AjudaMng = new AjudaManager(0, Editor.fromConfiguracao.getValor("Controler.interface.help"),
-                    RepositorioHtml.generateSobre());
+            AjudaMng = new AjudaManager(0, Editor.fromConfiguracao.getValor("Controler.interface.help"));
+            AjudaMng.setHtml(RepositorioHtml.generateSobre());
+            AjudaMng.setSuperior(AjudaMng);
             res = false;
         }
         PopuleTree();
         maxID = AjudaMng.FindMaxID();
         DoMuda(false);
         btnEditarActionPerformed(null);
+        Tree.setExpandsSelectedPaths(true);
+        Tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree,
+                    Object value, boolean selected, boolean expanded,
+                    boolean isLeaf, int row, boolean focused) {
+                Component c = super.getTreeCellRendererComponent(tree, value,
+                        selected, expanded, isLeaf, row, focused);
+                if (value instanceof TreeItem) {
+                    setIcon(fmp.getEditor().getControler().ImagemDeDiagrama.get("Controler.interface.ajuda.icone"));
+                }
+                return c;
+            }
+        });
+        this.setIconImage(fmp.getEditor().getControler().ImagemDeDiagrama.get("Controler.interface.ajuda.icone").getImage());
+        btnUP3.setEnabled(false);
+        btnDown3.setEnabled(false);
+        btnDel1.setEnabled(false);
+        lstLinks.addListSelectionListener((ListSelectionEvent lse) -> {
+            if (!lse.getValueIsAdjusting() && !disableEv) {
+                btnUP3.setEnabled(lstLinks.getSelectedIndex() > 0);
+                int t = lstLinks.getModel().getSize();
+                btnDown3.setEnabled(t > 1 && lstLinks.getSelectedIndex() < t - 1);
+                btnDel1.setEnabled(lstLinks.getSelectedIndex() > -1);
+            }
+        });
+
+        lstEncontrados.addListSelectionListener((ListSelectionEvent lse) -> {
+            if (!lse.getValueIsAdjusting() && !disableEv) {
+                if (lstEncontrados.getSelectedIndex() > -1) {
+                    int oid = encontrados.get(lstEncontrados.getSelectedIndex()).getID();
+                    SelectNodeByID(oid);
+                }
+            }
+        });
         return res;
     }
 
     private TreeItem TreePincipal = null;
     public AjudaManager AjudaMng = null;
 
+    private ArrayList<util.ItemIntStringToList> topicos = new ArrayList<>();
+    private ArrayList<util.ItemIntStringToList> encontrados = new ArrayList<>();
+
+    private boolean disableEv = false;
+
     private TreeItem PopuleTree() {
         final TreeItem tree = new TreeItem(AjudaMng.getTitulo(), 0, "");
-        AjudaMng.getChilds().stream().forEach((it) -> {
+        disableEv = true;
+        topicos.clear();
+        encontrados.clear();
+        lstEncontrados.setModel(new DefaultListModel());
+        AjudaMng.getSubs().stream().forEach((it) -> {
             it.PopuleTree(tree);
         });
+        AjudaMng.PopuleTopicos(topicos);
+
+        final DefaultComboBoxModel lst = new DefaultComboBoxModel();
+        final DefaultComboBoxModel lst2 = new DefaultComboBoxModel();
+        topicos.forEach(tp -> {
+            lst.addElement(tp);
+            lst2.addElement(tp);
+        });
+        comboTopicosAlterar.setModel(lst);
+        comboLinks.setModel(lst2);
+
         Tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         Tree.setModel(new DefaultTreeModel(tree));
         Tree.setSelectionRow(0);
@@ -917,6 +1208,7 @@ public class FormHelp extends javax.swing.JFrame {
         nav.clear();
         panNav.removeAll();
         panNav.repaint();
+        disableEv = false;
         return tree;
     }
 
@@ -943,13 +1235,12 @@ public class FormHelp extends javax.swing.JFrame {
 
     private void DoMuda(boolean b) {
         btnSalvar.setEnabled(b);
-        btnSalvarII.setEnabled(b);
-        btnReload.setEnabled(b);
         AjudaMng.setMudou(b);
         menuSalvar.setEnabled(b);
     }
 
     public boolean Salva() {
+        btnOKActionPerformed(new java.awt.event.ActionEvent(this, 0, ""));
         if (AjudaManager.SaveDataHelp(AjudaMng)) {
             DoMuda(false);
             return true;
@@ -958,47 +1249,162 @@ public class FormHelp extends javax.swing.JFrame {
     }
 
     private void performMove(int i) {
-        TreeItem tv = ((TreeItem) Tree.getLastSelectedPathComponent());
-
-        if (tv == null) {
-            return;
-        }
-        ItemAjuda v = AjudaMng.findByID(tv.getId());
+        ParteAjuda v = getSelecionado();
         if (v == null) {
             return;
         }
+        if (emEdicao(v)) {
+            btnOKActionPerformed(null);
+        }
+        ParteAjuda pai = v.getSuperior();
+        int np = pai.getSubs().indexOf(v) + i;
 
-        ItemAjuda pai = v.getPai();
-        int np = pai.getChilds().indexOf(v) + i;
-
-        pai.getChilds().remove(v);
-        pai.getChilds().add(np, v);
+        pai.getSubs().remove(v);
+        pai.getSubs().add(np, v);
 
         DoMuda(true);
+        previo = null;
         PopuleTree();
         SelectNodeByID(v.getID());
     }
 
-    public byte[] LoadImageFromFile() {
-        String arq = util.Dialogos.ShowDlgFileImg(this.getRootPane());//, titulo); 
-        if (arq == null) {
-            return null;
+    public void populeEditor(ParteAjuda sel) {
+        if (btnEditar.isSelected()) {
+            DefaultListModel lst = new DefaultListModel();
+            sel.getLinks().forEach(ls -> {
+                ParteAjuda pa = AjudaMng.findByID(ls);
+                lst.addElement(pa.getTitulo());
+            });
+            lstLinks.setModel(lst);
+            txtEditor.setText(sel.getXMLCopiado());
+            edtTitulo.setText(sel.getTitulo());
+            comboTopicosAlterar.setSelectedItem(topicos.stream().filter(tp -> tp.getTag() == sel.getSuperior()).findAny().orElse(null));
+            if (!sel.getHtml().isEmpty()) {
+                editorHtml.setText(sel.getHtml());
+            } else {
+                editorHtml.setText(RepositorioHtml.generateHtml());
+            }
+            btnToDiag.setEnabled(!sel.getXMLCopiado().isEmpty());
         }
+        if (sel.getByteImage() != null || sel.getHtml() != null || !sel.getLinks().isEmpty()) {//.isEmpty()) {
+            Pan.removeAll();
+            int H = 0;
+            int W = 0;
+            if (!sel.getHtml().isEmpty()) {
+                JLabel htmLbl = new JLabel();
+                htmLbl.setText(sel.getHtml());
+                htmLbl.repaint();
+                Dimension d = htmLbl.getPreferredSize();
+                htmLbl.setBounds(0, 0, d.width, d.height);
+                //Pan.setBackground(Color.yellow);
+                Pan.add(htmLbl);
+                H = d.height + 10;
+                W = d.width;
+            }
+            if (sel.getByteImage() != null) {
+                ImageIcon img = new ImageIcon(sel.getByteImage());
+                JLabel picLabel = new JLabel(img);
+                W = W > img.getIconWidth() ? W : img.getIconWidth();
+                picLabel.setBounds(0, H, img.getIconWidth(), img.getIconHeight());
+                picLabel.setPreferredSize(new Dimension(img.getIconWidth(), img.getIconHeight()));
+                H += img.getIconHeight();
+                Pan.setPreferredSize(new Dimension(W, H));
+                Pan.add(picLabel);
+            }
+            if (!sel.getLinks().isEmpty()) {
+                int tl = 1;
+                for (Integer sl : sel.getLinks()) {
+                    ParteAjuda lo = AjudaMng.findByID(sl);
+                    String ps = String.valueOf(tl) + ". " + lo.getTitulo();
+                    tl++;
+                    LabelNav lb = new LabelNav(ps);
+                    lb.setId(lo.getID());
+                    lb.setForeground(Color.BLUE);
 
-        BufferedImage imagem = null;
-        try {
-            File fimg = new File(arq);
-            imagem = ImageIO.read(fimg);
-        } catch (IOException iOException) {
-            util.BrLogger.Logger("ERROR_OPEN_FILE_IMG", iOException.getMessage());
-        } catch (Exception e) {
-            util.BrLogger.Logger("ERROR_OPEN_FILE_IMG", e.getMessage());
+                    Font font = lb.getFont();
+                    Map attributes = font.getAttributes();
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    lb.setFont(font.deriveFont(attributes));
+
+                    lb.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                            int i = ((LabelNav) evt.getSource()).getId();
+                            SelectNodeByID(i);
+                        }
+                    });
+                    Dimension d = lb.getPreferredSize();
+                    lb.setBounds(0, H, d.width, d.height);
+                    H += d.height;
+                    W = W > d.width ? W : d.width;
+                    Pan.add(lb);
+                }
+                Pan.setPreferredSize(new Dimension(W, H));
+            }
+            Pan.revalidate();
+            Pan.repaint();
+        } else {
+            Pan.removeAll();
+            Pan.revalidate();
+            Pan.repaint();
         }
-        if (imagem != null) {
-            H = imagem.getHeight();
-            W = imagem.getWidth();
-            return util.TratadorDeImagens.toByteArray(imagem);
+        oslinks.clear();
+        sel.getLinks().forEach(k -> oslinks.add(k));
+        PopuleLinks(sel);
+    }
+
+    private void PopuleLinks(ParteAjuda v) {
+        final DefaultListModel lst = new DefaultListModel();
+        oslinks.forEach(osl -> {
+            topicos.stream().filter(t -> t.getID() == osl).forEach(t -> lst.addElement(t.getValue()));
+        });
+        lstLinks.setModel(lst);
+    }
+
+    private boolean emEdicao(ParteAjuda iap) {
+        if (!btnEditar.isSelected()) {
+            return false;
         }
-        return null;
+        boolean sn = !iap.getTitulo().equals(edtTitulo.getText())
+                || !iap.getXMLCopiado().equals(txtEditor.getText());
+        if (sn || oslinks.size() != iap.getLinks().size()) {
+            return true;
+        }
+        if (iap.getHtml().isEmpty()) {
+            if (!editorHtml.getText().equals(RepositorioHtml.generateHtml())) {
+                return true;
+            }
+        } else {
+            if (!iap.getHtml().equals(editorHtml.getText())) {
+                return true;
+            }
+        }
+        for (int i = 0; i < oslinks.size(); i++) {
+            if (!Objects.equals(oslinks.get(i), iap.getLinks().get(i))) {
+                return true;
+            }
+        }
+        int idx = topicos.get(comboTopicosAlterar.getSelectedIndex()).getID();
+        ParteAjuda pai = AjudaMng.findByID(idx);
+        return iap.getSuperior() != pai;
+    }
+
+    private void performLinks(int i) {
+        ParteAjuda v = getSelecionado();
+        if (v == null) {
+            return;
+        }
+        int idx = lstLinks.getSelectedIndex();
+        if (idx == -1) {
+            return;
+        }
+        int nv = idx + i;
+        if ((nv < 0) || (nv >= lstLinks.getModel().getSize() - 1)) {
+            return;
+        }
+        Integer r = oslinks.remove(idx);
+        oslinks.add(nv, r);
+        PopuleLinks(v);
+        lstLinks.setSelectedIndex(nv);
     }
 }
