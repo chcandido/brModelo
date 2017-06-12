@@ -536,6 +536,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
             chkIsnomeada.setSelected(false);
             txtNome.setText("");
             txtNome.setEnabled(false);
+            mostrador.setText("");
             return;
         }
         chkIsnomeada.setSelected(pk.isNomeada());
@@ -598,6 +599,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 Tabela ada = tabelas.get(comboTabelas.getSelectedIndex());
                 if (ada != tabelaSelecionada) {
+                    tabelaSelecionada = ada;
                     changeTabela();
                 }
             }
@@ -755,6 +757,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
 
     private void changeConstraint() {
         if (constrSelecionada != null) {
+            comboTabelasLigadas.setEnabled(true);
             int idx = constrDaTabSelecionada.indexOf(constrSelecionada);
             Listador.setSelectedIndex(idx);
             desabiliteTudo = false;
@@ -790,6 +793,8 @@ public class EditorDeIrFK extends javax.swing.JDialog {
             desabiliteTudo = true;
             constrOrigem = null;
             tabelaDeOrigem = null;
+
+            comboTabelasLigadas.setEnabled(false);
         }
 
         if (tabelaSelecionada.isSelecionado() && tabelaSelecionada.getConstraintSelecionado() != constrSelecionada) {

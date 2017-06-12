@@ -1362,6 +1362,19 @@ public class Tabela extends baseDrawerFromForma {
     public void RefreshPosNovoTexto() {
         SendNotificacao(Constantes.Operacao.opRefresh);
     }
-}
 
-/////???? Criar um conversor para o modelo físico.
+    @Override
+    public void mouseDblClicked(MouseEvent e) {
+        super.mouseDblClicked(e);
+        if (getConstraintSelecionado() != null) {
+            int tg = Constraint.TAG_COMMAND_FK;
+            if (getConstraintSelecionado().getTipo() == Constraint.Constraint_tipo.tpPK) {
+                tg = Constraint.TAG_COMMAND_PK;
+            } else if (getConstraintSelecionado().getTipo() == Constraint.Constraint_tipo.tpUNIQUE) {
+                tg = Constraint.TAG_COMMAND_UN;
+            }
+            DoAnyThing(tg);
+        }
+    }
+
+}

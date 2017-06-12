@@ -31,18 +31,19 @@ public class EapProcesso extends baseDrawerFromForma {
 
     public EapProcesso(Diagrama diagrama) {
         super(diagrama);
+        Inicie();
+    }
+
+    private void Inicie() {
         setRoundrect(0);
         setGradiente(true);
         setDelimite(false);
-        setGradienteStartColor(new Color(51, 51, 255));
+        setGradienteStartColor(new Color(255, 255, 255, 255));
     }
 
     public EapProcesso(Diagrama diagrama, String texto) {
         super(diagrama, texto);
-        setRoundrect(0);
-        setGradiente(true);
-        setDelimite(false);
-        setGradienteStartColor(new Color(51, 51, 255));
+        Inicie();
     }
 
     @Override
@@ -117,7 +118,7 @@ public class EapProcesso extends baseDrawerFromForma {
     }
     @Override
     public void PoluleColors(ArrayList<Color> cores) {
-        super.PoluleColors(cores); //To change body of generated methods, choose Tools | Templates.
+        super.PoluleColors(cores);
         if (cores.indexOf(getGradienteStartColor()) == -1) {
             cores.add(getGradienteStartColor());
         }

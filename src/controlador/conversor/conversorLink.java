@@ -71,6 +71,12 @@ public class conversorLink {
     public List<FormaElementar> getLigadosDestino(FormaElementar dest) {
         return Lista.stream().filter(L -> L.destino == dest).map(L -> L.origem).collect(Collectors.toList());
     }
+//    
+//    public void TroqueDestino(FormaElementar dest, FormaElementar NovoDest) {
+//        Lista.stream().filter(L -> L.destino == dest).forEach(L -> {
+//            L.destino = NovoDest;
+//        });
+//    }
     
     public boolean ExistePar(FormaElementar ori, FormaElementar dest){
         return Lista.stream().filter(L -> L.origem == ori).anyMatch(L -> L.destino == dest);

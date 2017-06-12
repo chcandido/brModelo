@@ -17,7 +17,10 @@
 package helper;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
@@ -83,5 +86,12 @@ public class LabelNav extends JLabel {
             res = texto.substring(0, 8) + "...";
         }
         return res;
+    }
+    
+    public void LikeLink() {
+        Font font = getFont();
+        Map attributes = font.getAttributes();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        setFont(font.deriveFont(attributes));
     }
 }

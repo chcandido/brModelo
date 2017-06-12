@@ -666,7 +666,7 @@ public class FormHelp extends javax.swing.JFrame {
         });
 
         panNav.setBackground(new java.awt.Color(204, 204, 255));
-        panNav.setLayout(new javax.swing.BoxLayout(panNav, javax.swing.BoxLayout.LINE_AXIS));
+        panNav.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -805,7 +805,7 @@ public class FormHelp extends javax.swing.JFrame {
             }
             nav.add(iap);
             String ps = LabelNav.textoFormatado(previo.getTitulo());
-            ps = " [" + ps + (btnEditar.isSelected() ? " (ID: " + String.valueOf(previo.getId()) + ")" : "") + "]";
+            ps = "<" + ps + (btnEditar.isSelected() ? " (ID: " + String.valueOf(previo.getId()) + ")" : "") + ">";
             LabelNav lb = new LabelNav(ps);
             lb.setId(previo.getId());
             lb.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -815,6 +815,7 @@ public class FormHelp extends javax.swing.JFrame {
                     SelectNodeByID(i);
                 }
             });
+            lb.LikeLink();
             panNav.add(lb);
             panNav.revalidate();
             panNav.repaint();
@@ -919,7 +920,7 @@ public class FormHelp extends javax.swing.JFrame {
             LabelNav ln = (LabelNav) panNav.getComponent(i);
             ParteAjuda it = nav.get(i);
             String ps = LabelNav.textoFormatado(it.getTitulo());
-            ps = " [" + ps + (btnEditar.isSelected() ? " (ID: " + String.valueOf(it.getID()) + ")" : "") + "]";
+            ps = "<" + ps + (btnEditar.isSelected() ? " (ID: " + String.valueOf(it.getID()) + ")" : "") + ">";
             ln.setText(ps);
         }
     }//GEN-LAST:event_btnEditarActionPerformed
@@ -1005,6 +1006,9 @@ public class FormHelp extends javax.swing.JFrame {
         ParteAjuda v = getSelecionado();
         if (v == null) {
             return;
+        }
+        if (emEdicao(v)) {
+            btnOKActionPerformed(null);
         }
         String XMLCopiado = Diagrama.SaveToXml(fmp.getEditor().diagramaAtual, false);
         String versaoDiagrama = fmp.getEditor().diagramaAtual.getVersao();
@@ -1296,7 +1300,6 @@ public class FormHelp extends javax.swing.JFrame {
                 htmLbl.repaint();
                 Dimension d = htmLbl.getPreferredSize();
                 htmLbl.setBounds(0, 0, d.width, d.height);
-                //Pan.setBackground(Color.yellow);
                 Pan.add(htmLbl);
                 H = d.height + 10;
                 W = d.width;
@@ -1320,12 +1323,7 @@ public class FormHelp extends javax.swing.JFrame {
                     LabelNav lb = new LabelNav(ps);
                     lb.setId(lo.getID());
                     lb.setForeground(Color.BLUE);
-
-                    Font font = lb.getFont();
-                    Map attributes = font.getAttributes();
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    lb.setFont(font.deriveFont(attributes));
-
+                    lb.LikeLink();
                     lb.addMouseListener(new java.awt.event.MouseAdapter() {
                         @Override
                         public void mouseClicked(java.awt.event.MouseEvent evt) {

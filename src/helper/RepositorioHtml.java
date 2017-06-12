@@ -51,17 +51,17 @@ public class RepositorioHtml {
         return res;
     }
 
-    public static String generateImg(String img, int w, int h){
-        String res = "<center>\n<img style=\"width:" + String.valueOf(w) + "px;height:" + String.valueOf(h) + "px;\" src=\"data:image/png;base64,"
-                + img + "\"/>\n</center>";
-        return res;
-    }
-    
-    public static String InserirImagem(String html, String img, int pEdt, int w, int h) {
-        if (html == null || html.isEmpty()) {
-            html = generateHtml();
-        }
-        html = html.substring(0, pEdt) + generateImg(img, w, h) + html.substring(pEdt);
-        return html;
-    }
+//    public static String generateImg(String img, int w, int h){
+//        String res = "<center>\n<img style=\"width:" + String.valueOf(w) + "px;height:" + String.valueOf(h) + "px;\" src=\"data:image/png;base64,"
+//                + img + "\"/>\n</center>";
+//        return res;
+//    }
+//    
+//    public static String InserirImagem(String html, String img, int pEdt, int w, int h) {
+//        if (html == null || html.isEmpty()) {
+//            html = generateHtml();
+//        }
+//        html = html.substring(0, pEdt) + generateImg(img, w, h) + html.substring(pEdt);
+//        return html;
+//    }
 }

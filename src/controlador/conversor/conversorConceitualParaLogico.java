@@ -43,7 +43,6 @@ import java.awt.Frame;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
@@ -71,9 +70,9 @@ public class conversorConceitualParaLogico {
         boolean sn = perguntaCaracteres()
                 && converterEntidades()
                 && converterAtributos()
-                && converterAutoRelacionamento()
                 && converterEspecializacao()
                 && converterUniao()
+                && converterAutoRelacionamento()
                 && converterRelacionamento()
                 && converterEntidadeAssossiativa()
                 && exportarAssessorios()
@@ -139,6 +138,9 @@ public class conversorConceitualParaLogico {
                 Links.Add(e, res);
             }
         });
+        destino.isCarregando = false;
+        destino.repaint();
+        destino.isCarregando = true;
         return true;
     }
 
@@ -305,24 +307,6 @@ public class conversorConceitualParaLogico {
         if (ori == dest) {
             return;
         }
-//        ori.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).forEach(constr -> {
-//            final Constraint c_dest = new Constraint(dest);
-//            c_dest.setTipo(Constraint.Constraint_tipo.tpFK);
-//            
-//            final LogicoLinha lin = dest.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(ori) == dest)
-//                    .map(L -> (LogicoLinha)L).findAny().orElse(null);
-//            
-//            constr.getCamposDeOrigem().forEach(a -> {
-//                Campo c = dest.Add("_");
-//                String ax = removerCaracteresEspeciais(preTxt + a.getTexto());
-//                c.setTexto(ax);
-//                c.setTipo(a.getTipo());
-//                c.setFkey(true);
-//                c.setObservacao(a.getObservacao());
-//                c.setDicionario(a.getDicionario());
-//                c_dest.Add(a, c, lin, constr);
-//            });
-//        });
         ori.getCampos().stream().filter(c -> c.isKey()).forEach(a -> {
             Campo c = dest.Add("_");
             String ax = removerCaracteresEspeciais(preTxt + a.getTexto());
@@ -331,6 +315,23 @@ public class conversorConceitualParaLogico {
             c.setFkey(true);
 //#            c.setTabelaOrigem(ori);
 //            c.setCampoOrigem(a);
+            setCampoOrigem(c, a);
+            c.setObservacao(a.getObservacao());
+            c.setDicionario(a.getDicionario());
+        });
+    }
+
+    private void ImportaCampoChaveKFK(Tabela ori, Tabela dest, String preTxt) {
+        if (ori == dest) {
+            return;
+        }
+        ori.getCampos().stream().filter(c -> c.isKey()).forEach(a -> {
+            Campo c = dest.Add("_");
+            String ax = removerCaracteresEspeciais(preTxt + a.getTexto());
+            c.setTexto(ax);
+            c.setTipo(a.getTipo());
+            c.setFkey(true);
+            c.setKey(true);
             setCampoOrigem(c, a);
             c.setObservacao(a.getObservacao());
             c.setDicionario(a.getDicionario());
@@ -458,13 +459,14 @@ public class conversorConceitualParaLogico {
         }
         linha.FormasALigar = new Forma[]{A, B};
         linha.SuperInicie(0, ptB, ptA);
+        linha.Ligar();
 
         return linha;
     }
     //</editor-fold>
 
     private Point EspacoOcupado(Tabela tb, Point p) {
-        FormaElementar ac = tb; //apenas para facilitar o looping
+        FormaElementar ac = tb; //# apenas para facilitar o looping
         Point res = new Point(p);
         while (ac != null) {
             final Point x = new Point(res);
@@ -491,7 +493,6 @@ public class conversorConceitualParaLogico {
         for (Relacionamento R : lst) {
             if (!R.getListaDeFormasLigadas().isEmpty()) {
                 PreEntidade E = R.getListaDeFormasLigadas().stream().filter(o -> o instanceof PreEntidade).map(e -> (PreEntidade) e).findFirst().orElse(null);
-                Tabela T = Links.getLigadosOrigem(E).stream().filter(t -> t instanceof Tabela).map(t -> (Tabela) t).findAny().orElse(null);
                 List<Ligacao> lig = R.getListaDePontosLigados().stream().filter(o -> o.getDono().getOutraPonta(R) instanceof PreEntidade)
                         .map(o -> (Ligacao) o.getDono()).collect(Collectors.toList());
                 int tmp1 = lig.get(0).getCard().CardToInt();
@@ -514,11 +515,11 @@ public class conversorConceitualParaLogico {
                     AddObservacoes(R, true);
                     Opcoes.opcDefault = (Card2 == 2 ? 0 : 1);
 
-                    tmp = util.Utilidades.EncapsuleMsg("msg21", T.getTexto());
+                    tmp = util.Utilidades.EncapsuleMsg("msg21", E.getTexto());
                     Opcoes.Questoes.add(tmp);
                     Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg22"));
                     if (Card1 == 0 && (Card2 == 0 || Card2 == 2)) {
-                        //Se for obrigatória, ou seja (1,1) e ((1,1)||(1,N)) não será possível criar a recursividade.
+                        //# Se for obrigatória, ou seja (1,1) e ((1,1)||(1,N)) não será possível criar a recursividade.
                         Opcoes.Disables.add(0);
                         tmp = util.Utilidades.EncapsuleMsg("msg23", PreCardinalidade.CardToString(Card1), PreCardinalidade.CardToString(Card2));
                         Opcoes.Textos.add(tmp);
@@ -529,56 +530,54 @@ public class conversorConceitualParaLogico {
                     }
                     AdCol = (Opcoes.OPC == 0);
                 }
-                Tabela T2 = T;
 
-                if (AdCol) {
-                    for (int i = 0; i < T.getCampos().size(); i++) {
-                        Campo C = T.getCampos().get(i);
-                        if (!C.isKey()) {
-                            continue;
-                        }
-//                        Campo c = ImportaCampo(T, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_");
-                        Campo c = ImportaCampo(T, C, T.getTexto() + "_");
-                        c.setKey(false);
-                        c.setFkey(true);
-//#                        c.setTabelaOrigem(T);
-//                        c.setCampoOrigem(C);
-                        setCampoOrigem(c, C);
-                    }
-                } else {
-                    FormaElementar xres = CriarTabela(T);
-                    if (xres != null) {
-                        T2 = ((Tabela) xres);
-                        String ax = removerCaracteresEspeciais(R.getTexto());
-                        T2.setTexto(ax);
-                        Links.Add(R, xres);
-                        //LinkTable(T, T2, Card1, Card2);
-                        LinkTable(T, T2, 0, Card2); //# recursividade sempre cad min = (1,1).
-                        final Tabela TT = T2;
-                        //duas vezes
-                        T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
-                            Campo c = ImportaCampo(TT, C, T.getTexto() + "_A_");
-//                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_A_");
+                List<Tabela> tabs = Links.getLigadosOrigem(E).stream().filter(t -> t instanceof Tabela).map(t -> (Tabela) t).collect(Collectors.toList());
+
+                for (Tabela T : tabs) {
+                    Tabela T2 = T;
+                    if (AdCol) {
+                        for (int i = 0; i < T.getCampos().size(); i++) {
+                            Campo C = T.getCampos().get(i);
+                            if (!C.isKey()) {
+                                continue;
+                            }
+                            Campo c = ImportaCampo(T, C, T.getTexto() + "_");
                             c.setKey(false);
                             c.setFkey(true);
                             setCampoOrigem(c, C);
-                        });
-                        //Conforme acima: duas vezes
-                        T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
-                            Campo c = ImportaCampo(TT, C, T.getTexto() + "_B_");
-//                            Campo c = ImportaCampo(TT, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + T.getTexto() + "_B_");
-                            c.setKey(false);
-                            c.setFkey(true);
-                            setCampoOrigem(c, C); //# desta vez não assossiar
-                        });
-                        frutoAutoRelacionamento.add(TT);
+                        }
+                    } else {
+                        FormaElementar xres = CriarTabela(T);
+                        if (xres != null) {
+                            T2 = ((Tabela) xres);
+                            String ax = removerCaracteresEspeciais(R.getTexto() + (tabs.size() > 1 ? "_" + String.valueOf(tabs.indexOf(T) + 1) : ""));
+                            T2.setTexto(ax);
+                            Links.Add(R, xres);
+                            LinkTable(T, T2, 0, Card2); //# recursividade sempre cad min = (1,1).
+                            final Tabela TT = T2;
+                            //duas vezes
+                            T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
+                                Campo c = ImportaCampo(TT, C, T.getTexto() + "_A_");
+                                c.setKey(false);
+                                c.setFkey(true);
+                                setCampoOrigem(c, C);
+                            });
+                            //Conforme acima: duas vezes
+                            T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
+                                Campo c = ImportaCampo(TT, C, T.getTexto() + "_B_");
+                                c.setKey(false);
+                                c.setFkey(true);
+                                setCampoOrigem(c, C); //# desta vez não assossiar
+                            });
+                            frutoAutoRelacionamento.add(TT);
+                        }
                     }
-                }
-                if (!recebaEConvertaAtributos(R, T2, R.getListaDeFormasLigadas().stream()
-                        .filter(a -> a instanceof Atributo)
-                        .map(a -> (Atributo) a)
-                        .collect(Collectors.toList()))) {
-                    return false;
+                    if (!recebaEConvertaAtributos(R, T2, R.getListaDeFormasLigadas().stream()
+                            .filter(a -> a instanceof Atributo)
+                            .map(a -> (Atributo) a)
+                            .collect(Collectors.toList()))) {
+                        return false;
+                    }
                 }
             }
         }
@@ -664,14 +663,12 @@ public class conversorConceitualParaLogico {
             Opcoes.Textos.add(util.Utilidades.EncapsuleMsg("msg32", new Object[]{lst.size(), entP.getTexto()}));
         }
         AddObservacoes(Esp, false);
-        //Opcoes.Textos.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg08") + " " + (Esp.getObservacao().isEmpty() ? "[" + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg09") + "]" : Esp.getObservacao()));
-
         Opcoes.opcDefault = (Esp.isParcial() ? 0 : 1);
 
         Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg33"));
         Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg34"));
-        if (entP.getListaDeFormasLigadas().stream().filter(e -> e instanceof PreEspecializacao)
-                .map(f -> (PreEspecializacao) f)
+        if (entP.getListaDeFormasLigadas().stream().filter(e -> e instanceof Especializacao)
+                .map(f -> (Especializacao) f)
                 .filter(e -> e.LigadaAoPontoPrincipal() == entP)
                 .count() == 1) {
             Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg35")
@@ -682,7 +679,7 @@ public class conversorConceitualParaLogico {
 
         Opcoes.obj = Esp;
 
-        //para cada PreEnt em list, verificar se é especilizada de herança multipla, se sim, desabilita as opções 1.
+        //# para cada PreEnt em list, verificar se é especilizada de herança multipla, se sim, desabilita as opções 1.
         for (PreEntidade pre : lst) {
             if ((pre.getListaDeFormasLigadas().stream().filter(e -> e instanceof Especializacao)
                     .map(f -> (Especializacao) f)
@@ -690,9 +687,6 @@ public class conversorConceitualParaLogico {
                     .count() > 1)) {
                 Opcoes.opcDefault = 0;
                 Opcoes.Disables.add(1);
-                //if (Esp.isExclusiva()) {
-                //    Opcoes.Disables.add(2);
-                //}
                 Opcoes.Textos.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg38"));
                 break;
             }
@@ -711,25 +705,27 @@ public class conversorConceitualParaLogico {
                 });
             });
 
+            final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
             int opc = Opcoes.OPC;
             switch (opc) {
                 case 0:
                     secundarias.forEach(s -> {
-                        LinkTable(principal, s, 0, 3);
-                        ImportaCampoChave(principal, s, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_");
+                        LinkTable(principal, s, 0, 1);
+                        ImportaCampoChaveKFK(principal, s, pretx);
                     });
                     break;
                 case 1:
                     String st = "";
-                    for (Tabela s: secundarias) {
-                        if ( s != principal) {
-                            st = " [" + s.getTexto() + "]";
-                        }
-                    }
                     secundarias.stream().filter(s -> s != principal).map(s -> ", " + s.getTexto()).reduce(st, String::concat);
                     secundarias.stream().filter(s -> s != principal).forEach(s -> {
                         MoverLigacoes(s, principal);
+
+                        List<Campo> oldkeys = principal.getCampos().stream().filter(cam -> cam.isKey()).collect(Collectors.toList());
+
                         ImportaCampo(s, principal);
+
+                        NormaliseImportacaoKeys(principal, oldkeys, secundarias, pretx);
+
                         TroqueLinksDestino(s, principal);
                         this.destino.Remove(s, true);
                     });
@@ -741,14 +737,14 @@ public class conversorConceitualParaLogico {
                             c.setTipo(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg15"));
                             c.setObservacao(util.Utilidades.EncapsuleMsg("msg39", principal.getTexto()));
                             campoTipoJaSetado.put(principal, c);
-                        } 
+                        }
                         campoTipoJaSetado.get(principal).setObservacao(campoTipoJaSetado.get(principal).getObservacao() + st);
                     }
                     break;
                 case 2:
                     principal.getListaDePontosLigados().stream().map(p -> (LogicoLinha) p.getDono()).forEach(L -> {
                         Tabela ori = (Tabela) L.getOutraPonta(principal);
-                        secundarias.stream().filter(s -> s != principal).forEach(s -> {
+                        secundarias.stream().filter(s -> s != principal && ori != s).forEach(s -> {
                             int c1 = L.getCardA().CardToInt();
                             int c2 = L.getCardB().CardToInt();
                             if (L.getFormaPontaA() != principal) {
@@ -760,12 +756,23 @@ public class conversorConceitualParaLogico {
                         this.destino.Remove(L, true);
                     });
 
+                    //# Listo e removo todos cujo destino era Principal (que será removida).
+                    List<conversorLink.par> destEqPrinc = Links.Lista.stream().filter(p -> p.destino == principal).collect(Collectors.toList());
+                    destEqPrinc.forEach(dp -> {
+                        Links.Lista.remove(dp);
+                    });
                     secundarias.stream().filter(s -> s != principal).forEach(s -> {
                         ImportaCampo(principal, s);
+                        //# altero o destino para que aqueles que antes apontavam para principal, passem a apontar para as tabelas restantes. 
+                        destEqPrinc.forEach(dp -> {
+                            Links.Add(dp.origem, s);
+                        });
+                        //# Adiciono um link para a entidade principla desta especialização.
                         Links.Add(entP, s);
                     });
                     this.destino.Remove(principal, true);
                     Links.RemovePar(entP, principal);
+
                     break;
             }
         });
@@ -803,19 +810,42 @@ public class conversorConceitualParaLogico {
             lst.remove(pt);
         }
 
-        //Remover ligações ambiguas: duas ligações ligando as mesmas tabelas com as mesmas cardinalidades. Uma deve ser removida.
-        List<LogicoLinha> tmpLst1 = destino.getListaDePontosLigados().stream().map(p -> ((LogicoLinha) p.getDono())).collect(Collectors.toList());
-        List<LogicoLinha> ja = new ArrayList<>();
+        RemovaLigacoesIguais(destino);
 
+        return true;
+    }
+
+    private boolean CloneLigacoes(Tabela origem, Tabela destino) {
+        if (origem == destino || origem == null || destino == null) {
+            return false;
+        }
+        List<LogicoLinha> ligs = origem.getListaDeLigacoes().stream().map(L -> (LogicoLinha) L).collect(Collectors.toList());
+        ligs.stream().forEach(lig -> {
+            int ca = lig.getCardA().CardToInt();
+            int cb = lig.getCardB().CardToInt();
+            if (lig.getFormaPontaA() == origem) {
+                LinkTable(destino, (Tabela) (lig.getFormaPontaB()), ca, cb);
+            } else {
+                LinkTable((Tabela) (lig.getFormaPontaA()), destino, cb, ca);
+            }
+        });
+
+        RemovaLigacoesIguais(destino);
+
+        return true;
+    }
+
+    private void RemovaLigacoesIguais(Tabela destino1) {
+        //# Remover ligações ambiguas: duas ligações ligando as mesmas tabelas com as mesmas cardinalidades. Uma deve ser removida.
+        List<LogicoLinha> tmpLst1 = destino1.getListaDePontosLigados().stream().map(p -> ((LogicoLinha) p.getDono())).collect(Collectors.toList());
+        List<LogicoLinha> ja = new ArrayList<>();
         tmpLst1.forEach(Linha -> {
             tmpLst1.stream().filter((lin) -> ((lin != Linha) && (ja.indexOf(Linha) == -1 && ja.indexOf(lin) == -1) && (LigacoeIguais(Linha, lin)))).forEach(L -> {
                 this.destino.Remove(L, true);
                 ja.add(L);
-                ja.add(Linha);
+                //ja.add(Linha);
             });
         });
-
-        return true;
     }
 
     private void TroqueLinksDestino(Tabela de, Tabela para) {
@@ -834,7 +864,7 @@ public class conversorConceitualParaLogico {
         });
 
         int j = 0;
-        //Remove as relação mal formadas e auto-relacionamentos.
+        //# Remove as relações mal formadas e auto-relacionamentos.
         while (j < lst.size()) {
             Relacionamento re = lst.get(j);
             if (re.isAutoRelacionamento()) {
@@ -862,12 +892,12 @@ public class conversorConceitualParaLogico {
                 }
             }
             if (ligacoes.size() > 2) {
-                //ternário ou maior?
+                //# ternário ou maior?
                 if (!converterRelacionamentoTernario(re, ligacoes)) {
                     return false;
                 }
             } else {
-                //binário.
+                //# binário.
                 if (!converterRelacionamentoBinario(re, ligacoes)) {
                     return false;
                 }
@@ -1197,8 +1227,8 @@ public class conversorConceitualParaLogico {
         Opcoes.opcDefault = 0;
 
         String tmp = (lst_tex.isEmpty() ? "" : String.valueOf(lst_tex.size()) + " " + (lst_tex.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg66") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg67")));
-        tmp += (lst_des.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_des.size())  + " " + (lst_des.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg68") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg69")));
-        tmp += (lst_leg.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_leg.size())  + " " + (lst_leg.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg70") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg71")));
+        tmp += (lst_des.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_des.size()) + " " + (lst_des.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg68") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg69")));
+        tmp += (lst_leg.isEmpty() ? "" : (tmp.isEmpty() ? " " : ", ") + String.valueOf(lst_leg.size()) + " " + (lst_leg.size() == 1 ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg70") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg71")));
 
         Opcoes.Questoes.add(util.Utilidades.EncapsuleMsg("msg72", tmp));
         Opcoes.Questoes.add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg73"));
@@ -1261,31 +1291,95 @@ public class conversorConceitualParaLogico {
                 case 0:
                     Links.getLigadosOrigem(entP).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(principal -> {
 
+                        List<Campo> oldkeys = principal.getCampos().stream().filter(cam -> cam.isKey()).collect(Collectors.toList());
+                        List<Tabela> secundarias = new ArrayList<>();
+                        final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
+
                         lst.stream().forEach(pre -> {
                             Links.getLigadosOrigem(pre).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(s -> {
                                 LinkTable(principal, s, -1, 0);
                                 ImportaCampoChave(principal, s, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_");
+
+                                secundarias.add(s);
+
                             });
                         });
+
+                        NormaliseImportacaoKeys(principal, oldkeys, secundarias, pretx);
 
                     });
                     break;
                 case 1:
                     lst.stream().forEach(pre -> {
-                        Links.getLigadosOrigem(pre).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(s -> {
-                            Links.getLigadosOrigem(entP).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(principal -> {
-                                MoverLigacoes(s, principal);
+                        List<Tabela> secundarias = Links.getLigadosOrigem(pre).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).collect(Collectors.toList());
+                        Links.getLigadosOrigem(entP).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(principal -> {
+                            List<Campo> oldkeys = principal.getCampos().stream().filter(cam -> cam.isKey()).collect(Collectors.toList());
+                            secundarias.forEach(s -> {
+
+                                CloneLigacoes(s, principal);
+
                                 ImportaCampo(s, principal);
-                                TroqueLinksDestino(s, principal);
-                                this.destino.Remove(s, true);
+
+                                //TroqueLinksDestino(s, principal);
+                                //# Listo e removo todos cujo destino era s (que será removida).
+                                List<conversorLink.par> destEqPrinc = Links.Lista.stream().filter(p -> p.destino == s).collect(Collectors.toList());
+                                destEqPrinc.forEach(dp -> {
+                                    Links.Lista.remove(dp);
+                                });
+                                //# altero o destino para que aqueles que antes apontavam para s, passem a apontar para principal. 
+                                destEqPrinc.forEach(dp -> {
+                                    Links.Add(dp.origem, principal);
+                                });
+
+                            });
+
+                            final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
+                            NormaliseImportacaoKeys(principal, oldkeys, secundarias, pretx);
+                        });
+                        secundarias.forEach(s -> {
+                            this.destino.Remove(s, true);
+                            List<LogicoLinha> tmpLst1 = s.getListaDePontosLigados().stream().map(p -> ((LogicoLinha) p.getDono())).collect(Collectors.toList());
+                            tmpLst1.forEach(L -> {
+                                this.destino.Remove(L, true);
                             });
                         });
-
                     });
                     break;
             }
         }
         return true;
+    }
+
+    private void NormaliseImportacaoKeys(Tabela principal, List<Campo> oldkeys, List<Tabela> secundarias, final String pretx) {
+        List<Campo> newkeys = principal.getCampos().stream().filter(cam -> cam.isKey() && oldkeys.indexOf(cam) == -1).collect(Collectors.toList());
+        if (!newkeys.isEmpty()) {
+            final List<Tabela> tb_fks = new ArrayList<>();
+            camposOrigem.keySet().stream().forEach(dest -> {
+                Campo ori = camposOrigem.get(dest);
+                if (oldkeys.indexOf(ori) > -1) {
+                    Tabela tbl = dest.getTabela();
+                    if (secundarias.indexOf(tbl) == -1 && tb_fks.indexOf(tbl) == -1) {
+                        tb_fks.add(tbl);
+                    }
+                }
+            });
+            if (!tb_fks.isEmpty()) {
+                newkeys.stream().forEach(a -> {
+                    tb_fks.forEach(Tab -> {
+                        Campo c = Tab.Add("_");
+                        String ax = removerCaracteresEspeciais(pretx + a.getTexto());
+                        c.setTexto(ax);
+                        c.setTipo(a.getTipo());
+
+                        c.setFkey(true);
+                        setCampoOrigem(c, a);
+
+                        c.setObservacao(a.getObservacao());
+                        c.setDicionario(a.getDicionario());
+                    });
+                });
+            }
+        }
     }
 
     /**
