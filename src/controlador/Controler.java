@@ -125,7 +125,7 @@ public class Controler {
 
         cmdUndo, cmdRendo, cmdCut, cmdCopy, cmdCopyImg, cmdPaste, cmdCopyFormat, cmdPasteFormat, cmdSelProx, cmdSelAnt, cmdSelectAll, cmdBringToFront, cmdSendToBack, cmdDel, cmdDelToSel, //menu edit
         cmdNew, cmdOpen, cmdClose, cmdPrint, cmdExport, cmdSave, cmdSaveAs, cmdSaveAll, //menu arquivo
-        cmdTreeNavegador, //comandos diversos
+        cmdTreeNavegador, cmdTreeSelect, //comandos diversos
         cmdMicroAjuste0, cmdMicroAjuste1, cmdMicroAjuste2, cmdMicroAjuste3, //micro ajuste.
         //cmdDimCp, 
         cmdDimPastLeft, cmdDimPastTop, cmdDimPastRight, cmdDimPastBottom, cmdDimPastWidth, cmdDimPastHeight, cmdDimAlignH, cmdDimAlignV
@@ -182,6 +182,7 @@ public class Controler {
         ImagemDeDiagrama.put("diagrama.ancordor.2.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.2.img", true));
         ImagemDeDiagrama.put("diagrama.ancordor.3.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.3.img", true));
         ImagemDeDiagrama.put("diagrama.ancordor.4.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.4.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.5.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.5.img", true));
 
         ImagemDeDiagrama.put("diagrama.Constraint_PK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_PK.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_FK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_FK.img", true));

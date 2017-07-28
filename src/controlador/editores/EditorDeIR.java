@@ -411,6 +411,7 @@ public class EditorDeIR extends javax.swing.JDialog {
 
             @Override
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                comboTipo.setSelectedItem(cmp.getTipo());
             }
 
             @Override

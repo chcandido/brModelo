@@ -18,7 +18,9 @@ package diagramas.logico;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -33,10 +35,19 @@ public class DataBaseModel implements Serializable {
     }
     
     private ArrayList<String> reservedWords = new ArrayList<>();
-    private ArrayList<String> dataTypes = new ArrayList<>();
+    //private ArrayList<String> dataTypes = new ArrayList<>();
     private String nome = "";
     private String versao = "";
     private String descricao = "";
+    private HashMap<String, String> dataTypesToJava = new HashMap<>();
+
+    public HashMap<String, String> getDataTypesToJava() {
+        return dataTypesToJava;
+    }
+
+    public void setDataTypesToJava(HashMap<String, String> dataTypesToJava) {
+        this.dataTypesToJava = dataTypesToJava;
+    }
 
     public ArrayList<String> getReservedWords() {
         return reservedWords;
@@ -46,12 +57,13 @@ public class DataBaseModel implements Serializable {
         this.reservedWords = reservedWords;
     }
 
-    public ArrayList<String> getDataTypes() {
+    List<String> dataTypes = null;
+    
+    public List<String> getDataTypes() {
+        if (dataTypes == null) {
+            dataTypes = dataTypesToJava.keySet().stream().sorted((s1, s2) -> s1.compareTo(s2)).collect(Collectors.toList());
+        }
         return dataTypes;
-    }
-
-    public void setDataTypes(ArrayList<String> dataTypes) {
-        this.dataTypes = dataTypes;
     }
 
     public String getNome() {
@@ -78,7 +90,7 @@ public class DataBaseModel implements Serializable {
         this.descricao = descricao;
     }
     
-    public final void InicieAnsi2011() {
+    private final void InicieAnsi2011() {
         setNome("SQL Ansi 2011 - w3c");
         setVersao("1.0.0");
         setDescricao("Copiado de sites na internet - 15/04/2017");
@@ -424,32 +436,32 @@ public class DataBaseModel implements Serializable {
         lst.add("XMLTEXT");
         lst.add("XMLVALIDATE");
         lst.add("YEAR");
-
-        List<String> tipos = getDataTypes();
-        tipos.clear();
-        tipos.add("BIT");
-        tipos.add("BLOB");
-        tipos.add("BOOLEAN");
-        tipos.add("CHAR");
-        tipos.add("CHAR");
-        tipos.add("CHARACTER");
-        tipos.add("CLOB");
-        tipos.add("DATE");
-        tipos.add("DECIMAL");
-        tipos.add("DOUBLE");
-        tipos.add("FLOAT");
-        tipos.add("FLOAT");
-        tipos.add("INTEGER");
-        tipos.add("NCHAR");
-        tipos.add("NUMERIC");
-        tipos.add("REAL");
-        tipos.add("SMALLINT");
-        tipos.add("TIME");
-        tipos.add("TIMESTAMP");
-        tipos.add("VARCHAR");
-        tipos.add("XML");
+        
+        dataTypes = null;
+        
+        dataTypesToJava.clear();
+        dataTypesToJava.put("BIT", "short");
+        dataTypesToJava.put("BLOB", "byte[]");
+        dataTypesToJava.put("BOOLEAN", "boolean");
+        dataTypesToJava.put("CHAR", "char");
+        dataTypesToJava.put("CHARACTER", "String");
+        dataTypesToJava.put("CLOB", "byte");
+        dataTypesToJava.put("DATE", "Date");
+        dataTypesToJava.put("DECIMAL", "double");
+        dataTypesToJava.put("DOUBLE", "double");
+        dataTypesToJava.put("FLOAT", "float");
+        dataTypesToJava.put("INTEGER", "int");
+        dataTypesToJava.put("NCHAR", "String");
+        dataTypesToJava.put("NUMERIC", "int");
+        dataTypesToJava.put("REAL", "double");
+        dataTypesToJava.put("SMALLINT", "short");
+        dataTypesToJava.put("TIME", "Date");
+        dataTypesToJava.put("TIMESTAMP", "Date");
+        dataTypesToJava.put("VARCHAR", "String");
+        dataTypesToJava.put("XML", "org.w3c.dom.Document");
     }
     
+ 
     /////?????? Carregar de arquivos, outras implementações para o futuro modelo físico.
     ///// No modelo lógico: colocar a opção de troca e exibí-lo no inspector.
 }

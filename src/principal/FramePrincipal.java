@@ -13,6 +13,7 @@ import controlador.Diagrama;
 import controlador.Editor;
 import controlador.ISuperControler;
 import controlador.apoios.TreeItem;
+import desenho.formas.Forma;
 import helper.FormHelp;
 import java.awt.Color;
 import java.awt.Component;
@@ -35,6 +36,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import partepronta.FormPartes;
 import util.TratadorDeImagens;
@@ -263,9 +265,9 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         Manager.reloadMenuRecentes();
         m.setEnabled(lst.size() > 0);
         //End.
-        
+
         btnPrint.setToolTipText(Editor.fromConfiguracao.getValor("Controler.comandos.print.descricao"));
-        
+
         if (Manager.LoadAutoSave()) {
             util.Dialogos.ShowMessageInform(this, Editor.fromConfiguracao.getValor("Inspector.obj.msg.autosalvar"));
         }
@@ -939,6 +941,8 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 
     fmImpressao controladorImpressao;
 
+    private boolean noTree = false;
+
     @Override
     public void DoComandoExterno(Controler.menuComandos c) {
         if (c == Controler.menuComandos.cmdPrint) {
@@ -959,9 +963,41 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
                 formPartes.Popule(Manager.diagramaAtual.getTipo());
             }
         }
+        if ((TabInspector.getSelectedIndex() == 1) && (c == menuComandos.cmdTreeNavegador || c == menuComandos.cmdTreeSelect)) {
+            DefaultTreeModel df = (DefaultTreeModel) TreeItensDiagrama.getModel();
+            if (df.getRoot() instanceof TreeItem) {
+                TreeItem root = (TreeItem) df.getRoot();
+                TreePath pt = new TreePath(root);
+                if (Manager.diagramaAtual.getSelecionado() == null || !(Manager.diagramaAtual.getSelecionado() instanceof Forma)) {
+                    noTree = true;
+                    TreeItensDiagrama.setSelectionPath(pt);
+                    noTree = false;
+                } else {
+                    boolean done = false;
+                    for (int i = 0; i < root.getChildCount(); i++) {
+                        TreeItem item = (TreeItem) root.getChildAt(i);
+                        if (item.getId() == Manager.diagramaAtual.getSelecionado().getID()) {
+                            noTree = true;
+                            TreeItensDiagrama.setSelectionPath(pt.pathByAddingChild(item));
+                            noTree = false;
+                            done = true;
+                            break;
+                        }
+                    }
+                    if (!done) {
+                        noTree = true;
+                        TreeItensDiagrama.setSelectionPath(pt);
+                        noTree = false;
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void TreeItensDiagramaValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_TreeItensDiagramaValueChanged
+        if (noTree) {
+            return;
+        }
         if (TreeItensDiagrama.getLastSelectedPathComponent() != null) {
             int v = ((TreeItem) TreeItensDiagrama.getLastSelectedPathComponent()).getId();
             if (v > 0) {
@@ -971,6 +1007,9 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     }//GEN-LAST:event_TreeItensDiagramaValueChanged
 
     private void TreeItensDiagramaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TreeItensDiagramaMouseClicked
+        if (noTree) {
+            return;
+        }
         if (evt.getClickCount() == 2) {
             if (TreeItensDiagrama.getLastSelectedPathComponent() != null) {
                 int v = ((TreeItem) TreeItensDiagrama.getLastSelectedPathComponent()).getId();
@@ -1077,11 +1116,11 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
             formPartes.Salva();
         }
     }//GEN-LAST:event_MenuSalvarRepoActionPerformed
-    
+
     public void ReloadHelp() {
         formAjuda = null;
     }
-    
+
     private boolean CarregarFormPartes() {
         if (formPartes == null) {
             formPartes = new FormPartes();
@@ -1263,17 +1302,15 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         return Manager;
     }
 
-    public String getBarraBotoesTexto(){
+    public String getBarraBotoesTexto() {
         if (util.OS.isUnix()) {
             return "   ";
         }
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
         return bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle");
     }
-    
+
     /**
-     * TO_DO Ao colar: Os baseDrawer não estão persistindo em XML corretamente (ainda não implementado -
-     * 09/11/2013).
-     * Salvar como --> excluir extensão. ///???? /
+     * TO_DO Ao colar: Os baseDrawer não estão persistindo em XML corretamente (ainda não implementado - 09/11/2013). Salvar como --> excluir extensão. ///???? /
      */
 }

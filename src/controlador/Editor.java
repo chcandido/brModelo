@@ -1189,6 +1189,7 @@ public class Editor extends BaseControlador implements KeyListener {
         setTextoDica(null, "");
         getInspectorEditor().Carrege(itemSel.GenerateFullProperty());
         EditoresRefresh(itemSel);
+        FramePrincipal.DoComandoExterno(Controler.menuComandos.cmdTreeSelect);
     }
 
     public boolean AceitaEdicao(Inspector origem, InspectorProperty propriedade, String valor) {

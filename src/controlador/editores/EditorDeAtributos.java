@@ -414,6 +414,7 @@ public class EditorDeAtributos extends javax.swing.JDialog {
 
             @Override
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                comboTipo.setSelectedItem(attr.getTipoAtributo());
             }
 
             @Override

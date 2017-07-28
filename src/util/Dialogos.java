@@ -237,6 +237,41 @@ public class Dialogos {
         }
     }
 
+    public static File ShowDlgSaveAsAny(JComponent form, String ar) {
+        JFileChooser f = new JFileChooser();
+        //f.setDialogTitle(Editor.fromConfiguracao.getValor("Controler.dlg.modelo.salvar"));
+        f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        //FileFilter filter = new FileNameExtensionFilter("Arquivo texto (txt)", Arquivo.png);
+        //FileFilter filter2 = new FileNameExtensionFilter("Imagem (bmp)", Arquivo.bmp);
+        //f.addChoosableFileFilter(filter);
+        //f.addChoosableFileFilter(filter2);
+        f.setAcceptAllFileFilterUsed(true);
+        //f.setFileFilter(filter);
+        if (dir.isEmpty()) dir = System.getProperty("user.dir");
+        f.setCurrentDirectory(new File(dir));
+        f.setDialogTitle(Editor.fromConfiguracao.getValor("Controler.MSG_EPRT_TITLE"));
+        if (!ar.isEmpty()){ 
+            f.setSelectedFile(new File(ar));
+        }
+        //f.setApproveButtonText(Editor.fromConfiguracao.getValor("Controler.dlg.modelo.salvar"));
+        int returnVal = f.showSaveDialog(form);
+        //int returnVal = f.showDialog(form, Editor.fromConfiguracao.getValor("Controler.dlg.modelo.salvar"));
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = f.getSelectedFile();
+//            String ext = Arquivo.getExtension(file);
+//            if (ext == null) {
+//                ext = "";
+//            }
+            dir = file.getAbsolutePath();
+
+            return file;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * param preDir = pode ser diretório ou arquivo (não importa)
      * @param preDir

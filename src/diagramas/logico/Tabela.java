@@ -63,6 +63,7 @@ public class Tabela extends baseDrawerFromForma {
         showOrgDiag = true;
         INI_ORGDIAG = roundrect / 2;
         getAncorasCode().add(CODE_EDT_CMP);
+        getAncorasCode().add(CODE_EDT_CMP_TP);
     }
 
     private ArrayList<Campo> Campos = new ArrayList<>();
@@ -173,7 +174,9 @@ public class Tabela extends baseDrawerFromForma {
     }
 
     protected final String COMM_EDT_CMPS = "edt_campos";
+    protected final String COMM_EDT_CMPS_TP = "edt_campos_tipo";
     private final int EDITOR_CAMPOS = 200317;
+    private final int EDITOR_CAMPOS_TP =180717;
     private final int PRINT_DDL = 310317;
 
     protected final String COMM_RI = "tabela.constraint";
@@ -239,6 +242,7 @@ public class Tabela extends baseDrawerFromForma {
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_RI_FK).setTag(Constraint.TAG_COMMAND_FK));
 
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_EDT_CMPS).setTag(EDITOR_CAMPOS));
+        res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_EDT_CMPS_TP).setTag(EDITOR_CAMPOS_TP));
         //}
         return GP;
     }
@@ -676,7 +680,7 @@ public class Tabela extends baseDrawerFromForma {
 
             int contador_campos = 0;
             for (Campo c : getCampos()) {
-                boolean eh_ultimo_campo = contador_campos != total_campos;
+                boolean eh_ultimo_campo = contador_campos == total_campos;
                 tmp = c.getTexto() + (c.getTipo().isEmpty() ? "" : " " + c.getTipo()) + (!c.getComplemento().isEmpty() ? " " + c.getComplemento() : "");
                 if (c.isKey() && chaveSimples) {
                     tmp += " " + pktxt;
@@ -980,6 +984,10 @@ public class Tabela extends baseDrawerFromForma {
             ((DiagramaLogico) getMaster()).LancarEditorDeCampos();
             return;
         }
+        if (Tag == EDITOR_CAMPOS_TP) {
+            ((DiagramaLogico) getMaster()).LancarEditorDeCamposTP();
+            return;
+        }
         if (Tag == PRINT_DDL) {
             PrintDDL();
             return;
@@ -1126,12 +1134,17 @@ public class Tabela extends baseDrawerFromForma {
 
     //<editor-fold defaultstate="collapsed" desc="Ancorador">
     public final int CODE_EDT_CMP = 3;
+    public final int CODE_EDT_CMP_TP = 5;
 
     @Override
     public void runAncorasCode(int cod) {
         super.runAncorasCode(cod);
         if (cod == CODE_EDT_CMP) {
             DoAnyThing(EDITOR_CAMPOS);
+            return;
+        }
+        if (cod == CODE_EDT_CMP_TP) {
+            DoAnyThing(EDITOR_CAMPOS_TP);
         }
     }
 
@@ -1139,6 +1152,9 @@ public class Tabela extends baseDrawerFromForma {
     public String WhatDrawOnAcorador(Integer c) {
         if (c == CODE_EDT_CMP) {
             return "diagrama.ancordor.3.img";
+        }
+        if (c == CODE_EDT_CMP_TP) {
+            return "diagrama.ancordor.5.img";
         }
         return super.WhatDrawOnAcorador(c);
     }

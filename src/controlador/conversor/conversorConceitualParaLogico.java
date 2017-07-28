@@ -25,7 +25,6 @@ import desenho.formas.Legenda;
 import desenho.linhas.PontoDeLinha;
 import desenho.preAnyDiagrama.PreCardinalidade;
 import desenho.preAnyDiagrama.PreEntidade;
-import desenho.preAnyDiagrama.PreEspecializacao;
 import diagramas.conceitual.Atributo;
 import diagramas.conceitual.DiagramaConceitual;
 import diagramas.conceitual.EntidadeAssociativa;

@@ -12,6 +12,7 @@ import controlador.editores.EditorDeCampos;
 import controlador.editores.EditorDeIR;
 import controlador.editores.EditorDeIrFK;
 import controlador.editores.EditorDeIrUnique;
+import controlador.editores.EditorDeTipos;
 import controlador.inspector.InspectorProperty;
 import desenho.Elementar;
 import desenho.FormaElementar;
@@ -19,6 +20,7 @@ import desenho.formas.Desenhador;
 import desenho.formas.Forma;
 import desenho.formas.Legenda;
 import diagramas.conceitual.Texto;
+import java.awt.Frame;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import principal.Aplicacao;
 import util.BoxingJava;
+import controlador.editores.EditorTexto;
+import controlador.editores.MostradorDeCodigo;
 
 /**
  *
@@ -318,6 +322,7 @@ public class DiagramaLogico extends Diagrama {
 
     protected final String COMM_ORG = "orgtab";
     protected final String COMM_EDT_CMPS = "edt_campos";
+    protected final String COMM_EDT_CMPS_TP = "edt_campos_tipo";
     protected final String COMM_COV_FISICO = "logico.cov_fisico";
 
     @Override
@@ -334,6 +339,13 @@ public class DiagramaLogico extends Diagrama {
 
         tmp = Editor.fromConfiguracao.getValor("Controler.interface.Diagrama.Command.Logico.EdtC.descricao");
         ac = new Diagrama.AcaoDiagrama(this, tmp, "Controler.interface.Diagrama.Command.Logico.EdtC.img", tmp, COMM_EDT_CMPS);
+        ac.normal = false;
+        mi = new JMenuItem(ac);
+        mi.setName(tmp);
+        menu.add(mi);
+
+        tmp = Editor.fromConfiguracao.getValor("Controler.interface.Diagrama.Command.Logico.EdtT.descricao");
+        ac = new Diagrama.AcaoDiagrama(this, tmp, "Controler.interface.Diagrama.Command.Logico.EdtT.img", tmp, COMM_EDT_CMPS_TP);
         ac.normal = false;
         mi = new JMenuItem(ac);
         mi.setName(tmp);
@@ -360,6 +372,8 @@ public class DiagramaLogico extends Diagrama {
             }
         } else if (comm.equals(COMM_EDT_CMPS)) {
             LancarEditorDeCampos();
+        } else if (comm.equals(COMM_EDT_CMPS_TP)) {
+            LancarEditorDeCamposTP();
         } else if (comm.equals(COMM_COV_FISICO)) {
             ConverterParaFisico();
         }
@@ -367,6 +381,7 @@ public class DiagramaLogico extends Diagrama {
 
     private final int ATAG = 86;
     private final int EDITOR_CAMPOS = 200317;
+    private final int EDITOR_CAMPOS_TP = 180717;
     private final int CONV_FISICO = 310317;
 
     @Override
@@ -378,12 +393,11 @@ public class DiagramaLogico extends Diagrama {
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_ORG).setTag(ATAG));
         res.add(InspectorProperty.PropertyFactorySeparador(COMM_EDT_CMPS));
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_EDT_CMPS).setTag(EDITOR_CAMPOS));
+        res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_EDT_CMPS_TP).setTag(EDITOR_CAMPOS_TP));
         res.add(InspectorProperty.PropertyFactorySeparador(COMM_COV_FISICO));
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_COV_FISICO).setTag(CONV_FISICO));
     }
 
-    ///???? ver dif. ddl, dml
-    
     @Override
     public void InfoDiagrama_ToXmlValores(Document doc, Element me) {
         super.InfoDiagrama_ToXmlValores(doc, me);
@@ -422,6 +436,10 @@ public class DiagramaLogico extends Diagrama {
 
         if (Tag == EDITOR_CAMPOS) {
             LancarEditorDeCampos();
+            return;
+        }
+        if (Tag == EDITOR_CAMPOS_TP) {
+            LancarEditorDeCamposTP();
         }
     }
 
@@ -474,8 +492,24 @@ public class DiagramaLogico extends Diagrama {
     }
 
     public boolean ConverterParaFisico() {
-        util.Dialogos.ShowMessageInform(Aplicacao.fmPrincipal.getRootPane(), "Em construção!");
-        String tmp = "/* Em construção: */";
+        //util.Dialogos.ShowMessageInform(Aplicacao.fmPrincipal.getRootPane(), "Em construção!");
+
+        boolean vai = true;
+        for (Tabela t : getListaDeTabelas()) {
+            if (t.getCampos().stream().anyMatch(cc -> cc.getTipo().isEmpty())) {
+                EditorDeTipos edt = new EditorDeTipos((Frame) (Aplicacao.fmPrincipal.getRootPane()).getParent(), true);
+                edt.setLocationRelativeTo(Aplicacao.fmPrincipal.getRootPane());
+                edt.Inicie(this);
+                edt.setVisible(true);
+                vai = edt.getResultado() == JOptionPane.OK_OPTION;
+                break;
+            }
+        }
+        if (!vai) {
+            return false;
+        }
+
+        String tmp = "/* " + getNomeFormatado() + ": */";
         List<Tabela> tabelas = getListaDeTabelas();
         ArrayList<String> ddl = new ArrayList<>();
         tabelas.forEach(t -> {
@@ -486,7 +520,10 @@ public class DiagramaLogico extends Diagrama {
         tabelas.forEach(t -> {
             t.DDLGenerate(ddl, t.DDL_PEGAR_INTEGRIDADE_FK);
         });
-        util.Dialogos.ShowDlgTextoReadOnly(Aplicacao.fmPrincipal.getRootPane(), ddl.stream().map(s -> "\n" + s).reduce(tmp, String::concat));
+        MostradorDeCodigo edt = new MostradorDeCodigo((Frame) (Aplicacao.fmPrincipal.getRootPane()).getParent(), true);
+        edt.setLocationRelativeTo(Aplicacao.fmPrincipal.getRootPane());
+        edt.setTexto(ddl.stream().map(s -> "\n" + s).reduce(tmp, String::concat));
+        edt.setVisible(true);
         return true;
     }
 
@@ -610,5 +647,22 @@ public class DiagramaLogico extends Diagrama {
         }
         this.separatorSQL = separatorSQL;
         repaint();
+    }
+
+    public void LancarEditorDeCamposTP() {
+        if (getListaDeItens().stream().filter(tb -> tb instanceof Tabela).count() == 0) {
+            JOptionPane.showMessageDialog(Aplicacao.fmPrincipal,
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.sem_campos"),
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"),
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        EditorDeTipos de = new EditorDeTipos(Aplicacao.fmPrincipal, true);
+        de.setLocationRelativeTo(Aplicacao.fmPrincipal);
+        de.Inicie(this);
+        de.SelecioneByDiagramaSelecionado();
+        de.setVisible(true);
+        PerformInspector();    
     }
 }
