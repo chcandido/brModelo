@@ -124,13 +124,6 @@ public class Especializacao extends PreEspecializacao {
             if (esp.stream().anyMatch((f2) -> (f2.FinderLinked(quem, f)))) {
                 return true;
             }
-
-///??? mudado em 20/01/2017 - para operação funcional
-//            for (Especializacao f2 : esp) {
-//                if (f2.FinderLinked(quem, f)) {
-//                    return true;
-//                }
-//            }
         }
         return false;
     }

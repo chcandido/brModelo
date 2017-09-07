@@ -251,7 +251,9 @@ public class conversorConceitualParaLogico {
                         String ax = removerCaracteresEspeciais(a.getTexto());
                         ntb.setTexto(ax);
                         Links.Add(a, xres);
-                        LinkTable(tb, ntb, (a.isOpcional() ? 0 : (a.isMultivalorado() ? 0 : 1)), (Limitado ? 3 : 1));
+                        setOrigemLigacao(
+                                LinkTable(tb, ntb, (a.isOpcional() ? 0 : (a.isMultivalorado() ? 0 : 1)), (Limitado ? 3 : 1)),
+                                tb);
                         Campo c = ntb.Add(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.pk.sufix"));
                         c.setTexto(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.pk.sufix"));
                         c.setKey(true);
@@ -299,6 +301,18 @@ public class conversorConceitualParaLogico {
         c.setObservacao(a.getObservacao());
         c.setDicionario(a.getDicionario());
         //Links.Add(a, ?);
+        return c;
+    }
+
+    private Campo ImportaCampoIgnoreConstrais(Tabela tb, Campo a, String preTxt) {
+        Campo c = tb.Add("_");
+        String ax = removerCaracteresEspeciais(preTxt + a.getTexto());
+        c.setTexto(ax);
+        c.setTipo(a.getTipo());
+        //c.setKey(a.isKey());
+        //c.setFkey(a.isFkey());
+        c.setObservacao(a.getObservacao());
+        c.setDicionario(a.getDicionario());
         return c;
     }
 
@@ -416,7 +430,6 @@ public class conversorConceitualParaLogico {
         LogicoLinha lin = Ligue(origem, destino);
         lin.getCardA().setCard(cardO);
         lin.getCardB().setCard(cardD);
-
         lin.ajusteSeta();
         return lin;
     }
@@ -552,7 +565,9 @@ public class conversorConceitualParaLogico {
                             String ax = removerCaracteresEspeciais(R.getTexto() + (tabs.size() > 1 ? "_" + String.valueOf(tabs.indexOf(T) + 1) : ""));
                             T2.setTexto(ax);
                             Links.Add(R, xres);
-                            LinkTable(T, T2, 0, Card2); //# recursividade sempre cad min = (1,1).
+                            setOrigemLigacao(
+                                    LinkTable(T, T2, 0, Card2), //# recursividade sempre cad min = (1,1).
+                                    T2);
                             final Tabela TT = T2;
                             //duas vezes
                             T.getCampos().stream().filter(c -> c.isKey()).forEach(C -> {
@@ -709,7 +724,9 @@ public class conversorConceitualParaLogico {
             switch (opc) {
                 case 0:
                     secundarias.forEach(s -> {
-                        LinkTable(principal, s, 0, 1);
+                        setOrigemLigacao(
+                                LinkTable(principal, s, 0, 1),
+                                s);
                         ImportaCampoChaveKFK(principal, s, pretx);
                     });
                     break;
@@ -750,7 +767,9 @@ public class conversorConceitualParaLogico {
                                 c2 = L.getCardA().CardToInt();
                                 c1 = L.getCardB().CardToInt();
                             }
-                            LinkTable(ori, s, c2, c1);
+                            setOrigemLigacao(
+                                    LinkTable(ori, s, c2, c1),
+                                    s);
                         });
                         this.destino.Remove(L, true);
                     });
@@ -822,10 +841,16 @@ public class conversorConceitualParaLogico {
         ligs.stream().forEach(lig -> {
             int ca = lig.getCardA().CardToInt();
             int cb = lig.getCardB().CardToInt();
+            LogicoLinha lin;
             if (lig.getFormaPontaA() == origem) {
-                LinkTable(destino, (Tabela) (lig.getFormaPontaB()), ca, cb);
+                Tabela tmp = (Tabela) (lig.getFormaPontaB());
+                lin = LinkTable(destino, tmp, ca, cb);
             } else {
-                LinkTable((Tabela) (lig.getFormaPontaA()), destino, cb, ca);
+                Tabela tmp = (Tabela) (lig.getFormaPontaA());
+                lin = LinkTable(tmp, destino, cb, ca);
+            }
+            if (origemLigacao.containsKey(lig)) {
+                setOrigemLigacao(lin, destino);
             }
         });
 
@@ -996,7 +1021,9 @@ public class conversorConceitualParaLogico {
             PreCardinalidade.TiposCard card = cards.get(i);
             PreCardinalidade.TiposCard card2 = ((cards.get(i) == PreCardinalidade.TiposCard.C01 || cards.get(i) == PreCardinalidade.TiposCard.C0N) ? PreCardinalidade.TiposCard.C01 : PreCardinalidade.TiposCard.C11);
 
-            LinkTable(prin, t, card2.ordinal(), card.ordinal());
+            setOrigemLigacao(
+                    LinkTable(prin, t, card2.ordinal(), card.ordinal()),
+                    prin);
             ImportaCampoChave(t, prin, t.getTexto() + "_");
             ax = removerCaracteresEspeciais(prin.getTexto() + "_" + t.getTexto());
             prin.setTexto(ax);
@@ -1086,17 +1113,31 @@ public class conversorConceitualParaLogico {
                 if (Opcoes.OPC == 0) {
                     tabs_origem.forEach(tab1 -> {
                         tabs_destino.forEach(tab2 -> {
-                            ImportaCampoChave(tab1, tab2, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent1.getTexto() + "_");
-                            Links.Add(re, tab2);
-                            LinkTable(tab1, tab2, card1, card2);
+                            if (tab1 != tab2) {
+                                ImportaCampoChave(tab1, tab2, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent1.getTexto() + "_");
+                                setOrigemLigacao(
+                                        LinkTable(tab1, tab2, card1, card2),
+                                        tab2);
+                                Links.Add(re, tab2);
+                            } else {
+                                // # Como se fosse um altorelacionamento
+                                AdicionarChaveEstrangeira(tab1, tab1, null);
+                            }
                         });
                     });
                 } else {
                     tabs_destino.forEach(tab2 -> {
                         tabs_origem.forEach(tab1 -> {
-                            ImportaCampoChave(tab2, tab1, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent2.getTexto() + "_");
-                            LinkTable(tab2, tab1, card2, card1);
-                            Links.Add(re, tab1);
+                            if (tab1 != tab2) {
+                                ImportaCampoChave(tab2, tab1, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent2.getTexto() + "_");
+                                setOrigemLigacao(
+                                        LinkTable(tab2, tab1, card2, card1),
+                                        tab1);
+                                Links.Add(re, tab1);
+                            } else {
+                                // # Como se fosse um altorelacionamento
+                                AdicionarChaveEstrangeira(tab1, tab1, null);
+                            }
                         });
                     });
                 }
@@ -1158,13 +1199,19 @@ public class conversorConceitualParaLogico {
         String ax = removerCaracteresEspeciais(re.getTexto().isEmpty() ? ent1.getTexto() + "_" + ent2.getTexto() : re.getTexto());
         prin.SetTexto(ax);
 
+        ArrayList<Tabela> jaLigada = new ArrayList<>();
         for (Tabela t : tabs_origem) {
             int c2 = card1;
             int c1 = 1; //(0,1)
             if (c2 == 0 || c2 == 2) {
                 c1 = 0; //(1,1)
             }
-            LinkTable(prin, t, c2, c1);
+            if (prin != t) {
+                setOrigemLigacao(
+                        LinkTable(prin, t, c2, c1),
+                        prin);
+                jaLigada.add(t);
+            }
             ImportaCampoChave(t, prin, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t.getTexto() + "_");
         }
         for (Tabela t : tabs_destino) {
@@ -1173,14 +1220,42 @@ public class conversorConceitualParaLogico {
             if (c2 == 0 || c2 == 2) {
                 c1 = 0; //(1,1)
             }
-            LinkTable(prin, t, c2, c1);
-            ImportaCampoChave(t, prin, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t.getTexto() + "_");
+            if (jaLigada.indexOf(t) > -1) {
+                final LogicoLinha lig = LinkTable(prin, t, c2, c1);
+                setOrigemLigacao(lig, prin);
+                // # Um duplo relacionamento entre a nova tabela e a existente! 
+                AdicionarChaveEstrangeira(prin, t, lig);
+            } else {
+                if (prin != t) {
+                    setOrigemLigacao(LinkTable(prin, t, c2, c1), prin);
+                }
+                ImportaCampoChave(t, prin, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t.getTexto() + "_");
+            }
         }
+
         if (!recebaEConvertaAtributos(re, prin, attrs)) {
             return false;
         }
         Links.Add(re, prin);
         return true;
+    }
+
+    HashMap<Constraint, LogicoLinha> directFK = new HashMap<>();
+    HashMap<Constraint, Tabela> directPK = new HashMap<>();
+
+    private void AdicionarChaveEstrangeira(Tabela tab_recebedora, Tabela tab_origen_PK, final LogicoLinha lig) {
+        final Constraint nova_fk = new Constraint(tab_recebedora);
+        nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+
+        List<Campo> camposKey = tab_origen_PK.getCampos().stream().filter(cm -> cm.isKey()).collect(Collectors.toList());
+
+        camposKey.forEach(C -> {
+            Campo c = ImportaCampoIgnoreConstrais(tab_recebedora, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + tab_origen_PK.getTexto() + "_");
+            c.SetFkey(true);
+            nova_fk.Add(C, c);
+        });
+        directFK.put(nova_fk, lig);
+        directPK.put(nova_fk, tab_origen_PK);
     }
 
     private void AddObservacoes(Forma re, boolean origem) {
@@ -1296,7 +1371,7 @@ public class conversorConceitualParaLogico {
 
                         lst.stream().forEach(pre -> {
                             Links.getLigadosOrigem(pre).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(s -> {
-                                LinkTable(principal, s, -1, 0);
+                                setOrigemLigacao(LinkTable(principal, s, -1, 0), s);
                                 ImportaCampoChave(principal, s, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_");
 
                                 secundarias.add(s);
@@ -1386,9 +1461,14 @@ public class conversorConceitualParaLogico {
      */
     private void renomeieFKs() {
         destino.getListaDeTabelas().stream().forEach(tt -> {
+            ArrayList<String> nm = new ArrayList<>();
             tt.getCampos().stream().filter(C -> C.isFkey() && C.getCampoOrigem() != null).forEach(C -> {
                 String ax = removerCaracteresEspeciais(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
                         + C.getTabelaOrigem().getTexto() + "_" + C.getCampoOrigem().getTexto());
+                while (nm.indexOf(ax) > -1) {
+                    ax += "_";
+                }
+                nm.add(ax);
                 C.setTexto(ax);
             });
             if (frutoAutoRelacionamento.indexOf(tt) > -1) {
@@ -1421,6 +1501,15 @@ public class conversorConceitualParaLogico {
         return camposOrigem.get(cmp_prin);
     }
 
+    /**
+     * Grava qual tabela será receberá a FK após uma ligação. /////???? Ver se todos as chamadas ao método LinkTable informa corretamente qual a tabela será a FK e ver também se não há outras ligações de tabelas não cobertas!
+     */
+    HashMap<LogicoLinha, Tabela> origemLigacao = new HashMap<>();
+
+    private void setOrigemLigacao(LogicoLinha linha, Tabela tab) {
+        origemLigacao.put(linha, tab);
+    }
+
     public boolean processeConstraints() {
         destino.getListaDeTabelas().forEach(tb -> {
             tb.getCampos().stream().filter(cmp -> cmp.isKey()).forEach(cmp -> {
@@ -1433,59 +1522,138 @@ public class conversorConceitualParaLogico {
                 Tabela tb_pk = cmp_ori.getTabela();
                 Constraint constr_pk = tb_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
                 Constraint constr_fk = tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
-                        .filter(c -> c.getConstraintOrigem() == constr_pk).findFirst().orElse(null);
+                        .filter(c -> (c.getConstraintOrigem() == constr_pk)).findFirst().orElse(null);
                 if (constr_fk == null) {
                     constr_fk = new Constraint(tb_fk);
                     constr_fk.setTipo(Constraint.Constraint_tipo.tpFK);
                 }
 
-                final LogicoLinha lin = tb_fk.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(tb_fk) == tb_pk)
+                LogicoLinha lin = tb_fk.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(tb_fk) == tb_pk && origemLigacao.get((LogicoLinha) L) == tb_fk)
+                        //                LogicoLinha lin = tb_fk.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(tb_fk) == tb_pk)
                         .map(L -> (LogicoLinha) L).findAny().orElse(null);
 
                 constr_fk.Add(cmp_ori, cmp, lin, constr_pk);
+                condicaoIR(lin, tb_fk, constr_fk);
                 constr_fk.Valide();
             });
             if (frutoAutoRelacionamento.indexOf(tb_fk) > -1) {
-                ArrayList<Constraint> ascons = new ArrayList<>(tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK).collect(Collectors.toList()));
-                ascons.stream().forEach(constr_fk -> {
-
-                    ArrayList<Campo> tmp = new ArrayList<>();
-                    ArrayList<Campo> replicado = new ArrayList<>();
-
-                    for (int i = 0; i < constr_fk.getCamposDeOrigem().size(); i++) {
-                        Campo co = constr_fk.getCamposDeOrigem().get(i);
-                        if (tmp.indexOf(co) > -1) {
-                            replicado.add(constr_fk.getCamposDeDestino().get(i));
-                        } else {
-                            tmp.add(co);
-                        }
-                    }
-
-                    if (!replicado.isEmpty()) {
-                        final Constraint nova_fk = new Constraint(tb_fk);
-                        nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
-
-                        LogicoLinha lin = constr_fk.getLigacao();
-                        if (lin != null) {
-                            //int Card1 = lin.getCardA().CardToInt();
-                            int Card2 = lin.getCardB().CardToInt();
-                            if (lin.getFormaPontaB() != tb_fk) {
-                                Card2 = lin.getCardA().CardToInt();
-                                //Card1 = lin.getCardB().CardToInt();
-                            }
-                            lin = LinkTable(constr_fk.getConstraintOrigem().getTabela(), tb_fk, 0, Card2);
-                        }
-                        final LogicoLinha lig = lin;
-                        replicado.stream().forEach(rp -> {
-                            Campo cmp_ori = constr_fk.getOrigem(rp);
-                            constr_fk.RemoveFromDestino(rp);
-                            nova_fk.Add(cmp_ori, rp, lig, constr_fk.getConstraintOrigem());
-                        });
-                        nova_fk.Valide();
-                    }
-                });
+                ProcesseFrutoAutoRel(tb_fk);
             }
         });
+        return processeConstraintsDirect();
+    }
+
+    /**
+     * Acrescenta a RI à FK
+     * @param linha
+     * @param tab_fk
+     * @param IR 
+     */
+    private void condicaoIR(LogicoLinha linha, Tabela tab_fk, Constraint IR) {
+        if (linha == null || tab_fk == null || IR == null) {
+            return;
+        }
+        final String CASCADE = "CASCADE";
+        final String SETNULL = "SET NULL";
+        final String NOACTION = "NO ACTION";
+        final String RESTRICT = "RESTRICT";
+
+        PreCardinalidade.TiposCard cardA;
+        PreCardinalidade.TiposCard cardB;
+
+        if (linha.getFormaPontaB() == tab_fk) {
+            cardA = linha.getCardA().getCard();
+            cardB = linha.getCardB().getCard();
+        } else {
+            cardA = linha.getCardB().getCard();
+            cardB = linha.getCardA().getCard();
+        }
+
+        if (cardA == PreCardinalidade.TiposCard.C01) {
+            if (cardB == PreCardinalidade.TiposCard.C0N || cardB == PreCardinalidade.TiposCard.C01) {
+                IR.setDdlOnDelete(SETNULL);
+            } else {
+                IR.setDdlOnDelete(CASCADE);
+            }
+            IR.setDdlOnUpdate(CASCADE);
+        } else {
+            if (cardA == PreCardinalidade.TiposCard.C11) {
+                if (cardB == PreCardinalidade.TiposCard.C0N || cardB == PreCardinalidade.TiposCard.C01) {
+                    IR.setDdlOnDelete(CASCADE);
+                    IR.setDdlOnUpdate(CASCADE);
+                } else {
+                    IR.setDdlOnDelete(RESTRICT);
+                    IR.setDdlOnUpdate(RESTRICT);
+                }
+            } else {
+                IR.setDdlOnDelete(NOACTION);
+                IR.setDdlOnUpdate(NOACTION);
+            }
+        }
+    }
+
+    /**
+     * Caso em que se precisa de uma segunda chave estrangeira. Será neessário uma nova forma de processamento!
+     */
+    private boolean processeConstraintsDirect() {
+        directFK.keySet().stream().forEach(fk -> {
+            Tabela t_pk = directPK.get(fk);
+            Constraint constr_pk = t_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
+            if (constr_pk != null) {
+                Tabela t_fk = fk.getTabela();
+                t_pk.getCampos().stream().filter(cm -> cm.isKey() && (fk.getCamposDeOrigem().indexOf(cm) < 0)).forEach(C -> {
+                    Campo c = ImportaCampoIgnoreConstrais(t_fk, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t_pk.getTexto() + "_");
+                    c.SetFkey(true);
+                    fk.Add(C, c);
+                });
+                fk.LigacaoDireta(constr_pk, directFK.get(fk));
+                condicaoIR(directFK.get(fk), t_fk, fk);
+            }
+            fk.Valide();
+        });
         return true;
+    }
+
+    private void ProcesseFrutoAutoRel(Tabela tb_fk) {
+        ArrayList<Constraint> ascons = new ArrayList<>(tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK).collect(Collectors.toList()));
+        ascons.stream().forEach(constr_fk -> {
+
+            ArrayList<Campo> tmp = new ArrayList<>();
+            ArrayList<Campo> replicado = new ArrayList<>();
+
+            for (int i = 0; i < constr_fk.getCamposDeOrigem().size(); i++) {
+                Campo co = constr_fk.getCamposDeOrigem().get(i);
+                if (tmp.indexOf(co) > -1) {
+                    replicado.add(constr_fk.getCamposDeDestino().get(i));
+                } else {
+                    tmp.add(co);
+                }
+            }
+
+            if (!replicado.isEmpty()) {
+                final Constraint nova_fk = new Constraint(tb_fk);
+                nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+
+                LogicoLinha lin = constr_fk.getLigacao();
+                if (lin != null) {
+                    //int Card1 = lin.getCardA().CardToInt();
+                    int Card2 = lin.getCardB().CardToInt();
+                    if (lin.getFormaPontaB() != tb_fk) {
+                        Card2 = lin.getCardA().CardToInt();
+                        //Card1 = lin.getCardB().CardToInt();
+                    }
+                    lin = LinkTable(constr_fk.getConstraintOrigem().getTabela(), tb_fk, 0, Card2);
+                    setOrigemLigacao(lin, tb_fk);
+                }
+                final LogicoLinha lig = lin;
+                replicado.stream().forEach(rp -> {
+                    Campo cmp_ori = constr_fk.getOrigem(rp);
+                    constr_fk.RemoveFromDestino(rp);
+                    nova_fk.Add(cmp_ori, rp, lig, constr_fk.getConstraintOrigem());
+                });
+                condicaoIR(lin, tb_fk, nova_fk);
+                nova_fk.Valide();
+            }
+        });
     }
 }

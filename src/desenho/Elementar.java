@@ -598,6 +598,11 @@ public class Elementar implements ElementarListener, Serializable {
         lista.add(0, this);
     }
 
+    /**
+     * Processo fundamental que verifica se um ponto está na área di componente.
+     * @param p Point
+     * @return 
+     */
     public boolean IsMe(Point p) {
         if (!isVisible()) {
             return false;

@@ -1311,6 +1311,6 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     }
 
     /**
-     * TO_DO Ao colar: Os baseDrawer não estão persistindo em XML corretamente (ainda não implementado - 09/11/2013). Salvar como --> excluir extensão. ///???? /
+     * TO_DO Ao colar: Salvar como --> excluir extensão. ///???? /
      */
 }

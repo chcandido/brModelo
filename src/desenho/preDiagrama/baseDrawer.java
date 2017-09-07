@@ -594,7 +594,4 @@ public class baseDrawer extends baseDrawerFromForma implements iBaseDrawer {
     public String FormateUnidadeMedida(int valor) {
         return convertMedidas(valor) + getUnidadeMedida();
     }
-
-    ////???Falta testar salver e carregar e ToXML
-    //testado 20/009/2016 - erro não observado
 }

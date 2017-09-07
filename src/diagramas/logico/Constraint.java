@@ -298,6 +298,25 @@ public class Constraint implements Serializable {
         return constraintOrigem;
     }
 
+    public void LigacaoDireta(Constraint constraintOrigem, LogicoLinha ligacao) {
+        if ((constraintOrigem == null) || (constraintOrigem.getTipo() == Constraint_tipo.tpFK) || (this.constraintOrigem != null) || (getTipo() != Constraint_tipo.tpFK)) {
+            setConstraintOrigem(constraintOrigem);
+        } else {
+            this.constraintOrigem = constraintOrigem;
+            Tabela ori = this.constraintOrigem.getTabela();
+            getTabela().PerformLigacao(ori, true);
+            int tl = camposDeOrigem.size() - 1;
+            while (tl > -1) {
+                if (camposDeOrigem.get(tl) != null && camposDeOrigem.get(tl).getTabela() != ori) {
+                    camposDeOrigem.remove(tl);
+                    camposDeOrigem.add(tl, null);
+                } 
+                tl--;
+            }
+            this.ligacao = ligacao;
+        }
+    }
+
     public void setConstraintOrigem(Constraint constraintOrigem) {
         if (this.constraintOrigem != constraintOrigem) {
             if (this.constraintOrigem != null) {
@@ -747,7 +766,7 @@ public class Constraint implements Serializable {
                 if (isNomeada() && !getNome().trim().isEmpty()) {
                     txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
                     txt += sepa;
-            } else {
+                } else {
                     txt = "PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
                 }
                 break;

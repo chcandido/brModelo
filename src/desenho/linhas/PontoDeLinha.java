@@ -35,7 +35,7 @@ public class PontoDeLinha extends PontoElementar {
             linhaDona = (Linha) pai;
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Campos">
     //public PontoDeLinha Proximo;
     public boolean IsTopOrBotton;
@@ -50,7 +50,7 @@ public class PontoDeLinha extends PontoElementar {
     public void setPosicao(int posicao) {
         this.posicao = posicao;
     }
-    
+
     private transient Point down = new Point(0, 0);
     private transient boolean isMouseDown = false;
     //public boolean AllwaysHide = false;
@@ -92,22 +92,21 @@ public class PontoDeLinha extends PontoElementar {
      * Força o setEm()
      */
     public void SetEm(Forma destino) {
-           this.em = destino;
-            if (destino != null) {
-                PerformLigacao(destino, true);
-                //this.em.maisLigacao(this);
-            }
+        this.em = destino;
+        if (destino != null) {
+            PerformLigacao(destino, true);
+            //this.em.maisLigacao(this);
+        }
     }
-    
+
     // </editor-fold>
-    
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
         isMouseDown = true;
         down = new Point(e.getX(), e.getY());
     }
-    
+
     private Linha linhaDona;
 
     @Override
@@ -144,13 +143,14 @@ public class PontoDeLinha extends PontoElementar {
         ProcessaOverDraw(true);
         super.mouseReleased(e);
     }
-    
+
     /**
      * Liga uma linha a um objeto manualmente (sem o uso do mouse).
+     *
      * @param res
-     * @return 
+     * @return
      */
-    public boolean LigarA(Elementar res){
+    public boolean LigarA(Elementar res) {
         boolean sn = false;
         if (res instanceof Forma) {
             setEm((Forma) res);
@@ -168,7 +168,7 @@ public class PontoDeLinha extends PontoElementar {
         //ProcessaOverDraw(true);
         return sn;
     }
-    
+
     private transient boolean dragging = false;
 
     @Override
@@ -191,7 +191,7 @@ public class PontoDeLinha extends PontoElementar {
             ProcessaOverDraw(false);
         }
     }
-    
+
     private Forma overDraw = null;
 
     public void ProcessaOverDraw(boolean zera) {
@@ -210,7 +210,9 @@ public class PontoDeLinha extends PontoElementar {
                     overDraw = null;
                 }
             } else {
-                if (el.isComposto()) el = el.ProcessaComposicao(getCentro());
+                if (el.isComposto()) {
+                    el = el.ProcessaComposicao(getCentro());
+                }
                 if (el instanceof Forma && el != overDraw) {
                     if (overDraw != null) {
                         overDraw.setOverMe(false);
@@ -396,7 +398,7 @@ public class PontoDeLinha extends PontoElementar {
         getDono().OrganizeLinha();
         getDono().reSetBounds();
     }
-    
+
     private int lado = 0;
 
     public int getLado() {
@@ -425,6 +427,30 @@ public class PontoDeLinha extends PontoElementar {
             g.setPaint(bkpP);
 
         }
+
+        if (entrou) {
+            Rectangle rec = getBounds();
+            int x = rec.width / 2;
+            int y = rec.height / 2;
+            rec.grow(x + 1, y + 1);
+
+            //rec = new Rectangle(rec.x - x, rec.y - y, rec.width * 2, rec.height * 2);
+            Stroke bkp = g.getStroke();
+            Paint bkpP = g.getPaint();
+
+            g.setStroke(new BasicStroke(
+                    1f,
+                    BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_ROUND,
+                    2f,
+                    new float[]{2f, 2f},
+                    0f));
+            g.setPaint(Color.gray);
+            g.drawOval(rec.x, rec.y, rec.width, rec.height);
+            g.setStroke(bkp);
+            g.setPaint(bkpP);
+        }
+
         if (dragging && getMaster().getEditor().isMostrarDimensoesAoMover()) {
             Stroke bkp = g.getStroke();
             Paint bkpP = g.getPaint();
@@ -440,7 +466,6 @@ public class PontoDeLinha extends PontoElementar {
             g.drawLine(0, getCentro().y, getMaster().getWidth(), getCentro().y);
             g.drawLine(getCentro().x, 0, getCentro().x, getMaster().getHeight());
 
-            
             Font bkpf = g.getFont();
             g.setFont(new Font(bkpf.getName(), Font.ITALIC, bkpf.getSize() - 2));
             g.drawString("[" + String.valueOf(getLeft()) + ","
@@ -458,5 +483,47 @@ public class PontoDeLinha extends PontoElementar {
     boolean ForceIsMe(Point p) {
         return getBounds().contains(p);
     }
-    
+
+    @Override
+    public boolean IsMe(Point p) {
+//        if (IsTopOrBotton && linhaDona.isSelecionado()) {
+        if (linhaDona.isSelecionado()) {
+            if (!isVisible()) {
+                return super.IsMe(p);
+            }
+            Rectangle r = getBounds();
+            int x = r.width / 2;
+            int y = r.height / 2;
+            //r = new Rectangle(r.x - x, r.y - y, r.width * 2, r.height * 2);
+            r.grow(x, y);
+            return r.contains(p);
+        }
+        return super.IsMe(p);
+    }
+
+    private boolean entrou = false;
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        super.mouseEntered(e); //To change body of generated methods, choose Tools | Templates.
+        entrou = true;
+        Rectangle r = getBounds();
+        int x = r.width / 2;
+        int y = r.height / 2;
+        //r = new Rectangle(r.x - x, r.y - y, r.width * 2, r.height * 2);
+        r.grow(x + 2, y + 2);
+        InvalidateArea(r);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        super.mouseExited(e); //To change body of generated methods, choose Tools | Templates.
+        entrou = false;
+        Rectangle r = getBounds();
+        int x = r.width / 2;
+        int y = r.height / 2;
+        //r = new Rectangle(r.x - x, r.y - y, r.width * 2, r.height * 2);
+        r.grow(x + 2, y + 2);
+        InvalidateArea(r);
+    }
 }

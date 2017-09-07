@@ -89,8 +89,8 @@ public class PontoElementar extends Elementar {
         }
         super.DoPaint(g);
         g.setColor(this.getBackColor());
-        //g.fillRect(getLeft(), getTop(), getWidth(), getHeight());
         g.fillOval(getLeft(), getTop(), getWidth(), getHeight());
+
     }
     
     // <editor-fold defaultstate="collapsed" desc="Mouse">

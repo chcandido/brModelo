@@ -16,6 +16,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -172,23 +173,69 @@ public class Linha extends FormaElementar {
         super.DoPaint(g);
         Stroke bkp = g.getStroke();
 
-        if (isDashed()) {
-            g.setStroke(new BasicStroke(getLargura(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1, 2}, 0));
-        } else {
-            g.setStroke(new BasicStroke(
-                    getLargura(),
-                    BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_ROUND));
-        }
-
         g.setPaint(getForeColor());
-
         if (getPontosParaDesenho() != null) {
+//            g.setStroke(new BasicStroke(
+//                    3f * getLargura(),
+//                    BasicStroke.CAP_ROUND,
+//                    BasicStroke.JOIN_ROUND));
+//            g.setPaint(Color.yellow);
+//            int[] baseX = Arrays.copyOf(pontosParaDesenhoX, pontosParaDesenhoX.length);
+//            int[] baseY = Arrays.copyOf(pontosParaDesenhoY, pontosParaDesenhoY.length);
+//            Diminua(baseX, baseY);
+//            g.drawPolyline(baseX, baseY, pontosParaDesenhoX.length);
+//            g.setPaint(getForeColor());
+
+            if (isDashed()) {
+                g.setStroke(new BasicStroke(getLargura(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1, 2}, 0));
+            } else {
+                g.setStroke(new BasicStroke(
+                        getLargura(),
+                        BasicStroke.CAP_ROUND,
+                        BasicStroke.JOIN_ROUND));
+            }
+
             g.drawPolyline(pontosParaDesenhoX, pontosParaDesenhoY, pontosParaDesenhoX.length);
         }
         g.setStroke(bkp);
-        //g.drawRect(getLeft(), getTop(), getWidth(), getHeight());
+//        super.DoPaint(g);
     }
+
+//    public void Diminua(int[] baseX, int[] baseY) {
+//        final int w = getMaster().getPontoWidth();
+//        for (int i = 0; i < baseX.length; i++) {
+//            if ((baseX.length > 1) && ((i == 0) || (i == baseX.length - 1))) {
+//                int a, b, c, d, n;
+//                if (i == 0) {
+//                    a = baseX[0];
+//                    b = baseX[1];
+//                    c = baseY[0];
+//                    d = baseY[1];
+//                    n = 1;
+//                } else {
+//                    a = baseX[baseX.length - 2];
+//                    b = baseX[baseX.length - 1];
+//                    c = baseY[baseX.length - 2];
+//                    d = baseY[baseX.length - 1];
+//                    n = -1;
+//                }
+//                int m = w*n*2;
+//                if (a == b) {
+//                    if (c < d) {
+//                        baseY[i] = baseY[i] + m;
+//                    } else {
+//                        baseY[i] = baseY[i] - m;
+//                    }
+//                } else {
+//                    if (a < b) {
+//                        baseX[i] = baseX[i] + m;
+//                    } else {
+//                        baseX[i] = baseX[i] - m;
+//                    }
+//                }
+//            } 
+//        }
+//    }
 
     @Override
     public boolean IsMe(Point p) {
@@ -295,8 +342,7 @@ public class Linha extends FormaElementar {
     }
 
     /**
-     * Quando o objetivo for ligar duas formas, basta que FormasALigar seja carregada com elas! Isso forçará uma ligação entre duas unidades, impedido que uma
-     * ligação indesejada ocorra por conde de existir uma outra unidade sobre a que esta sendo ligaga.
+     * Quando o objetivo for ligar duas formas, basta que FormasALigar seja carregada com elas! Isso forçará uma ligação entre duas unidades, impedido que uma ligação indesejada ocorra por conde de existir uma outra unidade sobre a que esta sendo ligaga.
      */
     transient public Forma[] FormasALigar = null;
 
@@ -319,7 +365,7 @@ public class Linha extends FormaElementar {
         pt2.setEm((Forma) res);
 
         FormasALigar = null;
-        
+
         if (pt.getEm() != null) {
             pt.getEm().PosicionePonto(pt);
         }
@@ -444,7 +490,7 @@ public class Linha extends FormaElementar {
                 getMaster().DiagramaDoSelecao(this, true, false);
             }
         }
-        
+
         if (!isAncorado()) { ////???? Colocado em 19/03/2017 - falta testar.
             ProcessPontoMouseUp();
         }

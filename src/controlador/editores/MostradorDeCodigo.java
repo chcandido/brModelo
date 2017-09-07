@@ -344,4 +344,3 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         
     }
 }
-////????? Colocar um título neste formulário e no EditorTexto.

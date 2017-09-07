@@ -179,6 +179,22 @@ public class Utilidades {
     public static String EncapsuleMsg(String msg, String param1, String param2) {
         return EncapsuleMsg(msg, new Object[] {param1, param2});
     }
+
+//    public static int[] Diminua(int[] base) {
+//        int[] res = new int[base.length];
+//        for (int i = 0; i < base.length; i++) {
+//            res[i] = base[i]-1;
+//        }
+//        return res;
+//    }
+//    
+//    public static int[] Aumente(int[] base) {
+//        int[] res = new int[base.length];
+//        for (int i = 0; i < base.length; i++) {
+//            res[i] = base[i]+1;
+//        }
+//        return res;
+//    }
     
     public static String textoParaCampo(String original) {
         return original.replaceAll("[ãâàáä]", "a")
