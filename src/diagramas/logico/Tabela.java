@@ -401,7 +401,7 @@ public class Tabela extends baseDrawerFromForma {
     /**
      * Mostrar as IR de maneira simplificada
      */
-    private boolean plainIR = false;
+    private boolean plainIR = true;
 
     public boolean isPlainIR() {
         return plainIR;
@@ -1336,7 +1336,7 @@ public class Tabela extends baseDrawerFromForma {
     /**
      * Mostrar constraints na tabela
      */
-    private boolean mostrarConstraints = false;
+    private boolean mostrarConstraints = true;
 
     public boolean isMostrarConstraints() {
         return mostrarConstraints;

@@ -7,7 +7,6 @@ package diagramas.logico;
 import controlador.Controler;
 import controlador.Diagrama;
 import controlador.Editor;
-import controlador.editores.DrawerEditor;
 import controlador.editores.EditorDeCampos;
 import controlador.editores.EditorDeIR;
 import controlador.editores.EditorDeIrFK;
@@ -31,7 +30,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import principal.Aplicacao;
 import util.BoxingJava;
-import controlador.editores.EditorTexto;
 import controlador.editores.MostradorDeCodigo;
 
 /**

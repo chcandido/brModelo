@@ -392,6 +392,9 @@ public class Campo implements Serializable {
 
             txt = getCampoOrigem() == null ? "()" : getCampoOrigem().getTexto();
             res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "campo.campoorigem", txt).setTag(Constraint.TAG_COMMAND_FK + 10));
+        } else {
+            res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("campo.tabelaorigem", "[]").PropertyForceDisable(true));
+            res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("campo.campoorigem", "()").PropertyForceDisable(true));
         }
 
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdExcluirSubItem.name()));
