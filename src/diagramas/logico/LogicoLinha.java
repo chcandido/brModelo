@@ -254,6 +254,7 @@ public class LogicoLinha extends SuperLinha {
 
     @Override
     public boolean Destroy() {
+        PerformRoqued(false);
         ArrayList<PontoDeLinha> pontos = getPontos();
         for (PontoDeLinha pdl : pontos) {
             pdl.Destroy();
@@ -394,14 +395,13 @@ public class LogicoLinha extends SuperLinha {
         }
     }
 
-//    @Override
-//    public void setSelecionado(boolean sel) {
-//        super.setSelecionado(sel);
-//        if (getMaster().getSelecionado() == this) {
-//            PerformRoqued(true);
-//        } else {
-//            PerformRoqued(false);
-//        }
-//    }
+
+    /**
+     * Acesso externo ao fator_largura
+     * @param f 
+     */
+    public void SetFatorLargura(float f) {
+        fator_largura = f;
+    }
 
 }

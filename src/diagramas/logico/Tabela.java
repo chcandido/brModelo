@@ -116,11 +116,17 @@ public class Tabela extends baseDrawerFromForma {
         }
         if (this.constraintSelecionado != null) {
             this.constraintSelecionado.setSelecionado(false);
+//            if (this.constraintSelecionado.getLigacao() != null && this. constraintSelecionado.roqued) {
+//                this.constraintSelecionado.getLigacao().PerformRoqued(false);
+//            }
         }
         this.constraintSelecionado = selecionado;
         if (this.constraintSelecionado != null) {
             this.constraintSelecionado.setSelecionado(true);
             setCampoSelecionado(null);
+//            if (this.constraintSelecionado.getLigacao() != null) {
+//                this.constraintSelecionado.getLigacao().PerformRoqued(true);
+//            }
         }
         if (getMaster().getSelecionado() == this) {
             getMaster().PerformInspector();
@@ -176,7 +182,7 @@ public class Tabela extends baseDrawerFromForma {
     protected final String COMM_EDT_CMPS = "edt_campos";
     protected final String COMM_EDT_CMPS_TP = "edt_campos_tipo";
     private final int EDITOR_CAMPOS = 200317;
-    private final int EDITOR_CAMPOS_TP =180717;
+    private final int EDITOR_CAMPOS_TP = 180717;
     private final int PRINT_DDL = 310317;
 
     protected final String COMM_RI = "tabela.constraint";
@@ -822,6 +828,9 @@ public class Tabela extends baseDrawerFromForma {
                 });
                 break;
             case tpFK:
+                if (constr.getLigacao() != null) {
+                    constr.getLigacao().PerformRoqued(false);
+                }
                 constr.getCamposDeDestino().stream().filter(cmp -> cmp != null).forEach(cmp -> cmp.SetFkey(false));
                 break;
         }
@@ -1393,4 +1402,49 @@ public class Tabela extends baseDrawerFromForma {
         }
     }
 
+    @Override
+    public void mouseExited(MouseEvent e) {
+        super.mouseExited(e);
+        if (constraintRoqued != null) {
+            roqueFromMouse(false);
+            constraintRoqued = null;
+        }
+    }
+
+    private void roqueFromMouse(boolean sn) {
+        if (sn == constraintRoqued.roqued) {
+            return;
+        }
+        if (constraintRoqued.isAutoRelacionamento()) {
+            constraintRoqued.roqued = sn;
+            constraintRoqued.getCamposDeDestino().stream().filter(c -> c != null).forEach(c -> c.roqued = sn);
+            constraintRoqued.getCamposDeOrigem().stream().filter(c -> c != null).forEach(c -> c.roqued = sn);
+            InvalidateArea();
+            return;
+        }
+        if (constraintRoqued.getLigacao() != null) {
+            constraintRoqued.getLigacao().PerformRoqued(sn);
+            constraintRoqued.getLigacao().SetFatorLargura(sn ? 2f : 1f);
+        }
+    }
+
+    private transient Constraint constraintRoqued = null;
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        super.mouseMoved(e);
+        Constraint tmp = getConstraints().stream().filter(constr -> constr.getTipo() == Constraint.Constraint_tipo.tpFK && constr.isMe(e.getPoint())).findFirst().orElse(null);
+        if (tmp == constraintRoqued) {
+            return;
+        }
+        if (constraintRoqued != null) {
+            roqueFromMouse(false);
+        }
+        if (tmp == null) {
+            constraintRoqued = null;
+        } else {
+            constraintRoqued = tmp;
+            roqueFromMouse(true);
+        }
+    }
 }

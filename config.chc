@@ -1,13 +1,13 @@
 #Config
-#Thu Sep 07 20:51:37 AMT 2017
+#Sun Sep 10 22:02:42 AMT 2017
 cfg.ancorador=true
 cfg.mostrargrade=true
-cfg.location.y=0
+cfg.location.y=-8
 cfg.location.x=-8
 cfg.mostrardimensoesaomover=true
 cfg.gradelargura=23
 cfg.mostrartooltips=false
 cfg.tipodefault=0
 cfg.mostrarids=true
-cfg.recentes=C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO.brM3;C\:\\Chc\\Prg\\brModelo\\BigLogico.brM3;C\:\\Chc\\Prg\\brModelo\\testando.brM3;C\:\\Chc\\TMP\\brModelo\\Conceitual_1.xml;C\:\\Chc\\Apreseta\u00E7\u00E3o\\Conceitual-3.0.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_2.brM3;C\:\\Chc\\TMP\\TesteLogico.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_teste.brM3;C\:\\Chc\\TMP\\L\u00F3gico_1bagunca.brM3;C\:\\Chc\\Prg\\brModelo\\novontesteConceitual_1.brM3;C\:\\Chc\\html\\brModeloHelp\\Rel 1pN com nova tab.brM3;C\:\\Chc\\TMP\\TesteConceitual.brM3;C\:\\Chc\\TMP\\Conceitual_1.brM3;C\:\\Chc\\TMP\\Conceitual_2.brM3;C\:\\Chc\\Prg\\brModelo\\logicol_1.brM3;C\:\\Chc\\Prg\\brModelo\\Conceitual_1.brM3;C\:\\Chc\\TMP\\drawerel_1.brM3
+cfg.recentes=C\:\\Chc\\Prg\\brModelo\\BigLogico.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO.brM3;C\:\\Chc\\Prg\\brModelo\\testando.brM3;C\:\\Chc\\TMP\\brModelo\\Conceitual_1.xml;C\:\\Chc\\Apreseta\u00E7\u00E3o\\Conceitual-3.0.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_2.brM3;C\:\\Chc\\TMP\\TesteLogico.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_teste.brM3;C\:\\Chc\\TMP\\L\u00F3gico_1bagunca.brM3;C\:\\Chc\\Prg\\brModelo\\novontesteConceitual_1.brM3;C\:\\Chc\\html\\brModeloHelp\\Rel 1pN com nova tab.brM3;C\:\\Chc\\TMP\\TesteConceitual.brM3;C\:\\Chc\\TMP\\Conceitual_1.brM3;C\:\\Chc\\TMP\\Conceitual_2.brM3;C\:\\Chc\\Prg\\brModelo\\logicol_1.brM3;C\:\\Chc\\Prg\\brModelo\\Conceitual_1.brM3;C\:\\Chc\\TMP\\drawerel_1.brM3
 cfg.location.salvar=true

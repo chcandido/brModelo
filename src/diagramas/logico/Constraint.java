@@ -221,6 +221,10 @@ public class Constraint implements Serializable {
      */
     private int motivoValidade = 0;
 
+    public boolean isAutoRelacionamento() {
+        return (getTabela() != null && getTabela() == getTabelaDeOrigem());
+    }
+
     public void Valide() {
         motivoValidade = V_MOTIVO_OK;
         if (getTipo() != Constraint_tipo.tpFK) {
@@ -310,7 +314,7 @@ public class Constraint implements Serializable {
                 if (camposDeOrigem.get(tl) != null && camposDeOrigem.get(tl).getTabela() != ori) {
                     camposDeOrigem.remove(tl);
                     camposDeOrigem.add(tl, null);
-                } 
+                }
                 tl--;
             }
             this.ligacao = ligacao;
