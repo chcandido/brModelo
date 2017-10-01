@@ -89,7 +89,7 @@ public class PreTexto extends FormaTextoBase {
     private Color corSombra = new Color(51, 51, 51);
 
     public Color getCorSombra() {
-        return corSombra;
+        return isDisablePainted()? disabledColor : corSombra;
     }
 
     public void setCorSombra(Color corSombra) {
@@ -104,7 +104,7 @@ public class PreTexto extends FormaTextoBase {
     private boolean gradientePinteDetalhe = true;
 
     public Color getGradienteCorDetalhe() {
-        return gradienteCorDetalhe;
+        return isDisablePainted()? disabledColor : gradienteCorDetalhe;
     }
 
     public void setGradienteCorDetalhe(Color gradienteCorDetalhe) {
@@ -123,7 +123,7 @@ public class PreTexto extends FormaTextoBase {
     private Color gradienteCorDetalhe = new Color(102, 102, 102);
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -141,7 +141,7 @@ public class PreTexto extends FormaTextoBase {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {
@@ -379,13 +379,13 @@ public class PreTexto extends FormaTextoBase {
             g.drawRoundRect(L, T, w - 1, h - 1, roundRectSize, roundRectSize);
             g.setPaint(GP);
             g.fillRoundRect(L + 1, T + 1, w - 2, h - 2, roundRectSize, roundRectSize);
-            g.setPaint(Color.WHITE);
+            g.setPaint(isDisablePainted()? disabledColor : Color.WHITE);
             g.drawRoundRect(L + 1, T + 1, w - 3, h - 3, roundRectSize, roundRectSize);
         } else {
             g.drawRect(L, T, w - 1, h - 1);
             g.setPaint(GP);
             g.fillRect(L + 1, T + 1, w - 2, h - 2);
-            g.setPaint(Color.WHITE);
+            g.setPaint(isDisablePainted()? disabledColor : Color.WHITE);
             g.drawRect(L + 1, T + 1, w - 3, h - 3);
         }
         if (isGradientePinteDetalhe()) {

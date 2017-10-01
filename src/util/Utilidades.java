@@ -5,11 +5,15 @@
 package util;
 
 import controlador.Editor;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -67,6 +71,26 @@ public class Utilidades {
         int G = 255 - cor.getGreen();
         int B = 255 - cor.getBlue();
         return new Color(R, G, B, A);
+    }
+    
+    /**
+     * Fonte: https://stackoverflow.com/questions/21382966/colorize-a-picture-in-java
+     * MODIFICADO
+     * @param image
+     * @param color
+     * @return 
+     */
+    public static BufferedImage dye(ImageIcon image, Color color) {
+        int w = image.getIconWidth();
+        int h = image.getIconHeight();
+        BufferedImage dyed = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = dyed.createGraphics();
+        g.drawImage(image.getImage(), 0, 0, null);
+        g.setComposite(AlphaComposite.SrcAtop);
+        g.setColor(color);
+        g.fillRect(0, 0, w, h);
+        g.dispose();
+        return dyed;
     }
 
     public static String decodeFontStyle(int style) {

@@ -212,7 +212,7 @@ public class FormaArea extends Forma {
     private Color gradienteStartColor = Color.LIGHT_GRAY;
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -230,7 +230,7 @@ public class FormaArea extends Forma {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {

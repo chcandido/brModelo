@@ -201,7 +201,7 @@ public class Legenda extends Forma {
     private Color BorderColor = Color.LIGHT_GRAY;
 
     public Color getBorderColor() {
-        return BorderColor;
+        return isDisablePainted()? disabledColor : BorderColor;
     }
 
     public void setBorderColor(Color BorderColor) {
@@ -290,10 +290,10 @@ public class Legenda extends Forma {
         for (ItemDeLegenda it : getItens()) {
 
             if (it.isSelecionada()) {
-                g.setColor(new Color(204, 204, 255, 50));
+                g.setColor(isDisablePainted()? disabledColor : new Color(204, 204, 255, 50));
                 g.fillRect(lft, posi - altura - 2, getWidth(), altura + 4);
             }
-            g.setColor(it.cor);
+            g.setColor(isDisablePainted()? disabledColor : it.cor);
             int moveleft;
             switch (getTipo()) {
                 case tpLinhas:

@@ -199,4 +199,11 @@ public class PreEntidadeAssociativa extends PreEntidade {
         if (interno != null) txts.add(interno.getTexto());
     }
 
+    @Override
+    public void setDisablePainted(boolean disablePainted) {
+        super.setDisablePainted(disablePainted);
+        if (interno != null) {
+            interno.setDisablePainted(disablePainted);
+        }
+    }
 }

@@ -240,7 +240,7 @@ public class baseDrawerItem implements Serializable, IObjetoPintavel {
     }
 
     public Color getCor() {
-        return cor;
+        return isDisablePainted() ? disabledColor : cor;
     }
 
     public void setCor(Color cor) {
@@ -473,7 +473,7 @@ public class baseDrawerItem implements Serializable, IObjetoPintavel {
     }
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -489,7 +489,7 @@ public class baseDrawerItem implements Serializable, IObjetoPintavel {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {
@@ -532,7 +532,7 @@ public class baseDrawerItem implements Serializable, IObjetoPintavel {
             if (isGradiente()) {
                 g.setPaint(PaintGradiente(g, l, t));
             } else {
-                g.setColor(cor);
+                g.setColor(getCor());
             }
         }
 
@@ -737,4 +737,21 @@ public class baseDrawerItem implements Serializable, IObjetoPintavel {
         return res;
     }
 
+    protected Color disabledColor = new Color(221, 221, 221);
+
+    /**
+     * Mostra os artefatos em cor padrão ao ser disabilitado na pintura.
+     */
+    private boolean disablePainted = false;
+
+    public boolean isDisablePainted() {
+        return disablePainted;
+    }
+
+    public void setDisablePainted(boolean disablePainted) {
+        if (this.disablePainted == disablePainted) {
+            return;
+        }
+        this.disablePainted = disablePainted;
+    }
 }

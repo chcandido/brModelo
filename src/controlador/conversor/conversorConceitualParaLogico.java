@@ -1245,7 +1245,7 @@ public class conversorConceitualParaLogico {
 
     private void AdicionarChaveEstrangeira(Tabela tab_recebedora, Tabela tab_origen_PK, final LogicoLinha lig) {
         final Constraint nova_fk = new Constraint(tab_recebedora);
-        nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+        nova_fk.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
 
         List<Campo> camposKey = tab_origen_PK.getCampos().stream().filter(cm -> cm.isKey()).collect(Collectors.toList());
 
@@ -1520,12 +1520,12 @@ public class conversorConceitualParaLogico {
             tb_fk.getCampos().stream().filter(cmp -> cmp.isFkey() && getCampoOrigem(cmp) != null).forEach(cmp -> {
                 final Campo cmp_ori = getCampoOrigem(cmp);
                 Tabela tb_pk = cmp_ori.getTabela();
-                Constraint constr_pk = tb_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
-                Constraint constr_fk = tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+                Constraint constr_pk = tb_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findFirst().orElse(null);
+                Constraint constr_fk = tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                         .filter(c -> (c.getConstraintOrigem() == constr_pk)).findFirst().orElse(null);
                 if (constr_fk == null) {
                     constr_fk = new Constraint(tb_fk);
-                    constr_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+                    constr_fk.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
                 }
 
                 LogicoLinha lin = tb_fk.getListaDeLigacoes().stream().filter(L -> L.getOutraPonta(tb_fk) == tb_pk && origemLigacao.get((LogicoLinha) L) == tb_fk)
@@ -1598,7 +1598,7 @@ public class conversorConceitualParaLogico {
     private boolean processeConstraintsDirect() {
         directFK.keySet().stream().forEach(fk -> {
             Tabela t_pk = directPK.get(fk);
-            Constraint constr_pk = t_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
+            Constraint constr_pk = t_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findFirst().orElse(null);
             if (constr_pk != null) {
                 Tabela t_fk = fk.getTabela();
                 t_pk.getCampos().stream().filter(cm -> cm.isKey() && (fk.getCamposDeOrigem().indexOf(cm) < 0)).forEach(C -> {
@@ -1615,7 +1615,7 @@ public class conversorConceitualParaLogico {
     }
 
     private void ProcesseFrutoAutoRel(Tabela tb_fk) {
-        ArrayList<Constraint> ascons = new ArrayList<>(tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK).collect(Collectors.toList()));
+        ArrayList<Constraint> ascons = new ArrayList<>(tb_fk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK).collect(Collectors.toList()));
         ascons.stream().forEach(constr_fk -> {
 
             ArrayList<Campo> tmp = new ArrayList<>();
@@ -1632,7 +1632,7 @@ public class conversorConceitualParaLogico {
 
             if (!replicado.isEmpty()) {
                 final Constraint nova_fk = new Constraint(tb_fk);
-                nova_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+                nova_fk.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
 
                 LogicoLinha lin = constr_fk.getLigacao();
                 if (lin != null) {

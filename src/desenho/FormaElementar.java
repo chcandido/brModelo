@@ -528,6 +528,7 @@ public class FormaElementar extends Elementar {
      */
     protected void ToXmlValores(Document doc, Element me) {
         me.appendChild(util.XMLGenerate.ValorRect(doc, "Bounds", getBounds()));
+        me.appendChild(util.XMLGenerate.ValorBoolean(doc, "DisablePainted", isDisablePainted()));
     }
 
     /**
@@ -559,6 +560,8 @@ public class FormaElementar extends Elementar {
              */
             SetBounds(bounds);
         }
+        boolean x = util.XMLGenerate.getValorBooleanFrom(me, "DisablePainted");
+        disablePainted = x;
         return true;
     }
 
@@ -659,4 +662,5 @@ public class FormaElementar extends Elementar {
         return res;
     }
     //</editor-fold>
+    
 }

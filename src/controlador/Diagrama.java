@@ -7,7 +7,6 @@ package controlador;
 import controlador.apoios.GuardaPadraoBrM;
 import controlador.apoios.InfoDiagrama;
 import controlador.apoios.TreeItem;
-import controlador.inspector.InspectorExtenderEditor;
 import controlador.inspector.InspectorItemBase;
 import controlador.inspector.InspectorItemExtender;
 import controlador.inspector.InspectorProperty;
@@ -438,7 +437,6 @@ public class Diagrama implements Serializable, ClipboardOwner {
             });
         }
         return TreeNavegacao;
-
     }
 
     /**
@@ -490,7 +488,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
     }
 
     /**
-     * Insere comandos no submenu "menuCMD" (Comandos) do menu diagrama.
+     * Insere comandos no submenu "menuCMD" (Comandos) do menu diagrama. O menu "item" é um submenu a ser populado.
      *
      * @param item Implementado, como exemplo em DiagramaEap
      */
@@ -525,9 +523,19 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
     /**
      * Método para setar um valor String diretamente no diagrama, disparado pelo InfoDiagrama
+     *
+     * @param str
+     * @param tag
      */
     public void setFromString(String str, int tag) {
         //# talvez implantar o setFromInt e etc.
+    }
+
+    /**
+     * Rodado após o carregamento do diagrama a aprtir de um arquivo. será ultil no futuro para setar propriedades default em novas versões dos diagramas a partir das versões do brMOdelo. roda dentro do método: ProcessePosOpen(Diagrama res) na classe Editor
+     */
+    public void OnAfterLoad() {
+
     }
 
     public enum TipoDeDiagrama {
@@ -2476,4 +2484,63 @@ public class Diagrama implements Serializable, ClipboardOwner {
         return true;
     }
 
+    /**
+     * Mostra apenas os artefatos selecionados e os que estiverem ligados a eles. É setado para false no OnAfterLoad
+     */
+    private boolean realce = false;
+
+    public boolean isRealce() {
+        return realce;
+    }
+    
+    public void SetRealce(boolean realce) {
+        this.realce = realce;
+    }
+    
+    public void setRealce(boolean realce) {
+        if (this.realce == realce) {
+            return;
+        }
+        this.realce = realce;
+        if (!realce) {
+            getListaDeItens().stream().filter(fo -> fo instanceof FormaElementar).forEach(fo -> fo.setDisablePainted(false));
+        } else {
+            final ArrayList<FormaElementar> res = new ArrayList<>();
+            getListaDeItens().stream().filter(f -> getItensSelecionados().indexOf(f) > -1).forEach(item -> {
+                if (item instanceof Forma) {
+                    AdicionePrinFromRealce(res, item);
+                    //res.add(item);
+                    Forma f = (Forma) item;
+                    f.getListaDeFormasLigadas().forEach(lfl -> {
+                        AdicioneSubsFromRealce(res, lfl);
+                    });
+                    f.getListaDeLigacoes().stream().filter(l -> l instanceof SuperLinha).forEach(lfl -> {
+                        AdicioneSubsFromRealce(res, lfl);
+                    });
+                } else if (item instanceof SuperLinha) {
+                    AdicionePrinFromRealce(res, item);
+                    SuperLinha sl = (SuperLinha) item;
+                    res.add(sl.getFormaPontaA());
+                    res.add(sl.getFormaPontaB());
+                }
+            });
+            getListaDeItens().stream().filter(f -> res.indexOf(f) == -1).forEach(fo -> fo.setDisablePainted(true));
+        }
+        repaint();
+    }
+
+    protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
+        if (item instanceof Forma) {
+            Forma f = (Forma) item;
+            if (f.isParte()) {
+                res.add((Forma) f.getPrincipal());
+                return;
+            }
+        }
+        res.add(item);
+    }
+    
+    protected void AdicionePrinFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
+        AdicioneSubsFromRealce(res, item);
+    }
 }

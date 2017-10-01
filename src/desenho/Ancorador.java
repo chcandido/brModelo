@@ -245,8 +245,13 @@ public class Ancorador extends FormaElementar{
         g.setColor(new Color(204, 204, 255));
         int i = 0;
         for (Integer c : getAncorasCode()) {
-            g.setColor(Color.gray);
+//            g.setColor(Color.gray);
             Rectangle r = areas.get(i);
+
+            g.setColor(Color.white);
+            g.fillRect(r.x, r.y + 1, r.width-1, r.height-4);
+            g.setColor(Color.gray);
+
             String whatDraw = getMaster().getSelecionado().WhatDrawOnAcorador(c);
             g.drawImage(
                     getMaster().getEditor().getControler().ImagemDeDiagrama.get(whatDraw).getImage(),

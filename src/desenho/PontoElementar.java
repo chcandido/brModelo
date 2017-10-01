@@ -19,13 +19,17 @@ public class PontoElementar extends Elementar {
 
     public PontoElementar(FormaElementar pai) {
         super(pai);
+        InicieSemVazamentos();
+    }
+
+    private void InicieSemVazamentos() {
         setVisible(false);
         this.setWidth(getMaster().getPontoWidth());
         this.setHeight(getMaster().getPontoHeigth());
         this.setBackColor(Color.BLACK);
         recuo = (getMaster().getPontoWidth() / 2);
     }
-    
+
     private int recuo;
 
     public int getRecuo() {
@@ -42,7 +46,7 @@ public class PontoElementar extends Elementar {
 
     public void setPosicao(int posicao) {
     }
-    
+
     boolean isHide = false;
 
     public boolean getIsHide() {
@@ -92,9 +96,10 @@ public class PontoElementar extends Elementar {
         g.fillOval(getLeft(), getTop(), getWidth(), getHeight());
 
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Mouse">
-    Point inidown = new Point(0,0);
+    Point inidown = new Point(0, 0);
+
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
@@ -109,9 +114,8 @@ public class PontoElementar extends Elementar {
         }
         super.mouseReleased(e);
     }
-    
+
     // </editor-fold>
-    
 //    /**
 //     * Acredito que deverá ser usado apenas para serializar a linha para xml.
 //     */
@@ -133,4 +137,16 @@ public class PontoElementar extends Elementar {
 //     */
 //    protected void ToXmlAtributos(Document doc, Element me) {
 //    }
+    @Override
+    public Color getBackColor() {
+        if (isDisablePainted()) {
+            setDisablePainted(false);
+            Color c = super.getBackColor();
+            setDisablePainted(true);
+            return c;
+        } else {
+            return super.getBackColor();
+        }
+    }
+
 }

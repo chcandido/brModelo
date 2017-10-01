@@ -380,7 +380,7 @@ public class LivreBase extends FormaNaoRetangularDisformeBase {
     private Color gradienteStartColor = Color.BLACK;
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -398,7 +398,7 @@ public class LivreBase extends FormaNaoRetangularDisformeBase {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {

@@ -362,7 +362,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         Constraint cc = new Constraint(getSelecionada());
-        cc.setTipo(Constraint.Constraint_tipo.tpUNIQUE);
+        cc.setTipo(Constraint.CONSTRAINT_TIPO.tpUNIQUE);
         getSelecionada().repaint();
         Popule(getSelecionada());
         Listador.setSelectedIndex(Listador.getModel().getSize() - 1);
@@ -408,7 +408,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
     }
 
     private void performMove(int passo) {
-        List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).collect(Collectors.toList());
+        List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE).collect(Collectors.toList());
         int ix = lst.indexOf(selConstr) + passo;
         Constraint dest = lst.get(ix);
         int idx = getSelecionada().getConstraints().indexOf(dest);
@@ -607,7 +607,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
             @Override
             public void valueChanged(ListSelectionEvent arg) {
                 if (!arg.getValueIsAdjusting()) {
-                    List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).collect(Collectors.toList());
+                    List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE).collect(Collectors.toList());
                     if (lst.size() > Listador.getSelectedIndex() && Listador.getSelectedIndex() > -1) {
                         Constraint tmp = lst.get(Listador.getSelectedIndex());
                         setSelConstr(tmp);
@@ -679,7 +679,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
             item.chUnique.setSelected(false);
         });
         btnDel.setEnabled(selConstr != null);
-        List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).collect(Collectors.toList());
+        List<Constraint> lst = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE).collect(Collectors.toList());
         int ix = selConstr != null ? lst.indexOf(selConstr) : -1;
         btnDown2.setEnabled(selConstr != null && ix < lst.size() - 1);
         btnUP2.setEnabled(selConstr != null && ix > 0);
@@ -723,7 +723,7 @@ public class EditorDeIrUnique extends javax.swing.JDialog {
     }
 
     private void PopuleLista() {
-        List<Constraint> uni = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).collect(Collectors.toList());
+        List<Constraint> uni = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE).collect(Collectors.toList());
         DefaultListModel lst = new DefaultListModel();
         int t = 1;
         for (Constraint contr : uni) {

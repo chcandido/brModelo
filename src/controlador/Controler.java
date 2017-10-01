@@ -123,7 +123,7 @@ public class Controler {
 
     public enum menuComandos {
 
-        cmdUndo, cmdRendo, cmdCut, cmdCopy, cmdCopyImg, cmdPaste, cmdCopyFormat, cmdPasteFormat, cmdSelProx, cmdSelAnt, cmdSelectAll, cmdBringToFront, cmdSendToBack, cmdDel, cmdDelToSel, //menu edit
+        cmdUndo, cmdRendo, cmdCut, cmdCopy, cmdCopyImg, cmdPaste, cmdCopyFormat, cmdPasteFormat, cmdRealcar, cmdSelProx, cmdSelAnt, cmdSelectAll, cmdBringToFront, cmdSendToBack, cmdDel, cmdDelToSel, //menu edit
         cmdNew, cmdOpen, cmdClose, cmdPrint, cmdExport, cmdSave, cmdSaveAs, cmdSaveAll, //menu arquivo
         cmdTreeNavegador, cmdTreeSelect, //comandos diversos
         cmdMicroAjuste0, cmdMicroAjuste1, cmdMicroAjuste2, cmdMicroAjuste3, //micro ajuste.
@@ -189,7 +189,7 @@ public class Controler {
         ImagemDeDiagrama.put("diagrama.Constraint_UN.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_UN.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_UNFK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_UNFK.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_see.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_see.img", true));
-        
+
         ImagemDeDiagrama.put("Controler.interface.ajuda.icone", TratadorDeImagens.loadFromResource("Controler.interface.ajuda.icone", true));
     }
 
@@ -277,6 +277,7 @@ public class Controler {
         forMEdt.add(menuComandos.cmdPaste.toString());
         forMEdt.add(menuComandos.cmdCopyFormat.toString());
         forMEdt.add(menuComandos.cmdPasteFormat.toString());
+        forMEdt.add(menuComandos.cmdRealcar.toString());
         forMEdt.add(menuComandos.cmdSelProx.toString());
         forMEdt.add(menuComandos.cmdSelAnt.toString());
         forMEdt.add(menuComandos.cmdSelectAll.toString());
@@ -322,7 +323,7 @@ public class Controler {
                     //mi.setAccelerator(k);
                     if (medt) {
                         i++;
-                        if (i == 4 || i == 9 || i == 14) {
+                        if (i == 4 || i == 9 || i == 10 || i == 16) {
                             menuEditar.addSeparator();// add(new JSeparator());
                             popup.addSeparator();
                         }
@@ -428,13 +429,6 @@ public class Controler {
             }
             String cmd = ac.getValue(Acao.ACTION_COMMAND_KEY).toString();
 
-//            ArrayList<String> cmds = new ArrayList<>();
-//            for (menuComandos m: menuComandos.values()) {
-//                cmds.add(m.name());
-//            }
-//            
-//            int idx = cmds.indexOf(cmd);
-//            if (idx == -1) return;
             if (cmd.equals(Comandos.cmdApagar.toString())) {
                 ac.setEnabled(editor.diagramaAtual.getListaDeItens().size() > Diagrama.totalInicialDeItens);
             } else {
@@ -457,14 +451,15 @@ public class Controler {
                     case cmdMicroAjuste3:
                         ac.setEnabled(editor.diagramaAtual.TemSelecionado());
                         break;
-
-                    //case cmdDimCp: 
-//                        ac.setEnabled(editor.diagramaAtual.TemSelecionado());
-//                        break;
-//                    case cmdPaste:
-//                        break;
-//                    case cmdDelToSel:
-//                        break;
+                    case cmdRealcar:
+                        if (!editor.diagramaAtual.isRealce()) {
+                            ac.setEnabled(editor.diagramaAtual.TemSelecionado());
+                            ac.Renomeie("Controler.comandos.realcar.descricao");
+                        } else {
+                            ac.setEnabled(true);
+                            ac.Renomeie("Controler.comandos.realcar.descricao.b");
+                        }
+                        break;
                     case cmdSelProx:
                     case cmdSelAnt:
                     case cmdBringToFront:

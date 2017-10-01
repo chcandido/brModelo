@@ -187,7 +187,7 @@ public class LivreTriangulo extends FormaTriangular {
     private Color gradienteStartColor = Color.BLACK;
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -205,7 +205,7 @@ public class LivreTriangulo extends FormaTriangular {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {

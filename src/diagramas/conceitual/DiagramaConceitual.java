@@ -664,4 +664,36 @@ public class DiagramaConceitual extends Diagrama {
         de.setVisible(true);
         PerformInspector();
     }
+
+    @Override
+    protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
+        if (item instanceof Relacionamento) {
+            Relacionamento re = (Relacionamento) item;
+            re.getListaDeLigacoes().stream().filter(l -> l instanceof SuperLinha && (((SuperLinha) l).getOutraPonta(re) instanceof PreEntidade)).forEach(lfl -> {
+                AdicioneSubsFromRealce(res, lfl);
+                AdicioneSubsFromRealce(res, ((SuperLinha) lfl).getOutraPonta(re));
+            });
+        }
+        super.AdicioneSubsFromRealce(res, item);
+        if (item instanceof Ligacao) {
+            Ligacao lig = (Ligacao) item;
+            res.add(lig.getCard());
+        }
+    }
+
+    @Override
+    protected void AdicionePrinFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
+        super.AdicionePrinFromRealce(res, item);
+        if (item instanceof EntidadeAssociativa) {
+            EntidadeAssociativa ea = (EntidadeAssociativa) item;
+            if (ea.getInterno() != null) {
+                ea.getInterno().getListaDeLigacoes().stream().filter(l -> l instanceof SuperLinha).forEach(lfl -> {
+                    AdicioneSubsFromRealce(res, lfl);
+                });
+                ea.getInterno().getListaDeFormasLigadas().forEach(lfl -> {
+                    AdicioneSubsFromRealce(res, lfl);
+                });
+            }
+        }
+    }
 }

@@ -104,10 +104,10 @@ public class baseDrawerFromForma extends Forma {
             }
         } else {
             if (isPintarBorda()) {
-                g.setPaint(Color.darkGray);
+                g.setPaint(isDisablePainted()? disabledColor : Color.darkGray);
                 g.drawRect(L, T, W, H);
 
-                g.setPaint(Color.gray);
+                g.setPaint(isDisablePainted()? disabledColor : Color.gray);
                 g.drawRect(L, T, W + 1, H + 1);
 
                 g.setPaint(getCorBorda());
@@ -135,7 +135,7 @@ public class baseDrawerFromForma extends Forma {
     private Color corBorda = Color.BLACK;
 
     public Color getCorBorda() {
-        return corBorda;
+        return isDisablePainted()? disabledColor : corBorda;
     }
 
     public void setCorBorda(Color corBorda) {
@@ -217,7 +217,7 @@ public class baseDrawerFromForma extends Forma {
     }
 
     public Color getGradienteStartColor() {
-        return gradienteStartColor;
+        return isDisablePainted()? disabledColor : gradienteStartColor;
     }
 
     public void setGradienteStartColor(Color gradienteStartColor) {
@@ -226,7 +226,7 @@ public class baseDrawerFromForma extends Forma {
     }
 
     public Color getGradienteEndColor() {
-        return gradienteEndColor;
+        return isDisablePainted()? disabledColor : gradienteEndColor;
     }
 
     public void setGradienteEndColor(Color gradienteEndColor) {
@@ -235,14 +235,12 @@ public class baseDrawerFromForma extends Forma {
     }
 
     protected void PaintGradiente(Graphics2D g) { //, boolean round) {
-        //Paint bkp = g.getPaint();
-        int dist = 0;//distSelecao;
+        int dist = 0;
         DimensioneParaPintura();
         W -= dist;
         H -= dist;
         boolean dv = getGDirecao() == VERTICAL;
 
-//        Composite originalComposite = g.getComposite();
         int type = AlphaComposite.SRC_OVER;
 
         g.setComposite(AlphaComposite.getInstance(type, alfa));
@@ -250,22 +248,13 @@ public class baseDrawerFromForma extends Forma {
         GradientPaint GP = new GradientPaint(L, T, getGradienteStartColor(), dv ? L : L + W, dv ? T + H : T, getGradienteEndColor(), true);
         g.setPaint(GP);
 
-        //ExporteGradiente(GP);
         if (roundrect > 0 && isPintarBorda()) {
             g.fillRoundRect(L + 1, T + 1, W, H, roundrect, roundrect);
         } else {
             g.fillRect(L + 1, T + 1, W, H);
         }
-        //g.setComposite(originalComposite);
-        //g.setPaint(bkp);
     }
-
-//    /**
-//     * Caso algum descendente queira usar o mesmo gradiente basta capturá-lo aqui.
-//     */
-//    public void ExporteGradiente(GradientPaint GP) {
-//        
-//    }
+ 
     @Override
     public ArrayList<InspectorProperty> CompleteGenerateProperty(ArrayList<InspectorProperty> GP) {
         ArrayList<InspectorProperty> res = GP;

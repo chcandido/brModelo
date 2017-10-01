@@ -422,7 +422,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         Constraint cc = new Constraint(tabelaSelecionada);
-        cc.setTipo(Constraint.Constraint_tipo.tpFK);
+        cc.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
         tabelaSelecionada.repaint();
         changeTabela();
         Listador.setSelectedIndex(Listador.getModel().getSize() - 1);
@@ -448,7 +448,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         if (constrOrigem != null) {
             constrOrigem.getTabela().setConstraintSelecionado(constrOrigem);
-            int tp = constrOrigem.getTipo() == Constraint.Constraint_tipo.tpPK ? Constraint.TAG_COMMAND_PK : Constraint.TAG_COMMAND_UN;
+            int tp = constrOrigem.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK ? Constraint.TAG_COMMAND_PK : Constraint.TAG_COMMAND_UN;
             diagrama.setSelecionado(constrOrigem.getTabela());
             diagrama.LancarEditorDeIR(tp);
             tabelaSelecionada.setConstraintSelecionado(constrSelecionada);
@@ -729,7 +729,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         });
 
         //Constraint da tabela selecionada
-        constrDaTabSelecionada = tabelaSelecionada.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK).collect(Collectors.toList());
+        constrDaTabSelecionada = tabelaSelecionada.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK).collect(Collectors.toList());
         DefaultListModel lst = new DefaultListModel();
         int t = 1;
         for (Constraint contr : constrDaTabSelecionada) {
@@ -815,7 +815,7 @@ public class EditorDeIrFK extends javax.swing.JDialog {
         comboIR.addItem(strSelecione);
         comboLigacoes.addItem(strSelecione);
         if (tabelaDeOrigem != null) {
-            constrDaTabOrigem = tabelaDeOrigem.getConstraints().stream().filter(c -> c.getTipo() != Constraint.Constraint_tipo.tpFK).collect(Collectors.toList());
+            constrDaTabOrigem = tabelaDeOrigem.getConstraints().stream().filter(c -> c.getTipo() != Constraint.CONSTRAINT_TIPO.tpFK).collect(Collectors.toList());
             t = 1;
             for (Constraint contr : constrDaTabOrigem) {
                 comboIR.addItem(Integer.toString(t++) + " - " + contr.getNomeFormatado());

@@ -111,8 +111,8 @@ public class FormaLosangular extends FormaNaoRetangularBase {
         Point[] pts = getAllSubPoints();
         Paint bkpP = g.getPaint();
         g.setPaint(Color.orange);
-        for (int i = 0; i < pts.length; i++) {
-            g.fillRect(pts[i].x - 2, pts[i].y - 2, 4, 4);
+        for (Point pt : pts) {
+            g.fillRect(pt.x - 2, pt.y - 2, 4, 4);
         }
         g.setPaint(bkpP);
     }

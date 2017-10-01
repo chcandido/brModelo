@@ -145,7 +145,7 @@ public class Elementar implements ElementarListener, Serializable {
      * @return the backColor
      */
     public Color getBackColor() {
-        return backColor;
+        return isDisablePainted()? disabledColor : backColor;
     }
 
     /**
@@ -308,7 +308,7 @@ public class Elementar implements ElementarListener, Serializable {
      * @return the foreColor
      */
     public Color getForeColor() {
-        return foreColor;
+        return isDisablePainted()? disabledColor : foreColor;
     }
 
     /**
@@ -845,5 +845,24 @@ public class Elementar implements ElementarListener, Serializable {
      */
     public final void SetVisible(boolean sn) {
         visible = sn;
+    }
+    
+
+    protected Color disabledColor = new Color(221, 221, 221);
+    
+    /**
+     * Mostra os artefatos em cor padrão ao ser disabilitado na pintura.
+     */
+    protected boolean disablePainted = false;
+
+    public boolean isDisablePainted() {
+        return disablePainted;
+    }
+
+    public void setDisablePainted(boolean disablePainted) {
+        if (this.disablePainted == disablePainted) {
+            return;
+        }
+        this.disablePainted = disablePainted;
     }
 }

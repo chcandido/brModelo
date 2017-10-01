@@ -215,7 +215,7 @@ public class EditorDeIR extends javax.swing.JDialog {
     }//GEN-LAST:event_comboTabelasActionPerformed
 
     private void Done() {
-        Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findAny().orElse(null);
+        Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findAny().orElse(null);
         if (pk == null) {
             chkIsnomeada.setSelected(false);
             txtNome.setText("");
@@ -229,7 +229,7 @@ public class EditorDeIR extends javax.swing.JDialog {
     }
 
     private void DoneTexto() {
-        Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findAny().orElse(null);
+        Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findAny().orElse(null);
         if (pk == null) {
             chkIsnomeada.setSelected(false);
             txtNome.setText("");
@@ -356,7 +356,7 @@ public class EditorDeIR extends javax.swing.JDialog {
             }
             if (cmp.isKey() != chkCampo.isSelected()) {
                 cmp.setKey(chkCampo.isSelected());
-                Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findAny().orElse(null);
+                Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findAny().orElse(null);
                 if (pk != null) {
                     getSelecionada().setConstraintSelecionado(pk);
                 }
@@ -479,7 +479,7 @@ public class EditorDeIR extends javax.swing.JDialog {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findAny().orElse(null);
+                    Constraint pk = getSelecionada().getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findAny().orElse(null);
                     if (pk == null) {
                         return;
                     }

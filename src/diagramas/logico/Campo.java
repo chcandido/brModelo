@@ -8,11 +8,15 @@ import controlador.Editor;
 import controlador.inspector.InspectorProperty;
 import desenho.FormaElementar;
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +59,7 @@ public class Campo implements Serializable {
         Composite originalComposite = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
         Paint bkpp = g.getPaint();
-        g.setColor(getTabela().getMaster().getBackground());
+        g.setColor(getTabela().getMaster().getBackground()); //# Não: isDisablePainted()? disabledColor :  
         g.fill(area);
         if (isSelecionado()) {
             if (getTabela().isGradiente()) {
@@ -80,17 +84,20 @@ public class Campo implements Serializable {
             if (isKey()) {
                 img = Editor.fromControler().ImagemDeDiagrama.get(getTabela().imgkfk);
             } else if (isUnique()) {
-                img = Editor.fromControler().ImagemDeDiagrama.get("diagrama.Constraint_UNFK.img");
+                img = Editor.fromControler().ImagemDeDiagrama.get(getTabela().imgunfk);
             } else {
                 img = Editor.fromControler().ImagemDeDiagrama.get(getTabela().imgfk);
             }
         } else if (isKey()) {
             img = Editor.fromControler().ImagemDeDiagrama.get(getTabela().imgk);
         } else if (isUnique()) {
-            img = Editor.fromControler().ImagemDeDiagrama.get("diagrama.Constraint_UN.img");
+            img = Editor.fromControler().ImagemDeDiagrama.get(getTabela().imgun);
         }
-        
+
         if (img != null) {
+            if (getTabela().isDisablePainted()) {
+                img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
+            }
             g.drawImage(img.getImage(), r.x + f, r.y + 4, imgl, imgl, null);
         }
         g.clipRect(r.x, r.y, r.width, r.height);
@@ -410,6 +417,6 @@ public class Campo implements Serializable {
         }
         return res;
     }
-    
+
     protected transient boolean roqued = false;
 }

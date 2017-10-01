@@ -6,9 +6,8 @@ package util;
 
 import controlador.Diagrama;
 import controlador.Editor;
+import desenho.Elementar;
 import desenho.FormaElementar;
-import desenho.linhas.PontoDeLinha;
-import desenho.preAnyDiagrama.PreCardinalidade;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -29,11 +28,11 @@ import org.xml.sax.SAXException;
  * @author ccandido
  */
 public class XMLGenerate {
-
+    
     public XMLGenerate() {
         super();
     }
-
+    
     public static Document GeraDocument() {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -45,7 +44,7 @@ public class XMLGenerate {
         }
         return null;
     }
-
+    
     public static Document LoadDocument(File arq) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -58,7 +57,7 @@ public class XMLGenerate {
         }
         return null;
     }
-
+    
     public static Document LoadDocument(String inS) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -71,7 +70,7 @@ public class XMLGenerate {
         }
         return null;
     }
-
+    
     public static StringWriter GeraXMLtoSaveFrom(Diagrama atual, boolean apenasSelecao) {
         Document doc = GeraDocument();
         Element rootElement = doc.createElement(Diagrama.nodePrincipal);
@@ -83,11 +82,18 @@ public class XMLGenerate {
             if (atual.getItensSelecionados().size() > 0) {
                 rootElement.setAttribute("FIRST_SEL", String.valueOf(atual.getItensSelecionados().get(0).getID()));
             }
+            //# 13/07/2017: inclusão do impedimento de gerar xml parcial com cor disabilitada.
+            ArrayList<Elementar> sel_dis = new ArrayList<>();
+            atual.getItensSelecionados().stream().filter(item -> item.isDisablePainted()).forEach(item -> {
+                item.setDisablePainted(false);
+                sel_dis.add(item);
+            });
             CarregueItens(doc, rootElement, atual.getItensSelecionados());
+            sel_dis.stream().forEach(item -> item.setDisablePainted(true));
         } else {
             CarregueItens(doc, rootElement, atual.getListaDeItens());
         }
-
+        
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         try {
             Transformer transformer = transformerFactory.newTransformer();
@@ -99,10 +105,10 @@ public class XMLGenerate {
         } catch (TransformerException ex) {
             util.BrLogger.Logger("ERROR_XML_DOC", ex.getMessage());
         }
-
+        
         return null;
     }
-
+    
     public static String GeraXMLFrom(Diagrama atual, boolean apenasSelecao) {
         StringWriter res = GeraXMLtoSaveFrom(atual, apenasSelecao);
         if (res != null) {
@@ -111,7 +117,7 @@ public class XMLGenerate {
             return "";
         }
     }
-
+    
     public static void CarregueItens(Document doc, Element root, ArrayList<FormaElementar> itens) {
         for (FormaElementar it : itens) {
             //não serializa cardinalidade.
@@ -128,17 +134,17 @@ public class XMLGenerate {
             }
         }
     }
-
+    
     public static Element ValorInteger(Document doc, String prop, int valor) {
         Element res = doc.createElement(prop);
         res.setAttribute("Valor", Integer.toString(valor));
         return res;
     }
-
+    
     public static Element ValorColor(Document doc, String prop, Color valor) {
         return ValorString(doc, prop, util.Utilidades.ColorToString(valor));
     }
-
+    
     public static Element ValorLegenda(Document doc, String leg, String legN, Color valor, String valorN, int tag, String tagnN) {
         Element res = doc.createElement("ItemLegenda");
         res.setAttribute(legN, leg);
@@ -146,20 +152,20 @@ public class XMLGenerate {
         res.setAttribute(tagnN, Integer.toString(tag));
         return res;
     }
-
+    
     public static Element ValorBoolean(Document doc, String prop, boolean valor) {
         Element res = doc.createElement(prop);
         res.setAttribute("Valor", Boolean.toString(valor));
         return res;
     }
-
+    
     public static Element ValorPoint(Document doc, String prop, Point valor) {
         Element res = doc.createElement(prop);
         res.setAttribute("Left", Integer.toString(valor.x));
         res.setAttribute("Top", Integer.toString(valor.y));
         return res;
     }
-
+    
     public static Element ValorRect(Document doc, String prop, Rectangle valor) {
         Element res = doc.createElement(prop);
         res.setAttribute("Left", Integer.toString(valor.x));
@@ -168,19 +174,19 @@ public class XMLGenerate {
         res.setAttribute("Height", Integer.toString(valor.height));
         return res;
     }
-
+    
     public static Element ValorString(Document doc, String prop, String valor) {
         Element res = doc.createElement(prop);
         res.setAttribute("Valor", valor);
         return res;
     }
-
+    
     public static Element ValorRefFormElementar(Document doc, String prop, FormaElementar valor) {
         Element res = doc.createElement(prop);
         AtributoRefFormElementar(res, "ID", valor);
         return res;
     }
-
+    
     public static void AtributoRefFormElementar(Element res, String attr, FormaElementar valor) {
         if (valor == null) {
             res.setAttribute(attr, "-1");
@@ -202,7 +208,7 @@ public class XMLGenerate {
         res.setTextContent(valor);
         return res;
     }
-
+    
     public static Element ValorFonte(Document doc, Font fonte) {
         Element res = doc.createElement("Fonte");
         res.setAttribute("Nome", fonte.getName());
@@ -210,7 +216,7 @@ public class XMLGenerate {
         res.setAttribute("Tamanho", String.valueOf(fonte.getSize()));
         return res;
     }
-
+    
     public static Element FindByNodeName(Element pai, String prop) {
         NodeList lst = pai.getElementsByTagName(prop);
 //        if (lst.getLength() == 0) {
@@ -218,24 +224,26 @@ public class XMLGenerate {
 //        }
         //não quero aqueles que pertençam a subitens,
         for (int i = 0; i < lst.getLength(); i++) {
-            Element e = (Element)lst.item(i);
-            if (e.getParentNode() == pai) return e;
+            Element e = (Element) lst.item(i);
+            if (e.getParentNode() == pai) {
+                return e;
+            }
         }
 //        return (Element) lst.item(0);
         return null;
     }
-
+    
     public static Font getValorFonte(Element pai) {
         Element res = FindByNodeName(pai, "Fonte");
         if (res != null) {
-        String fn = res.getAttribute("Nome");
-        int st = Integer.valueOf(res.getAttribute("Estilo"));
-        int tam = Integer.valueOf(res.getAttribute("Tamanho"));
-        return new Font(fn, st, tam);
+            String fn = res.getAttribute("Nome");
+            int st = Integer.valueOf(res.getAttribute("Estilo"));
+            int tam = Integer.valueOf(res.getAttribute("Tamanho"));
+            return new Font(fn, st, tam);
         }
         return null;
     }
-
+    
     public static Rectangle getValorRectFrom(Element pai, String prop) {
         Element res = FindByNodeName(pai, prop);
         if (res == null) {
@@ -247,7 +255,7 @@ public class XMLGenerate {
         int h = Integer.valueOf(res.getAttribute("Height"));
         return new Rectangle(l, t, w, h);
     }
-
+    
     public static Color getValorColorFrom(Element pai, String prop) {
         Element ac = FindByNodeName(pai, prop);
         if (ac == null) {
@@ -256,7 +264,7 @@ public class XMLGenerate {
         String tmp = GetValorString(ac);
         return util.Utilidades.StringToColor(tmp);// new Color(Integer.valueOf(tmp));
     }
-
+    
     public static String getValorStringFrom(Element pai, String prop) {
         Element ac = FindByNodeName(pai, prop);
         if (ac == null) {
@@ -264,7 +272,7 @@ public class XMLGenerate {
         }
         return GetValorString(ac);
     }
-
+    
     public static String getValorTextoFrom(Element pai, String prop) {
         Element ac = FindByNodeName(pai, prop);
         if (ac == null) {
@@ -272,15 +280,15 @@ public class XMLGenerate {
         }
         return ac.getTextContent();
     }
-
+    
     public static String GetValorString(Element pr) {
         return pr.getAttribute("Valor");
     }
-
+    
     public static String GetValorString(Element pr, String ppr) {
         return pr.getAttribute(ppr);
     }
-
+    
     public static boolean getValorBooleanFrom(Element pai, String prop) {
         Element ac = FindByNodeName(pai, prop);
         if (ac == null) {
@@ -289,7 +297,7 @@ public class XMLGenerate {
         String tmp = GetValorString(ac);
         return Boolean.parseBoolean(tmp);
     }
-
+    
     public static int getValorIntegerFrom(Element pai, String prop) {
         Element ac = FindByNodeName(pai, prop);
         if (ac == null) {
@@ -298,7 +306,7 @@ public class XMLGenerate {
         String tmp = GetValorString(ac);
         return Integer.valueOf(tmp);
     }
-
+    
     public static Point getValorPointFrom(Element pai, String prop) {
         Element pr = FindByNodeName(pai, prop);
         int x = Integer.valueOf(pr.getAttribute("Left"));
@@ -313,8 +321,7 @@ public class XMLGenerate {
     }
 
     /**
-     * Dado um ID, procura no mapa qual formElementar foi originado deste ID. No
-     * caso de "colando" o ID do FormElementar será diferente. Isso não importa!
+     * Dado um ID, procura no mapa qual formElementar foi originado deste ID. No caso de "colando" o ID do FormElementar será diferente. Isso não importa!
      *
      * @param oID
      * @param mapa
@@ -331,7 +338,7 @@ public class XMLGenerate {
             }
         }
         for (Element x : mapa.keySet()) {
-
+            
             NodeList nodeLst = x.getChildNodes();
             
             int i = -1;

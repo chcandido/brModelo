@@ -16,7 +16,6 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -175,17 +174,6 @@ public class Linha extends FormaElementar {
 
         g.setPaint(getForeColor());
         if (getPontosParaDesenho() != null) {
-//            g.setStroke(new BasicStroke(
-//                    3f * getLargura(),
-//                    BasicStroke.CAP_ROUND,
-//                    BasicStroke.JOIN_ROUND));
-//            g.setPaint(Color.yellow);
-//            int[] baseX = Arrays.copyOf(pontosParaDesenhoX, pontosParaDesenhoX.length);
-//            int[] baseY = Arrays.copyOf(pontosParaDesenhoY, pontosParaDesenhoY.length);
-//            Diminua(baseX, baseY);
-//            g.drawPolyline(baseX, baseY, pontosParaDesenhoX.length);
-//            g.setPaint(getForeColor());
-
             if (isDashed()) {
                 g.setStroke(new BasicStroke(getLargura(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1, 2}, 0));
             } else {
@@ -198,7 +186,6 @@ public class Linha extends FormaElementar {
             g.drawPolyline(pontosParaDesenhoX, pontosParaDesenhoY, pontosParaDesenhoX.length);
         }
         g.setStroke(bkp);
-//        super.DoPaint(g);
     }
 
 //    public void Diminua(int[] baseX, int[] baseY) {
@@ -236,7 +223,6 @@ public class Linha extends FormaElementar {
 //            } 
 //        }
 //    }
-
     @Override
     public boolean IsMe(Point p) {
         boolean res = false;

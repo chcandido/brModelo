@@ -34,14 +34,14 @@ public class FormaRetangular extends Forma {
         super.DoPaint(g);
         g.drawRect(getLeft(), getTop(), getWidth() -1, getHeight() -1);
         Paint bkp = g.getPaint();
-        g.setPaint(Color.darkGray);
+        g.setPaint(isDisablePainted()? disabledColor : Color.darkGray);
         int L = getLeft();
         int T = getTop();
         int W = getWidth() + L;
         int H = getHeight() + T;
         g.drawLine(L + 1, H, W, H);
         g.drawLine(W, T + 1, W, H);
-        g.setPaint(Color.gray);
+        g.setPaint(isDisablePainted()? disabledColor : Color.gray);
         g.drawLine(L + 2, H + 1, W + 1, H + 1);
         g.drawLine(W + 1, T + 2, W  +1, H + 1);
 //        g.drawLine(L + 1, H -1, W -1, H -1);

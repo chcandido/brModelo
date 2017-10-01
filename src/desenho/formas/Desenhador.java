@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -124,6 +125,7 @@ public class Desenhador extends Forma implements iBaseDrawer {
             
             Color bkp = g.getColor();
             for (baseDrawerItem bi : getItens()) {
+                bi.setDisablePainted(isDisablePainted());
                 bi.DoPaint(g);
             }
             g.setColor(bkp);
@@ -131,7 +133,7 @@ public class Desenhador extends Forma implements iBaseDrawer {
         }
         if (imgres == null && imgSeta == null && (!isTipoDesenho())) {
             Color bkp = g.getColor();
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(isDisablePainted()? disabledColor : Color.LIGHT_GRAY);
             g.drawRect(getLeft(), getTop(), getWidth() - 1, getHeight() - 1);
             g.setColor(bkp);
         }
@@ -159,7 +161,7 @@ public class Desenhador extends Forma implements iBaseDrawer {
     }
 
     public Color getSetaCor() {
-        return setaCor;
+        return isDisablePainted()? disabledColor : setaCor;
     }
 
     public void setSetaCor(Color setaCor) {
@@ -275,7 +277,7 @@ public class Desenhador extends Forma implements iBaseDrawer {
             BufferedImage bi = new BufferedImage(pos.width, pos.height, BufferedImage.TYPE_INT_ARGB);
             Graphics gg = bi.getGraphics();
             //Color bkp = g.getColor();
-            gg.setColor(setaCor);
+            gg.setColor(getSetaCor());
             drawArrow((Graphics2D) gg, recSeta.x, recSeta.y, recSeta.width, recSeta.height);
             imgSeta = bi;
             //return;
@@ -441,14 +443,14 @@ public class Desenhador extends Forma implements iBaseDrawer {
     transient Image imgres = null;
 
     public void DrawImagem(Graphics2D g) {
-        BufferedImage img = getImagem();
-        if (img == null) {
+        BufferedImage imgB = getImagem();
+        if (imgB == null) {
             return;
         }
         Rectangle rec = getBounds();
         rec.grow(-2, -2);
         if (imgres == null) {
-            imgres = img.getScaledInstance(rec.width, rec.height, Image.SCALE_SMOOTH);
+            imgres = imgB.getScaledInstance(rec.width, rec.height, Image.SCALE_SMOOTH);
         }
 
         Composite originalComposite = g.getComposite();
@@ -456,7 +458,12 @@ public class Desenhador extends Forma implements iBaseDrawer {
             int type = AlphaComposite.SRC_OVER;
             g.setComposite(AlphaComposite.getInstance(type, alfa));
         }
-        g.drawImage(imgres, rec.x, rec.y, null);
+        Image img = imgres;
+        if (isDisablePainted()) {
+            img = util.Utilidades.dye(new ImageIcon(imgres), disabledColor);
+        }
+        
+        g.drawImage(img, rec.x, rec.y, null);
         g.setComposite(originalComposite);
     }
 

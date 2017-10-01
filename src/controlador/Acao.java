@@ -51,6 +51,11 @@ public class Acao extends AbstractAction {
         this.putValue(Action.NAME, texto);
         this.putValue(Action.ACTION_COMMAND_KEY, command);
     }
+    
+    public void Renomeie(String desc) {
+        this.putValue(Action.NAME, Editor.fromConfiguracao.getValor(desc));
+//        this.putValue(Action.SHORT_DESCRIPTION, Editor.fromConfiguracao.getValor(desc));
+    }
 
     private Image makeColorTransparent(Image im, final Color color) {
         return TratadorDeImagens.makeColorTransparent(im, color);

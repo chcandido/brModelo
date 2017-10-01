@@ -426,7 +426,7 @@ public class Tabela extends baseDrawerFromForma {
         float alfa = 1f - getAlfa();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
         Paint bkpp = g.getPaint();
-        g.setColor(getMaster().getBackground());
+        g.setColor(getMaster().getBackground()); //# Não: isDisablePainted()? disabledColor : 
         if (!normal) {
             if (isGradiente()) {
                 g.setColor(getGradienteStartColor());
@@ -442,7 +442,7 @@ public class Tabela extends baseDrawerFromForma {
     }
 
     public void setRoqued(boolean sn, LogicoLinha linha) {
-        getConstraints().stream().filter(c -> c.getLigacao() == linha && c.getTipo() == Constraint.Constraint_tipo.tpFK).forEach(co -> {
+        getConstraints().stream().filter(c -> c.getLigacao() == linha && c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK).forEach(co -> {
             co.roqued = sn;
             co.getCamposDeDestino().stream().forEach(c -> c.roqued = sn);
             co.getCamposDeOrigem().stream().filter(c -> c != null).forEach(c -> c.roqued = sn);
@@ -674,13 +674,13 @@ public class Tabela extends baseDrawerFromForma {
             texto.add(tmp);
 
             int total_campos = getCampos().size() - 1;
-            Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
+            Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findFirst().orElse(null);
             boolean nomeada = (pk != null && pk.isNomeada());
             boolean chaveSimples = (pk != null && pk.getCamposDeOrigem().size() == 1 && !nomeada);
             boolean pk_noNome_simples = (pk != null && !nomeada && !chaveSimples);
 
             List<Constraint> uniao_noNome_complex = getConstraints().stream()
-                    .filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE && !c.isNomeada() && c.getCamposDeOrigem().size() > 1)
+                    .filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE && !c.isNomeada() && c.getCamposDeOrigem().size() > 1)
                     .collect(Collectors.toList());
             boolean u_noNomea_complex = !uniao_noNome_complex.isEmpty();
 
@@ -724,14 +724,14 @@ public class Tabela extends baseDrawerFromForma {
 
         if (ddl_pegar == DDL_PEGAR_TUDO || ddl_pegar == DDL_PEGAR_INTEGRIDADE || ddl_pegar == DDL_PEGAR_INTEGRIDADE_PK_UN_NOMEADAS) {
             //# PK e UNIQUE
-            getConstraints().stream().filter(constr -> !(constr.getTipo() == Constraint.Constraint_tipo.tpFK) && constr.isNomeada()).forEach(constr -> {
+            getConstraints().stream().filter(constr -> !(constr.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK) && constr.isNomeada()).forEach(constr -> {
                 texto.add(" ");
                 AddSubsDDL(texto, constr.getDDL(), em_branco);
             });
         }
         if (ddl_pegar == DDL_PEGAR_TUDO || ddl_pegar == DDL_PEGAR_INTEGRIDADE || ddl_pegar == DDL_PEGAR_INTEGRIDADE_FK) {
             // # Só FK
-            getConstraints().stream().filter(constr -> (constr.getTipo() == Constraint.Constraint_tipo.tpFK)).forEach(constr -> {
+            getConstraints().stream().filter(constr -> (constr.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)).forEach(constr -> {
                 texto.add(" ");
                 AddSubsDDL(texto, constr.getDDL(), em_branco);
             });
@@ -907,6 +907,8 @@ public class Tabela extends baseDrawerFromForma {
     final String imgk = "diagrama.Campo_Key.img";
     final String imgfk = "diagrama.Campo_Fkey.img";
     final String imgkfk = "diagrama.Campo_KeyFkey.img";
+    final String imgunfk = "diagrama.Constraint_UNFK.img";
+    final String imgun = "diagrama.Constraint_UN.img";
 
     public void Add(Campo aThis) {
         getCampos().add(aThis);
@@ -1184,11 +1186,11 @@ public class Tabela extends baseDrawerFromForma {
     }
 
     public void direct_ProcesseIrKey(Campo cmp) {
-        Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findAny().orElse(null);
+        Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findAny().orElse(null);
         if (pk == null) {
             if (cmp.isKey()) {
                 pk = new Constraint(this);
-                pk.setTipo(Constraint.Constraint_tipo.tpPK);
+                pk.setTipo(Constraint.CONSTRAINT_TIPO.tpPK);
                 pk.Add(cmp, null);
             }
             return;
@@ -1228,13 +1230,13 @@ public class Tabela extends baseDrawerFromForma {
 
     public List<Constraint> getPresentAsUN(Campo cmp) {
         ArrayList<Constraint> lst = new ArrayList<>();
-        getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE)
+        getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE)
                 .filter(c -> c.getCamposDeOrigem().indexOf(cmp) > -1).forEach(c -> lst.add(c));
         return lst;
     }
 
     public Constraint getPresentAsFK(Campo cmp) {
-        return getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+        return getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                 .filter(c -> c.getCamposDeDestino().indexOf(cmp) > -1).findAny().orElse(null);
     }
 
@@ -1242,11 +1244,11 @@ public class Tabela extends baseDrawerFromForma {
         if (cmp == null || getMaster().isCarregando) {
             return;
         }
-        Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE).findFirst().orElse(null);
+        Constraint pk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE).findFirst().orElse(null);
         if (pk == null) {
             if (cmp.isUnique()) {
                 pk = new Constraint(this);
-                pk.setTipo(Constraint.Constraint_tipo.tpUNIQUE);
+                pk.setTipo(Constraint.CONSTRAINT_TIPO.tpUNIQUE);
                 pk.Add(cmp, null);
                 InvalidateArea();
             }
@@ -1276,7 +1278,7 @@ public class Tabela extends baseDrawerFromForma {
         if (pk == null) {
             if (isadd) {
                 pk = new Constraint(this);
-                pk.setTipo(Constraint.Constraint_tipo.tpUNIQUE);
+                pk.setTipo(Constraint.CONSTRAINT_TIPO.tpUNIQUE);
                 pk.Add(cmp, null);
                 InvalidateArea();
             }
@@ -1297,11 +1299,11 @@ public class Tabela extends baseDrawerFromForma {
         if (cmp == null || getMaster().isCarregando) {
             return;
         }
-        Constraint fk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK && !c.isValidado()).findFirst().orElse(null);
+        Constraint fk = getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK && !c.isValidado()).findFirst().orElse(null);
         if (fk == null) {
             if (cmp.isFkey()) {
                 fk = new Constraint(this);
-                fk.setTipo(Constraint.Constraint_tipo.tpFK);
+                fk.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
                 fk.Add(null, cmp);
                 InvalidateArea();
             }
@@ -1393,9 +1395,9 @@ public class Tabela extends baseDrawerFromForma {
         super.mouseDblClicked(e);
         if (getConstraintSelecionado() != null) {
             int tg = Constraint.TAG_COMMAND_FK;
-            if (getConstraintSelecionado().getTipo() == Constraint.Constraint_tipo.tpPK) {
+            if (getConstraintSelecionado().getTipo() == Constraint.CONSTRAINT_TIPO.tpPK) {
                 tg = Constraint.TAG_COMMAND_PK;
-            } else if (getConstraintSelecionado().getTipo() == Constraint.Constraint_tipo.tpUNIQUE) {
+            } else if (getConstraintSelecionado().getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE) {
                 tg = Constraint.TAG_COMMAND_UN;
             }
             DoAnyThing(tg);
@@ -1433,7 +1435,7 @@ public class Tabela extends baseDrawerFromForma {
     @Override
     public void mouseMoved(MouseEvent e) {
         super.mouseMoved(e);
-        Constraint tmp = getConstraints().stream().filter(constr -> constr.getTipo() == Constraint.Constraint_tipo.tpFK && constr.isMe(e.getPoint())).findFirst().orElse(null);
+        Constraint tmp = getConstraints().stream().filter(constr -> constr.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK && constr.isMe(e.getPoint())).findFirst().orElse(null);
         if (tmp == constraintRoqued) {
             return;
         }

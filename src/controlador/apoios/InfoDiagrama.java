@@ -7,12 +7,10 @@ package controlador.apoios;
 import controlador.Diagrama;
 import controlador.inspector.InspectorProperty;
 import desenho.formas.Forma;
-import diagramas.logico.DiagramaLogico;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -138,9 +136,7 @@ public class InfoDiagrama extends Forma {
     }
 
     /**
-     * Verifiquei que precisava garantir que o diagramaUniversalUnicID fosse único porém, ao copiar um arquivo do modelo o diagramaUniversalUnicID se tornava duplicado. Os dois modelos poderiam vir a
-     * ser abertos pelo mesmo editor ao mesmo tempo, causando problemas. Por isso, decidi que todas as vezes que um diagrama fosse carregado, um novo diagramaUniversalUnicID seria gerado para ele.
-     * Porém, resolvi preserva aquele primeiro gerado.
+     * Verifiquei que precisava garantir que o diagramaUniversalUnicID fosse único porém, ao copiar um arquivo do modelo o diagramaUniversalUnicID se tornava duplicado. Os dois modelos poderiam vir a ser abertos pelo mesmo editor ao mesmo tempo, causando problemas. Por isso, decidi que todas as vezes que um diagrama fosse carregado, um novo diagramaUniversalUnicID seria gerado para ele. Porém, resolvi preserva aquele primeiro gerado.
      */
     private String realDiagramaUniversalUnicID = "";
 
@@ -187,6 +183,8 @@ public class InfoDiagrama extends Forma {
         me.appendChild(util.XMLGenerate.ValorInteger(doc, "Zoom", (int) (getMaster().getZoom() * 100)));
         me.appendChild(util.XMLGenerate.ValorFonte(doc, getFont()));
         me.appendChild(util.XMLGenerate.ValorPoint(doc, "Localizacao", getMaster().ScrPosicao));
+        me.appendChild(util.XMLGenerate.ValorBoolean(doc, "Realce", getMaster().isRealce()));
+
         getMaster().InfoDiagrama_ToXmlValores(doc, me);
     }
 
@@ -207,6 +205,9 @@ public class InfoDiagrama extends Forma {
         getMaster().ScrPosicao = util.XMLGenerate.getValorPointFrom(me, "Localizacao");
         setAlinhamento_h(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento_h"));
         setAlinhamento_v(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento_v"));
+        
+        getMaster().SetRealce(util.XMLGenerate.getValorBooleanFrom(me, "Realce"));
+
         return getMaster().InfoDiagrama_LoadFromXML(me, colando);
     }
 

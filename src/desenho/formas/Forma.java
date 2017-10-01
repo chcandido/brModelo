@@ -1225,4 +1225,14 @@ public class Forma extends FormaElementar {
     public boolean isAlinhavel() {
         return true;
     }
+
+//    @Override
+//    public void setDisablePainted(boolean disablePainted) {
+//        super.setDisablePainted(disablePainted);
+//        if (isParte()) {
+//            
+//        }
+//    }
+    
+    
 }

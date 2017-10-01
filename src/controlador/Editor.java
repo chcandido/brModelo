@@ -1043,6 +1043,11 @@ public class Editor extends BaseControlador implements KeyListener {
                         controler.makeEnableComands();
                         break;
 
+                    case cmdRealcar:
+                        diagramaAtual.setRealce(!diagramaAtual.isRealce());
+                        controler.makeEnableComands();
+                        break;
+
                     case cmdPaste:
                         //canceleMostre = true;
                         diagramaAtual.doPaste();
@@ -1158,6 +1163,7 @@ public class Editor extends BaseControlador implements KeyListener {
             } else {
                 historicos.add(diagramaAtual);
             }
+            res.OnAfterLoad();
             prepareDiagramaAtual();
             RePopuleBarraDiagramas(true);
         }

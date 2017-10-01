@@ -115,6 +115,7 @@ public class baseDrawer extends baseDrawerFromForma implements iBaseDrawer {
                 g.setComposite(gcom);
                 g.setPaint(gra);
             }
+            bi.setDisablePainted(isDisablePainted());
             bi.DoPaint(g);
         });
         g.setClip(bkpA);

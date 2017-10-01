@@ -43,11 +43,6 @@ public class Constraint implements Serializable {
         this.tabela = tbl;
         this.tabela.Add(this);
         getMotivoValidade = new String[]{
-            //    private final int V_MOTIVO_OK = 0;
-            //    private final int V_MOTIVO_CONS_ORIGEM = 1;
-            //    private final int V_MOTIVO_QTD_CMP = 2;
-            //    private final int V_MOTIVO_TIPO = 3;
-            //    private final int V_MOTIVO_REP = 4;
             Editor.fromConfiguracao.getValor("Inspector.obj.constraint.validacao.ok"),
             Editor.fromConfiguracao.getValor("Inspector.obj.constraint.validacao.cons_origem"),
             Editor.fromConfiguracao.getValor("Inspector.obj.constraint.validacao.qtd_cmp"),
@@ -74,7 +69,7 @@ public class Constraint implements Serializable {
         Composite originalComposite = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alfa));
         Paint bkpp = g.getPaint();
-        g.setColor(getTabela().getMaster().getBackground());
+        g.setColor(getTabela().getMaster().getBackground()); //# Não: isDisablePainted()? disabledColor : 
         g.fill(area);
         if (isSelecionado()) {
             if (getTabela().isGradiente()) {
@@ -111,7 +106,12 @@ public class Constraint implements Serializable {
             g.drawRoundRect(r.x - 1 + f, r.y + 4 - 1, imgl + 1, imgl + 1, 4, 4);
             g.setStroke(bkps);
         }
+
+        if (getTabela().isDisablePainted()) {
+            img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
+        }
         g.drawImage(img.getImage(), r.x + f, r.y + 4, imgl, imgl, null);
+
         g.clipRect(r.x, r.y, r.width, r.height);
         g.setColor(getTabela().getForeColor());
         String tx = getNomeFormatado();
@@ -166,6 +166,9 @@ public class Constraint implements Serializable {
             g.setStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1, 2}, 0));
             g.drawRoundRect(r.x - 1 + f, r.y + 4 - 1, imgl + 1, imgl + 1, 4, 4);
             g.setStroke(bkps);
+        }
+        if (getTabela().isDisablePainted()) {
+            img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
         }
         g.drawImage(img.getImage(), r.x + f, r.y + f, imgl, imgl, null);
         g.clipRect(r.x, r.y, r.width, r.height);
@@ -227,7 +230,7 @@ public class Constraint implements Serializable {
 
     public void Valide() {
         motivoValidade = V_MOTIVO_OK;
-        if (getTipo() != Constraint_tipo.tpFK) {
+        if (getTipo() != CONSTRAINT_TIPO.tpFK) {
             if (getCamposDeOrigem().size() == 1) {
                 Campo cx = getCamposDeOrigem().get(0);
                 if (cx.isKey() && cx.isUnique()) {
@@ -283,7 +286,7 @@ public class Constraint implements Serializable {
         setValidado(sn);
     }
 
-    public enum Constraint_tipo {
+    public enum CONSTRAINT_TIPO {
         tpPK, tpUNIQUE, tpFK
     }
 
@@ -294,7 +297,7 @@ public class Constraint implements Serializable {
     private final ArrayList<Campo> camposDeOrigem = new ArrayList<>();
     private final ArrayList<Campo> camposDeDestino = new ArrayList<>();
 
-    private Constraint_tipo tipo = Constraint_tipo.tpPK;
+    private CONSTRAINT_TIPO tipo = CONSTRAINT_TIPO.tpPK;
     //private HashMap<Campo, Campo> listaDeCamposKV = new HashMap<>();
     private Constraint constraintOrigem = null;
 
@@ -303,7 +306,7 @@ public class Constraint implements Serializable {
     }
 
     public void LigacaoDireta(Constraint constraintOrigem, LogicoLinha ligacao) {
-        if ((constraintOrigem == null) || (constraintOrigem.getTipo() == Constraint_tipo.tpFK) || (this.constraintOrigem != null) || (getTipo() != Constraint_tipo.tpFK)) {
+        if ((constraintOrigem == null) || (constraintOrigem.getTipo() == CONSTRAINT_TIPO.tpFK) || (this.constraintOrigem != null) || (getTipo() != CONSTRAINT_TIPO.tpFK)) {
             setConstraintOrigem(constraintOrigem);
         } else {
             this.constraintOrigem = constraintOrigem;
@@ -327,9 +330,9 @@ public class Constraint implements Serializable {
                 Tabela ori = this.constraintOrigem.getTabela();
                 getTabela().PerformLigacao(ori, false);
             }
-            if (getTipo() == Constraint_tipo.tpFK) {
+            if (getTipo() == CONSTRAINT_TIPO.tpFK) {
                 if (constraintOrigem != null) {
-                    if (constraintOrigem.getTipo() == Constraint_tipo.tpFK) {
+                    if (constraintOrigem.getTipo() == CONSTRAINT_TIPO.tpFK) {
                         constraintOrigem = null;
                     }
                 }
@@ -352,16 +355,16 @@ public class Constraint implements Serializable {
         }
     }
 
-    public Constraint_tipo getTipo() {
+    public CONSTRAINT_TIPO getTipo() {
         return tipo;
     }
 
-    public void setTipo(Constraint_tipo tipo) {
+    public void setTipo(CONSTRAINT_TIPO tipo) {
         if (this.tipo.equals(tipo)) {
             return;
         }
         this.tipo = tipo;
-        if (tipo == Constraint_tipo.tpFK) {
+        if (tipo == CONSTRAINT_TIPO.tpFK) {
             setValidado(false);
             motivoValidade = V_MOTIVO_CONS_ORIGEM;
         }
@@ -370,7 +373,7 @@ public class Constraint implements Serializable {
 
     public void SetTipo(int tpForInspector) {
         try {
-            setTipo(Constraint_tipo.values()[tpForInspector]);
+            setTipo(CONSTRAINT_TIPO.values()[tpForInspector]);
         } catch (Exception e) {
         }
     }
@@ -425,7 +428,7 @@ public class Constraint implements Serializable {
     }
 
     public void Add(Campo origem, Campo destino) {
-        if (getTipo() != Constraint_tipo.tpFK) {
+        if (getTipo() != CONSTRAINT_TIPO.tpFK) {
             int idx = camposDeOrigem.indexOf(origem);
             if (idx == -1) {
                 camposDeOrigem.add(origem);
@@ -557,14 +560,14 @@ public class Constraint implements Serializable {
     }
 
     protected Tabela getTabelaDeOrigem() {
-        if (tipo == Constraint_tipo.tpPK || tipo == Constraint_tipo.tpUNIQUE) {
+        if (tipo == CONSTRAINT_TIPO.tpPK || tipo == CONSTRAINT_TIPO.tpUNIQUE) {
             return getTabela();
         }
         return (getConstraintOrigem() == null) ? null : getConstraintOrigem().getTabela();
     }
 
     protected Tabela getTabelaDeDestino() {
-        if (tipo == Constraint_tipo.tpPK || tipo == Constraint_tipo.tpUNIQUE) {
+        if (tipo == CONSTRAINT_TIPO.tpPK || tipo == CONSTRAINT_TIPO.tpUNIQUE) {
             return null;
         }
         return getTabela();
@@ -627,7 +630,7 @@ public class Constraint implements Serializable {
         String cmpStr = lig.getAttribute("CamposOrigem");
         final Tabela ori = getTabelaDeOrigem();
         String[] origens = cmpStr.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
-        if (getTipo() != Constraint_tipo.tpFK) {
+        if (getTipo() != CONSTRAINT_TIPO.tpFK) {
             for (String origen : origens) {
                 int v = util.Utilidades.TryIntStr(origen, -1);
                 if (v != -1) {
@@ -643,7 +646,7 @@ public class Constraint implements Serializable {
                     int vo = util.Utilidades.TryIntStr(origens[i], -1);
                     int vd = util.Utilidades.TryIntStr(destinos[i], -1);
                     if (vd != -1) {
-                        Add(vo == -1 ? null : ori.getCampos().get(vo), dest.getCampos().get(vd));
+                        Add(vo == -1 || ori == null ? null : ori.getCampos().get(vo), dest.getCampos().get(vd));
                     }
                 }
             }
@@ -710,7 +713,7 @@ public class Constraint implements Serializable {
 
         res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("constraint.validacao", getMotivoValidade[motivoValidade]));
 
-        if (tipo == Constraint_tipo.tpFK) {
+        if (tipo == CONSTRAINT_TIPO.tpFK) {
             String txt = getTabelaDeOrigem() == null ? "[]" : getTabelaDeOrigem().getTexto();
             res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "constraint.tabelaorigem", txt).setTag(Constraint.TAG_COMMAND_FK));
 
@@ -728,8 +731,8 @@ public class Constraint implements Serializable {
             res.add(InspectorProperty.PropertyFactoryApenasLeituraTexto("constraint.campos.ir", getCamposStr(getCamposDeOrigem())));
         }
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.edtitores")
-                .setTag(tipo == Constraint_tipo.tpPK ? TAG_COMMAND_PK
-                        : tipo == Constraint_tipo.tpUNIQUE ? TAG_COMMAND_UN
+                .setTag(tipo == CONSTRAINT_TIPO.tpPK ? TAG_COMMAND_PK
+                        : tipo == CONSTRAINT_TIPO.tpUNIQUE ? TAG_COMMAND_UN
                                 : TAG_COMMAND_FK));
 
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdExcluirSubItem.name()));

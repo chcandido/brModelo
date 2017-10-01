@@ -141,15 +141,15 @@ public class DiagramaLogico extends Diagrama {
                         if (!cmpD.isFkey()) { //não é chave estrangeira.
                             cmpD.SetFkey(true);
                             Constraint constr_un_pk = cmpO.isUnique()
-                                    ? ori.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpUNIQUE && c.getCamposDeOrigem().indexOf(cmpO) > -1).findFirst().orElse(null)
-                                    : ori.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpPK).findFirst().orElse(null);
+                                    ? ori.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpUNIQUE && c.getCamposDeOrigem().indexOf(cmpO) > -1).findFirst().orElse(null)
+                                    : ori.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findFirst().orElse(null);
 
-                            Constraint constr_fk = dest.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+                            Constraint constr_fk = dest.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                                     .filter(c -> c.getConstraintOrigem() == constr_un_pk).findFirst().orElse(null);
 
                             if (constr_fk == null) {
                                 constr_fk = new Constraint(dest);
-                                constr_fk.setTipo(Constraint.Constraint_tipo.tpFK);
+                                constr_fk.setTipo(Constraint.CONSTRAINT_TIPO.tpFK);
                                 constr_fk.Add(cmpO, cmpD, linha, constr_un_pk);
                             } else {
                                 constr_fk.Add(cmpO, cmpD);
@@ -585,7 +585,7 @@ public class DiagramaLogico extends Diagrama {
                     return;
                 }
                 getListaDeTabelas().stream().forEach(ta -> {
-                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                             .forEach(c -> {
                                 if (c.getCamposDeOrigem().indexOf(cmp) > -1) {
                                     boolean sn = true;
@@ -608,7 +608,7 @@ public class DiagramaLogico extends Diagrama {
                     return;
                 }
                 getListaDeTabelas().stream().forEach(ta -> {
-                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                             .filter(c -> (c.getConstraintOrigem() == cons))
                             .forEach(c -> {
                                 c.Valide();
@@ -620,7 +620,7 @@ public class DiagramaLogico extends Diagrama {
                     return;
                 }
                 getListaDeTabelas().stream().forEach(ta -> {
-                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.Constraint_tipo.tpFK)
+                    ta.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpFK)
                             .filter(c -> (c.getConstraintOrigem() == cons))
                             .forEach(c -> {
                                 c.setConstraintOrigem(null);
@@ -662,5 +662,15 @@ public class DiagramaLogico extends Diagrama {
         de.SelecioneByDiagramaSelecionado();
         de.setVisible(true);
         PerformInspector();    
+    }
+    
+    @Override
+    protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
+        super.AdicioneSubsFromRealce(res, item);
+        if (item instanceof LogicoLinha) {
+            LogicoLinha lig = (LogicoLinha) item;
+            res.add(lig.getCardA());
+            res.add(lig.getCardB());
+        }
     }
 }
