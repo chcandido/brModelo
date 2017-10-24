@@ -1204,7 +1204,6 @@ public class Forma extends FormaElementar {
     }
 
     //</editor-fold>
-    //////????? Não testado em todos os modelos
     @Override
     public boolean Destroy() {
         List<Linha> lst = getListaDeLigacoes();

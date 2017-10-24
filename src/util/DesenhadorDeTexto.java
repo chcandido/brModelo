@@ -114,9 +114,6 @@ public class DesenhadorDeTexto implements Serializable {
         lbmTexto = null;
     }
     
-    ////???? Default era false, o que permitia que a pintura do texto extrapolasse o desenho.
-    ///Não sei porque era assim. Devo testar mais. Se decidir por TRUE, devo apagar os locais que alteram para true nos objetos.
-    //20/09/2016
     public boolean LimitarAreaDePintura = true;
     private int MaxWidth = 0;
 

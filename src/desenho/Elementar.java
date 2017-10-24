@@ -853,16 +853,21 @@ public class Elementar implements ElementarListener, Serializable {
     /**
      * Mostra os artefatos em cor padrão ao ser disabilitado na pintura.
      */
-    protected boolean disablePainted = false;
+    private boolean disablePainted = false;
+    //protected boolean disablePainted = false;
 
     public boolean isDisablePainted() {
         return disablePainted;
     }
 
     public void setDisablePainted(boolean disablePainted) {
-        if (this.disablePainted == disablePainted) {
-            return;
-        }
+//        if (this.disablePainted == disablePainted) {
+//            return;
+//        }
+        this.disablePainted = disablePainted;
+    }
+    
+    public final void SetDisablePainted(boolean disablePainted) {
         this.disablePainted = disablePainted;
     }
 }

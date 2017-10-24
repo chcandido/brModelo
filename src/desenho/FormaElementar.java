@@ -465,16 +465,24 @@ public class FormaElementar extends Elementar {
     }
 
     /**
+     * Variavel de apoio para salvar em XML a condição de isDisablePainted(). Necessária porque, de outra forma, as cores persistidas seriam apenas a cor configurada para a condição de DisablePainted quando true.
+     */
+    private boolean snDisablePainted = false; 
+            
+    /**
      * Para que possa ser utilizado por softwares de terceiros e de diferentes linguagens, preferi este modelo ao de persistir o objeto em XLM usando o writer do próprio java.
      *
      * @param doc
      * @param root
      */
-    public void ToXlm(Document doc, Element root) {
+    public final void ToXlm(Document doc, Element root) {
+        snDisablePainted = isDisablePainted();
+        setDisablePainted(false); //# agora as cores serão salvas da meneira correta!
         Element me = doc.createElement(Editor.getClassTexto(this));
         ToXmlAtributos(doc, me);
         ToXmlValores(doc, me);
         root.appendChild(me);
+        setDisablePainted(snDisablePainted);
     }
 
     /**
@@ -528,7 +536,7 @@ public class FormaElementar extends Elementar {
      */
     protected void ToXmlValores(Document doc, Element me) {
         me.appendChild(util.XMLGenerate.ValorRect(doc, "Bounds", getBounds()));
-        me.appendChild(util.XMLGenerate.ValorBoolean(doc, "DisablePainted", isDisablePainted()));
+        me.appendChild(util.XMLGenerate.ValorBoolean(doc, "DisablePainted", snDisablePainted));
     }
 
     /**
@@ -561,7 +569,7 @@ public class FormaElementar extends Elementar {
             SetBounds(bounds);
         }
         boolean x = util.XMLGenerate.getValorBooleanFrom(me, "DisablePainted");
-        disablePainted = x;
+        SetDisablePainted(x);
         return true;
     }
 

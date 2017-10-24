@@ -35,7 +35,6 @@ public class PreCardinalidade extends FormaTextoBase {
     }
 
     public void Posicione() {
-        /////????Melhorar o posicione!!!
         if (isMovimentacaoManual() || (Fixo == null) || isSelecionado() || !Fixo.isEstaLigado()) {
             return;
         }

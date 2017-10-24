@@ -577,7 +577,6 @@ public class Editor extends BaseControlador implements KeyListener {
 
         res.add(InspectorProperty.PropertyFactorySN("cfg.location.salvar", "setSalvarLocation", isSalvarLocation()));
 
-        //res.add(InspectorProperty.PropertyFactorySeparador("cfg.autosalvartitulo")); ///???? remover cfg.autosalvartitulo
         res.add(InspectorProperty.PropertyFactoryNumero("cfg.autosalvarintervalo", "setAutoSaveInterval", getAutoSaveInterval()));
 
         res.add(InspectorProperty.PropertyFactorySeparador("cfg.exibicao", true));

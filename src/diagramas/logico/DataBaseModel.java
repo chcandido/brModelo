@@ -462,6 +462,6 @@ public class DataBaseModel implements Serializable {
     }
     
  
-    /////?????? Carregar de arquivos, outras implementações para o futuro modelo físico.
-    ///// No modelo lógico: colocar a opção de troca e exibí-lo no inspector.
+    //??: TO-DO: FUTURO: Carregar arquivos de outras implementações para o modelo físico.
+    //??: TO-DO: FUTURO: No modelo lógico: colocar a opção de troca e exibí-lo no inspector.
 }

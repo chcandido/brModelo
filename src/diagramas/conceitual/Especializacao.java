@@ -109,9 +109,6 @@ public class Especializacao extends PreEspecializacao {
 //        return super.LoadFromXML(me, colando);
 //    }
     
-    ////??? ao executar comandos com duploclick deve-se redezenhar o inspector (falha detectada no especialização: corrigida. Podem existir em outros)
-    //Erro persiste, visto em atributo. Acho que acabou:20/09/2016
-
     @Override
     protected boolean FinderLinked(Forma quem, Forma origem) {
         ArrayList<Forma> outras = getListaDeFormasLigadas(origem);

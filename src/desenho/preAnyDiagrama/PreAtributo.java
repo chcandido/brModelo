@@ -423,8 +423,4 @@ public class PreAtributo extends FormaNaoRetangularBase {
     public String getTextoToDraw() {
         return super.getTexto();
     }
-
-    ///??? Atributo: ao organizar está trocando a ligação principal (que o liga até a entidade principal), por um dos filhos no atributo multivalorado - pode ser um bug dificil de repitir!
-    ///20/09/2016.
-    //// Não consegui repetir. É um bug difícil. 23/09
 }

@@ -323,8 +323,9 @@ public class DrawerEditor extends javax.swing.JDialog implements Editor.iParaOut
     public boolean AceitaEdicao(InspectorProperty propriedade, String valor) {
         try {
             switch (propriedade.property) {
-//#Removido o Medida, talvez um dia eu o volte. Está feio e trabalhoso, talvez possa usar a régua como base para o futuro desenho.
-//# Código permanece em baseDrawerItem! //////???? Remover códigos!
+//#Removido o "Medida".
+//# Talvez, no futuro ele volte. Atualmente considerado inadequado e trabalhoso. Talvez possa usar a régua como base para o futuro desenho.
+//# Código permanece em baseDrawerItem! //??: TO-DO: Remover códigos!
 //#                case "setLeft":
 //#                    Selecionado.setLeft(Integer.valueOf(valor));
 //#                    break;
@@ -593,8 +594,6 @@ public class DrawerEditor extends javax.swing.JDialog implements Editor.iParaOut
 
         btnDescer.setEnabled(idx < utimo);
         btnSubir.setEnabled(idx > 0);
-
-        ////??limitar area de pintura do drawer
     }
 
 }

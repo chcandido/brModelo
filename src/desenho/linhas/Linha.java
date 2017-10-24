@@ -467,9 +467,6 @@ public class Linha extends FormaElementar {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        if (isNulo()) {
-//            return;
-//        }
         if (jaSel) {
             boolean combine = (getMaster().isShiftDown() || getMaster().isControlDown());
             if (combine) {
@@ -477,7 +474,7 @@ public class Linha extends FormaElementar {
             }
         }
 
-        if (!isAncorado()) { ////???? Colocado em 19/03/2017 - falta testar.
+        if (!isAncorado()) { 
             ProcessPontoMouseUp();
         }
         dragging = false;
@@ -491,7 +488,7 @@ public class Linha extends FormaElementar {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //if (!jaSel) return;//Permite a movimentação apenas se já estiver selecionado
+        //if (!jaSel) return; //# Permite a movimentação apenas se já estiver selecionado
         super.mouseDragged(e);
         dragging = true;
         if (!getMaster().IsMultSelecionado()) {

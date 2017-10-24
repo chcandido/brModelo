@@ -286,7 +286,6 @@ public class EapFormManual extends javax.swing.JDialog {
     }//GEN-LAST:event_txtYActionPerformed
 
     public String getValor() {
-        ////////????? Testar.
         String tmp = util.Utilidades.TryIntStr(txtX.getText(), "200");
         eapCLI.SetDirectVar(eapCLI.varScrPosX, tmp);
         tmp = util.Utilidades.TryIntStr(txtY.getText(), "200");

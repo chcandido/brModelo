@@ -134,7 +134,6 @@ public class CopFormatacao {
                 //((Forma)var).SendNotificacao(Constantes.Operacao.opResize);
                 break;
             case cmdDimPastHeight:
-                 ///////////???????????Não está 100% às vezes a ligação fica distante do objeto: testado relação.
                 ((Forma)var).ReciveFormaResize(new Rectangle(0, 0, 0, var.getHeight() - regiaoCopiada.height));
                 //((Forma)var).SendNotificacao(Constantes.Operacao.opResize);
                 break;

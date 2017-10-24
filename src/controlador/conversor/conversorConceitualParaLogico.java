@@ -1502,7 +1502,8 @@ public class conversorConceitualParaLogico {
     }
 
     /**
-     * Grava qual tabela será receberá a FK após uma ligação. /////???? Ver se todos as chamadas ao método LinkTable informa corretamente qual a tabela será a FK e ver também se não há outras ligações de tabelas não cobertas!
+     * Grava qual tabela será receberá a FK após uma ligação. 
+     * //??: TO-DO: Ver se todos as chamadas ao método LinkTable informa corretamente qual a tabela será a FK e ver também se não há outras ligações de tabelas não cobertas!
      */
     HashMap<LogicoLinha, Tabela> origemLigacao = new HashMap<>();
 

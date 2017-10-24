@@ -137,7 +137,7 @@ public class SuperLinha extends Linha {
      */
     @Override
     public synchronized void OrganizeLinha() {
-        ////?????continuaar correções como o feito em AD 0-1 e 2-1.
+        //??: TO-DO: continuaar correções como o feito em AD 0-1 e 2-1.
         if (!isInteligente()) {
             return;
         }

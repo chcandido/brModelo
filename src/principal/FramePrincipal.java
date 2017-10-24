@@ -1309,8 +1309,4 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
         return bundle.getString("FramePrincipal.ScrollerBarraDeBotoes.TabConstraints.tabTitle");
     }
-
-    /**
-     * TO_DO Ao colar: Salvar como --> excluir extensão. ///???? /
-     */
 }
