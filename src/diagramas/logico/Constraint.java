@@ -108,7 +108,7 @@ public class Constraint implements Serializable {
         }
 
         if (getTabela().isDisablePainted()) {
-            img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
+            img = new ImageIcon(util.TratadorDeImagens.dye(img, getTabela().getForeColor()));
         }
         g.drawImage(img.getImage(), r.x + f, r.y + 4, imgl, imgl, null);
 
@@ -168,7 +168,7 @@ public class Constraint implements Serializable {
             g.setStroke(bkps);
         }
         if (getTabela().isDisablePainted()) {
-            img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
+            img = new ImageIcon(util.TratadorDeImagens.dye(img, getTabela().getForeColor()));
         }
         g.drawImage(img.getImage(), r.x + f, r.y + f, imgl, imgl, null);
         g.clipRect(r.x, r.y, r.width, r.height);

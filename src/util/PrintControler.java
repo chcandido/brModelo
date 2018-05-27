@@ -9,8 +9,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import java.awt.print.*;
+import java.util.Locale;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.JobName;
 import javax.print.attribute.standard.PageRanges;
 
 /**
@@ -23,7 +25,6 @@ public class PrintControler implements Printable {
         this.printJob = PrinterJob.getPrinterJob();
         page = printJob.defaultPage();
         page.setOrientation(PageFormat.PORTRAIT);
-        ///??? Há problemas de impressão em WIndows - Diálogos incoerentes
     }
 
     //private Component componentToBePrinted;
@@ -36,26 +37,38 @@ public class PrintControler implements Printable {
     public void print() {
         getPrintJob().setPrintable(this, getPage());
 
-        boolean res;
-        PrintRequestAttributeSet attr_set
-                = new HashPrintRequestAttributeSet();
-        if (page_range.x == 0) {
-            res = getPrintJob().printDialog();
-        } else {
-            PrintRequestAttributeSet attr_set2
-                    = new HashPrintRequestAttributeSet();
-            attr_set2.add(new PageRanges(page_range.x, page_range.y));
-            res = getPrintJob().printDialog(attr_set2);
+        if (Atributos.isEmpty()) {
+            Atributos.add(jbn);
         }
-        if (res) {
-            try {
-                getPrintJob().print(attr_set);
-            } catch (PrinterException pe) {
-                System.out.println("Error printing: " + pe);
-            }
-            //page = getPrintJob().getPageFormat(null);
-        }
+        Atributos.remove(pgr);
+        pgr = new PageRanges(page_range.x, page_range.y);
+        Atributos.add(pgr);
 
+        if (getPrintJob().printDialog(Atributos)) {
+            try {
+                getPrintJob().print(Atributos);
+            } catch (PrinterException pe) {
+                util.BrLogger.Logger("ERROR_PRINTING", pe.getMessage());
+            }
+        }
+//        PrintRequestAttributeSet attr_set
+//                = new HashPrintRequestAttributeSet();
+//        if (page_range.x == 0) {
+//            res = getPrintJob().printDialog();
+//        } else {
+//            PrintRequestAttributeSet attr_set2
+//                    = new HashPrintRequestAttributeSet();
+//            attr_set2.add(new PageRanges(page_range.x, page_range.y));
+//            res = getPrintJob().printDialog(attr_set2);
+//        }
+//        if (res) {
+//            try {
+//                getPrintJob().print(attr_set);
+//            } catch (PrinterException pe) {
+//                System.out.println("Error printing: " + pe);
+//            }
+//            //page = getPrintJob().getPageFormat(null);
+//        }
     }//method()  
 
     @Override
@@ -90,21 +103,39 @@ public class PrintControler implements Printable {
     }
 
     private Point page_range = new Point(0, 0);
+    private PrintRequestAttributeSet Atributos = new HashPrintRequestAttributeSet();
+    private PageRanges pgr = null;
+    private JobName jbn = new JobName("brModelo", Locale.getDefault());
 
     public void printSetup() {
-
-        if (page_range.x == 0) {
-            if (getPrintJob().printDialog()) {
-                page = getPrintJob().getPageFormat(null);
-            }
-        } else {
-            PrintRequestAttributeSet attr_set
-                    = new HashPrintRequestAttributeSet();
-            attr_set.add(new PageRanges(page_range.x, page_range.y));
-            if (getPrintJob().printDialog(attr_set)) {
-                page = getPrintJob().getPageFormat(attr_set);
-            }
+        if (Atributos.isEmpty()) {
+            Atributos.add(jbn);
         }
+        Atributos.remove(pgr);
+        pgr = new PageRanges(page_range.x, page_range.y);
+        Atributos.add(pgr);
+
+        if (getPrintJob().printDialog(Atributos)) {
+            page = getPrintJob().getPageFormat(Atributos);
+        }
+
+//        if (page_range.x == 0) {
+//            Atributos.add(new PageRanges(page_range.x, page_range.y));
+//            if (getPrintJob().printDialog()) {
+//                
+//                page = getPrintJob().getPageFormat(null);
+//            }
+//        } else {
+//            PrintRequestAttributeSet attr_set
+//                    = new HashPrintRequestAttributeSet();
+//            attr_set.add(new PageRanges(page_range.x, page_range.y));
+//            
+//            attr_set = getPrintJob(). getPrintService().getAttributes().;
+//            
+//            if (getPrintJob().printDialog(attr_set)) {
+//                page = getPrintJob().getPageFormat(attr_set);
+//            }
+//        }
     }
 
     public static void disableDoubleBuffering(Component c) {

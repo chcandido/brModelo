@@ -2528,7 +2528,13 @@ public class Diagrama implements Serializable, ClipboardOwner {
         }
         repaint();
     }
-
+    
+    /**
+     * Função acionada no momento de se coletar os artefatos que são parte de um artefato princiapal no momento de realçar o diagrama.<br>
+     * É chamada pela função AdicionePrinFromRealce(...)<br>
+     * @param res: lista de eleentos coletado.<br>
+     * @param item: item a ser analisado.
+    */
     protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
         if (item instanceof Forma) {
             Forma f = (Forma) item;
@@ -2540,7 +2546,14 @@ public class Diagrama implements Serializable, ClipboardOwner {
         res.add(item);
     }
     
+    /**
+     * Função acionada no momento de se coletar os artefatos no momento de realçar o diagrama.<br>
+     *<br>
+     * @param res: lista de eleentos coletado.<br>
+     * @param item: item a ser analisado.
+     */
     protected void AdicionePrinFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
         AdicioneSubsFromRealce(res, item);
     }
 }
+/////???? No editor de ajuda: não permitir alterar o sobre!

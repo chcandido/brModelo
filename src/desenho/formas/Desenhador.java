@@ -460,7 +460,7 @@ public class Desenhador extends Forma implements iBaseDrawer {
         }
         Image img = imgres;
         if (isDisablePainted()) {
-            img = util.Utilidades.dye(new ImageIcon(imgres), disabledColor);
+            img = util.TratadorDeImagens.dye(new ImageIcon(imgres), disabledColor);
         }
         
         g.drawImage(img, rec.x, rec.y, null);

@@ -8,15 +8,11 @@ import controlador.Editor;
 import controlador.inspector.InspectorProperty;
 import desenho.FormaElementar;
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +92,7 @@ public class Campo implements Serializable {
 
         if (img != null) {
             if (getTabela().isDisablePainted()) {
-                img = new ImageIcon(util.Utilidades.dye(img, getTabela().getForeColor()));
+                img = new ImageIcon(util.TratadorDeImagens.dye(img, getTabela().getForeColor()));
             }
             g.drawImage(img.getImage(), r.x + f, r.y + 4, imgl, imgl, null);
         }

@@ -348,7 +348,7 @@ public class FormaArea extends Forma {
     @Override
     public ArrayList<InspectorProperty> GenerateProperty() {
         ArrayList<InspectorProperty> res = super.GenerateProperty();
-//        res.add(InspectorProperty.PropertyFactoryTexto("formaarea.areadefault", "setAreaDefault", getAreaDefault()));
+//        res.add(InspectorProperty.PropertyFactoryTexto("formaarea.area.default", "setAreaDefault", getAreaDefault()));
 //        res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdAdicionarSubItem.name()).setTag(-1));
 //
 //        int i = 0;
@@ -511,7 +511,7 @@ public class FormaArea extends Forma {
 
         res.add(InspectorProperty.PropertyFactorySeparador("formaarea.area", true));
 
-        res.add(InspectorProperty.PropertyFactoryTexto("formaarea.areadefault", "setAreaDefault", getAreaDefault()));
+        res.add(InspectorProperty.PropertyFactoryTexto("formaarea.area.default", "setAreaDefault", getAreaDefault()));
         res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdAdicionarSubItem.name()).setTag(-1));
 
         int i = 0;
