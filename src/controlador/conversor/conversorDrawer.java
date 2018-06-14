@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import util.BrLogger;
 
 /**
  *
@@ -87,7 +88,7 @@ public class conversorDrawer extends BaseControlador {
         this.destino = destino;
     }
 
-    public void setObjAtivo(FormaElementar obj) {
+    public void setObjAtivo(FormaElementar obj, BufferedImage dig_img) {
         if (obj == null) {
             toPaint = null;
         } else {
@@ -95,7 +96,9 @@ public class conversorDrawer extends BaseControlador {
             int x = Math.max(0, r.x -50), y = Math.max(0, r.y -50);
             int w = getWidth() /  2;
             int h = getHeight() / 2;
-            BufferedImage tmp = util.ImageGenerate.geraImagem(origem);
+
+            BufferedImage tmp = dig_img;
+
             if (x + w > tmp.getWidth()) {
                 w -= (x + w) - tmp.getWidth();
             }

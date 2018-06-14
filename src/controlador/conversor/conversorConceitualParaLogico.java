@@ -40,6 +40,7 @@ import diagramas.logico.LogicoLinha;
 import diagramas.logico.Tabela;
 import java.awt.Frame;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -377,19 +378,25 @@ public class conversorConceitualParaLogico {
         });
     }
 
+    BufferedImage dig_img = null;
     private boolean Questione() {
         if (Opcoes.isYesToAll()) {
             Opcoes.OPC = Opcoes.opcDefault;
             return true;
         }
+        
         conversorDialogo fm = new conversorDialogo((Frame) origem.getEditor().getFramePrincipal(), true);
         if (Opcoes.LastPosi == null) {
             fm.setLocationRelativeTo((Frame) origem.getEditor().getFramePrincipal());
         } else {
             fm.setLocation(Opcoes.LastPosi);
         }
-        fm.Inicializar(origem, destino, Opcoes);
+        if (dig_img == null) {
+            dig_img = util.ImageGenerate.geraImagem(origem);
+        }
+        fm.Inicializar(origem, destino, Opcoes, dig_img);
         fm.setVisible(true);
+
         return Opcoes.Resultado != conversorOpcoes.resultOfQuestion.respCancel;
     }
 
@@ -902,6 +909,7 @@ public class conversorConceitualParaLogico {
             }
             j++;
         }
+
         for (Relacionamento re : lst) {
             List<Ligacao> ligacoes = re.getListaDePontosLigados().stream().filter(p -> p.getDono().getOutraPonta(re) instanceof PreEntidade)
                     .map(p -> (Ligacao) p.getDono()).collect(Collectors.toList());
@@ -927,7 +935,6 @@ public class conversorConceitualParaLogico {
                 }
             }
         }
-
         return true;
     }
 
@@ -1033,6 +1040,7 @@ public class conversorConceitualParaLogico {
     }
 
     private boolean converterRelacionamentoBinario(Relacionamento re, List<Ligacao> ligacoes) {
+
         final List<Tabela> tabelasO = new ArrayList<>();
         final List<Tabela> tabelasD = new ArrayList<>();
 
@@ -1110,6 +1118,7 @@ public class conversorConceitualParaLogico {
                 return false;
             }
             if (Opcoes.OPC == 0 || (Opcoes.OPC == 1 && card2 == 0)) {
+                
                 if (Opcoes.OPC == 0) {
                     tabs_origem.forEach(tab1 -> {
                         tabs_destino.forEach(tab2 -> {
@@ -1189,6 +1198,7 @@ public class conversorConceitualParaLogico {
 //                        }
 //                    }
                 }
+
                 return true;
             } else if (Opcoes.OPC == 1 && card2 == 1) {
                 return converterRelacionamentoMerge(re, entidades);
@@ -1237,6 +1247,7 @@ public class conversorConceitualParaLogico {
             return false;
         }
         Links.Add(re, prin);
+
         return true;
     }
 

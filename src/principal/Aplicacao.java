@@ -44,5 +44,4 @@ public class Aplicacao {
 //    public static Aplicacao getApplication() {
 //        return Application.getInstance(Aplicacao.class);
 //    }
-    
 }

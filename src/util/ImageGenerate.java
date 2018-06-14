@@ -62,7 +62,6 @@ public class ImageGenerate {
     }
 
     public static BufferedImage geraImagemForPrn(Diagrama diag, int wdt, int ht) {
-        
         BufferedImage res = CriarImagem(wdt, ht);
         Graphics2D g = (Graphics2D)res.getGraphics();
         g.setPaint(diag.getBackground());

@@ -1,5 +1,5 @@
 #Config
-#Tue Feb 20 23:15:14 AMT 2018
+#Wed Jun 13 23:58:12 AMT 2018
 cfg.ancorador=false
 cfg.mostrargrade=true
 cfg.location.y=-8
@@ -9,5 +9,5 @@ cfg.gradelargura=23
 cfg.mostrartooltips=false
 cfg.tipodefault=0
 cfg.mostrarids=false
-cfg.recentes=C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO2.brM3;C\:\\Chc\\TMP\\Conceitual_RISCO2.xml;C\:\\Chc\\TMP\\Conceitual_RISCO2.brM3
+cfg.recentes=C\:\\Chc\\TMP\\teste.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_sis_risco.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO2.brM3;C\:\\Chc\\TMP\\Conceitual_RISCO2.xml;C\:\\Chc\\TMP\\Conceitual_RISCO2.brM3
 cfg.location.salvar=true

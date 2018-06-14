@@ -136,7 +136,7 @@ public class DiagramaLogico extends Diagrama {
 
                     if (cmpO != null && (cmpO.isUnique() || cmpO.isKey())) {
                         if (cmpD == null) {
-                            cmpD = dest.Add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + cmpO.getTexto());
+                            cmpD = dest.Add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ori.getTexto() + "_" +  cmpO.getTexto());
                         }
                         if (!cmpD.isFkey()) { //não é chave estrangeira.
                             cmpD.SetFkey(true);

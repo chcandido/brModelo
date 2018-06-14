@@ -897,7 +897,7 @@ public class Tabela extends baseDrawerFromForma {
             nomes.add(c.getTexto());
         });
         int i = 0;
-        String tmp = nome + "_1";
+        String tmp = nome; // + "_1";
         while (nomes.indexOf(tmp) > -1) {
             tmp = nome + "_" + String.valueOf(++i);
         }

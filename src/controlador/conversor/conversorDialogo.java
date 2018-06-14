@@ -21,9 +21,11 @@ import diagramas.conceitual.DiagramaConceitual;
 import diagramas.logico.DiagramaLogico;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import util.BrLogger;
 
 /**
  *
@@ -250,13 +252,13 @@ public class conversorDialogo extends javax.swing.JDialog {
     private Diagrama origem = null;
     private Diagrama destino = null;
 
-    public void Inicializar(DiagramaConceitual ori, DiagramaLogico dest, conversorOpcoes opcoes) {
+    public void Inicializar(DiagramaConceitual ori, DiagramaLogico dest, conversorOpcoes opcoes, BufferedImage dig_img) {
         origem = ori;
         destino = dest;
         Opcoes = opcoes;
         Opcoes.OPC = -1;
         conversorDrawer1.setDiagramas(origem, destino);
-        prepareQuestao();
+        prepareQuestao(dig_img);
     }
 
     public conversorDrawer getDrawer() {
@@ -265,8 +267,8 @@ public class conversorDialogo extends javax.swing.JDialog {
 
     private conversorOpcoes Opcoes = null;
 
-    private void prepareQuestao() {
-        conversorDrawer1.setObjAtivo(Opcoes.obj);
+    private void prepareQuestao(BufferedImage dig_img) {
+        conversorDrawer1.setObjAtivo(Opcoes.obj, dig_img);
         conversorDrawer1.Escreve(Opcoes);
         conversorDrawer1.revalidate();
         conversorDrawer1.repaint();

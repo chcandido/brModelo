@@ -26,7 +26,7 @@ public class Acao extends AbstractAction {
         try {
             ic = Configuer.getImageIconFromResource(ico);
         } catch(Exception e) {
-            util.BrLogger.Logger("ERROR_CREATE_ACAO", e.getMessage());
+            util.BrLogger.Logger("ERROR_CREATE_ACAO", ico + "_" + e.getMessage());
         }
         if (ic != null) {
             icone = makeColorTransparent(ic.getImage(), Color.WHITE);
