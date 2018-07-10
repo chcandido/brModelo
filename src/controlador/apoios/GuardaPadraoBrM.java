@@ -16,6 +16,7 @@ public class GuardaPadraoBrM implements Serializable {
     public GuardaPadraoBrM(Diagrama dg) {
         super();
         diagrama = toByteArray(Diagrama.SaveToStream(dg));
+        Tag = dg.getVersao();
     }
 
     public GuardaPadraoBrM(byte[] dg) {
@@ -24,6 +25,7 @@ public class GuardaPadraoBrM implements Serializable {
     }
     
     public String versao = "1.0.0";
+    public String versaoDiagrama = null;
     public String data = "13-02-2012";
     public String autor = "Carlos Henrique Cândido";
     private static final long serialVersionUID = 1138331722566089686L;

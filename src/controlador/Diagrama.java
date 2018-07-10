@@ -101,9 +101,12 @@ public class Diagrama implements Serializable, ClipboardOwner {
     protected Color pontoCor = Color.BLACK;
     protected Color pontoCorMultSel = Color.GREEN;
     protected FormaElementar infoDiagrama = null;
-    protected final String versaoA = "3";
-    protected final String versaoB = "0";
-    protected final String versaoC = "0";
+    static final String VERSAO_A = "3";
+    static final String VERSAO_B = "2";
+    static final String VERSAO_C = "0";
+    protected String versaoA = Diagrama.VERSAO_A;
+    protected String versaoB = Diagrama.VERSAO_B;
+    protected String versaoC = Diagrama.VERSAO_C;
     private TipoDeDiagrama tipo = TipoDeDiagrama.tpConceitual;
     transient private String nome;
     transient private String Arquivo = "";
@@ -534,7 +537,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
     /**
      * Rodado após o carregamento do diagrama a aprtir de um arquivo. será ultil no futuro para setar propriedades default em novas versões dos diagramas a partir das versões do brMOdelo. roda dentro do método: ProcessePosOpen(Diagrama res) na classe Editor
      */
-    public void OnAfterLoad() {
+    public void OnAfterLoad(boolean isXml) {
 
     }
 
@@ -2176,6 +2179,9 @@ public class Diagrama implements Serializable, ClipboardOwner {
         }
         String txt = getNome();
         String onome = fileName.getName();
+        versaoA = Diagrama.VERSAO_A;
+        versaoB = Diagrama.VERSAO_B;
+        versaoC = Diagrama.VERSAO_C;
         if (util.Arquivo.IsbrM3(fileName)) {
             onome = onome.substring(0, onome.length() - util.Arquivo.brM3.length() - 1);
         } else {
@@ -2191,6 +2197,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
                     this.setArquivo("");
                     //out.writeObject(this);
                     GuardaPadraoBrM seg = new GuardaPadraoBrM(this);
+                    seg.versaoDiagrama = versaoA + "." + versaoB + "." + versaoC;
                     out.writeObject(seg);
                 }
                 this.setArquivo(fileName.getAbsolutePath());
@@ -2198,6 +2205,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
                 this.setMudou(false);
                 master.DoAutoSaveCompleto();
+                PerformInspector();
                 return true;
             } catch (IOException iOException) {
                 util.BrLogger.Logger("ERROR_DIAGRAMA_SAVE_BRM", iOException.getMessage());
@@ -2214,6 +2222,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
                     this.setMudou(false);
                     master.DoAutoSaveCompleto();
+                    PerformInspector();
                     return true;
                 }
             } catch (IOException iOException) {
@@ -2225,10 +2234,14 @@ public class Diagrama implements Serializable, ClipboardOwner {
     }
 
     public boolean AutoSalvar(ArrayList<byte[]> as) {
+        versaoA = Diagrama.VERSAO_A;
+        versaoB = Diagrama.VERSAO_B;
+        versaoC = Diagrama.VERSAO_C;
         try {
             ByteArrayOutputStream fo = new ByteArrayOutputStream();
             try (ObjectOutput out = new ObjectOutputStream(fo)) {
                 GuardaPadraoBrM seg = new GuardaPadraoBrM(this);
+                seg.versaoDiagrama = versaoA + "." + versaoB + "." + versaoC;
                 seg.Tag = this.getNome();
                 out.writeObject(seg);
             }
@@ -2492,11 +2505,11 @@ public class Diagrama implements Serializable, ClipboardOwner {
     public boolean isRealce() {
         return realce;
     }
-    
+
     public void SetRealce(boolean realce) {
         this.realce = realce;
     }
-    
+
     public void setRealce(boolean realce) {
         if (this.realce == realce) {
             return;
@@ -2528,13 +2541,14 @@ public class Diagrama implements Serializable, ClipboardOwner {
         }
         repaint();
     }
-    
+
     /**
      * Função acionada no momento de se coletar os artefatos que são parte de um artefato princiapal no momento de realçar o diagrama.<br>
      * É chamada pela função AdicionePrinFromRealce(...)<br>
+     *
      * @param res: lista de eleentos coletado.<br>
      * @param item: item a ser analisado.
-    */
+     */
     protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
         if (item instanceof Forma) {
             Forma f = (Forma) item;
@@ -2545,15 +2559,68 @@ public class Diagrama implements Serializable, ClipboardOwner {
         }
         res.add(item);
     }
-    
+
     /**
      * Função acionada no momento de se coletar os artefatos no momento de realçar o diagrama.<br>
-     *<br>
+     * <br>
+     *
      * @param res: lista de eleentos coletado.<br>
      * @param item: item a ser analisado.
      */
     protected void AdicionePrinFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
         AdicioneSubsFromRealce(res, item);
     }
+
+    private final String v300 = "3.0.0";
+    private final String v310 = "3.1.0";
+
+    public boolean LoadVersao(String fromXml) {
+        if (fromXml == null || fromXml.isEmpty()) {
+            return false;
+        }
+        ArrayList<String> ver = new ArrayList<>();
+        ver.add(v300);
+        ver.add(v310);
+        ver.add(Diagrama.VERSAO_A + "." + Diagrama.VERSAO_B + "." + Diagrama.VERSAO_C); //Atual
+        
+        fromXml = fromXml.trim();
+        if (ver.indexOf(ver) == -1) {
+            return false;
+        }
+        
+        String[] v = fromXml.split("\\.");
+        versaoA = v[0];
+        versaoB = v[1];
+        versaoC = v[2];
+        
+//        String va = Diagrama.VERSAO_A;
+//        String vb = Diagrama.VERSAO_B;
+//        String vc = Diagrama.VERSAO_C;
+//        try {
+//            String[] v = fromXml.split("\\.");
+//            if (v.length != 3) {
+//                return false;
+//            }
+//            int a = Integer.valueOf(v[0]);
+//            int b = Integer.valueOf(v[1]);
+//            int c = Integer.valueOf(v[2]);
+//
+//            int A = Integer.valueOf(va);
+//            int B = Integer.valueOf(vb);
+//            int C = Integer.valueOf(vc);
+//
+//            if ((a > A) || (a == A && b > B) || (a == A && b == B && c > C)) {
+//                return false;
+//            }
+//
+//            versaoA = v[0];
+//            versaoB = v[1];
+//            versaoC = v[2];
+//
+//        } catch (Exception ex) {
+//            return false;
+//        }
+
+        return true;
+    }
 }
-/////???? No editor de ajuda: não permitir alterar o sobre!

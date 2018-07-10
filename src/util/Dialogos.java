@@ -90,7 +90,7 @@ public class Dialogos {
         dlg.Texto.setForeground(Color.DARK_GRAY);
         dlg.Texto.setCaretPosition(0);
         dlg.setLocationRelativeTo(form);
-        dlg.btnCancelar.setEnabled(false);
+        dlg.btnCancelar.setVisible(false);
         dlg.setVisible(true);
 
 //        if (dlg.getResultado() == JOptionPane.OK_OPTION) {

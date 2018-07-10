@@ -183,6 +183,14 @@ public class Controler {
         ImagemDeDiagrama.put("diagrama.ancordor.3.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.3.img", true));
         ImagemDeDiagrama.put("diagrama.ancordor.4.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.4.img", true));
         ImagemDeDiagrama.put("diagrama.ancordor.5.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.5.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.6.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.6.img", true));
+
+        ImagemDeDiagrama.put("diagrama.ancordor.7.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.7.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.8.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.8.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.9.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.9.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.7.0.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.7.0.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.8.0.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.8.0.img", true));
+        ImagemDeDiagrama.put("diagrama.ancordor.9.0.img", TratadorDeImagens.loadFromResource("diagrama.ancordor.9.0.img", true));
 
         ImagemDeDiagrama.put("diagrama.Constraint_PK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_PK.img", true));
         ImagemDeDiagrama.put("diagrama.Constraint_FK.img", TratadorDeImagens.loadFromResource("diagrama.Constraint_FK.img", true));

@@ -653,7 +653,7 @@ public class DiagramaConceitual extends Diagrama {
         if ((getListaDeItens().stream().filter(tb -> tb instanceof PreEntidade).count() == 0)) { // ||  !(getSelecionado() instanceof PreEntidade)) {
             JOptionPane.showMessageDialog(Aplicacao.fmPrincipal,
                     Editor.fromConfiguracao.getValor("Controler.interface.mensagem.sem_attr"),
-                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"),
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }

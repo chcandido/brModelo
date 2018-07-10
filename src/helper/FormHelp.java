@@ -734,6 +734,10 @@ public class FormHelp extends javax.swing.JFrame {
         if (v == null) {
             return;
         }
+        if (v.getID() == 0 ) {
+            util.Dialogos.ShowMessageERROR(this, Editor.fromConfiguracao.getValor("Controler.MSG_ERRO_EDIT_TOPICO_HELP"));
+            return;            
+        }
         if (evt != null && !emEdicao(v)) {
             return;
         }
@@ -755,7 +759,6 @@ public class FormHelp extends javax.swing.JFrame {
         PopuleTree();
         SelectNodeByID(v.getID());
     }//GEN-LAST:event_btnOKActionPerformed
-
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
         setVisible(false);
@@ -799,7 +802,7 @@ public class FormHelp extends javax.swing.JFrame {
                 nav.remove(idx);
                 panNav.remove(idx);
             }
-            if (nav.size() > 8) {
+            if (nav.size() > 4) {
                 nav.remove(0);
                 panNav.remove(0);
             }
@@ -993,7 +996,7 @@ public class FormHelp extends javax.swing.JFrame {
 
     private void btnToDiagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToDiagActionPerformed
         ParteAjuda v = getSelecionado();
-        if (v == null) {
+        if (v == null || v.getID() == 0) {
             return;
         }
         fmp.getEditor().AddAsAtual(v.getTipoDeDiagrama().name());
@@ -1005,6 +1008,10 @@ public class FormHelp extends javax.swing.JFrame {
     private void btnFromDiagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFromDiagActionPerformed
         ParteAjuda v = getSelecionado();
         if (v == null) {
+            return;
+        }
+        if (v.getID() == 0) {
+            util.Dialogos.ShowMessageERROR(this, Editor.fromConfiguracao.getValor("Controler.MSG_ERRO_EDIT_TOPICO_HELP"));
             return;
         }
         if (emEdicao(v)) {
@@ -1134,6 +1141,9 @@ public class FormHelp extends javax.swing.JFrame {
             AjudaMng.setHtml(RepositorioHtml.generateSobre());
             AjudaMng.setSuperior(AjudaMng);
             res = false;
+        } else {
+            AjudaMng.setHtml(RepositorioHtml.generateSobre());
+            AjudaMng.setTitulo(Editor.fromConfiguracao.getValor("Controler.interface.help"));
         }
         PopuleTree();
         maxID = AjudaMng.FindMaxID();

@@ -13,6 +13,7 @@ import desenho.linhas.PontoDeLinha;
 import desenho.preAnyDiagrama.PreAtributo;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.w3c.dom.Document;
@@ -29,13 +30,19 @@ public class Atributo extends PreAtributo {
     public Atributo(Diagrama modelo) {
         super(modelo);
         nodic = false;
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
     }
 
     public Atributo(Diagrama modelo, String texto) {
         super(modelo, texto);
         nodic = false;
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
+    }
+    
+    @Override
+    public ArrayList<Integer> getAncorasCode() {
+        ArrayList<Integer> res = super.getAncorasCode();
+        Integer[] ancorasCode = new Integer[]{Ancorador.CODE_ORG_AT};
+        res.addAll(Arrays.asList(ancorasCode));
+        return res;
     }
 
     /**

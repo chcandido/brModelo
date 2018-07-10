@@ -974,12 +974,22 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
                     noTree = false;
                 } else {
                     boolean done = false;
+                    int rp = Manager.diagramaAtual.getSelecionado().getID();
                     for (int i = 0; i < root.getChildCount(); i++) {
                         TreeItem item = (TreeItem) root.getChildAt(i);
-                        if (item.getId() == Manager.diagramaAtual.getSelecionado().getID()) {
-                            noTree = true;
-                            TreeItensDiagrama.setSelectionPath(pt.pathByAddingChild(item));
-                            noTree = false;
+                        if (item.getId() == rp) {
+                            if (TreeItensDiagrama.getLastSelectedPathComponent() != null) {
+                                int v = ((TreeItem) TreeItensDiagrama.getLastSelectedPathComponent()).getId();
+                                if (v != rp) {
+                                    noTree = true;
+                                    TreeItensDiagrama.setSelectionPath(pt.pathByAddingChild(item));
+                                    noTree = false;
+                                }
+                            } else {
+                                noTree = true;
+                                TreeItensDiagrama.setSelectionPath(pt.pathByAddingChild(item));
+                                noTree = false;
+                            }
                             done = true;
                             break;
                         }
@@ -999,9 +1009,14 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
             return;
         }
         if (TreeItensDiagrama.getLastSelectedPathComponent() != null) {
-            int v = ((TreeItem) TreeItensDiagrama.getLastSelectedPathComponent()).getId();
+            TreeItem ti = ((TreeItem) TreeItensDiagrama.getLastSelectedPathComponent());
+            int v = ti.getId();
             if (v > 0) {
                 Manager.diagramaAtual.SelecioneByID(v, false);
+            }
+            if (ti.getLevel() == 2 && Manager.diagramaAtual.getSelecionado() != null) {
+                TreeItem tir = (TreeItem) ti.getParent();
+                Manager.diagramaAtual.getSelecionado().DoSubItemSel(tir.getIndex(ti));
             }
         }
     }//GEN-LAST:event_TreeItensDiagramaValueChanged
@@ -1033,6 +1048,15 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         int index = sourceTabbedPane.getSelectedIndex();
         if (index == 1) {
             DoComandoExterno(Controler.menuComandos.cmdTreeNavegador);
+            Manager.setTextoDica(null, "");
+        } else {
+            if (Manager != null) {
+                if (index == 0) {
+                    inspector1.PerformDica();
+                } else {
+                    inspector2.PerformDica();
+                }
+            }
         }
     }//GEN-LAST:event_TabInspectorStateChanged
 
@@ -1125,7 +1149,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         if (formPartes == null) {
             formPartes = new FormPartes();
             formPartes.externalSalvar = MenuSalvarRepo;
-            formPartes.Mananger = Manager;
+            //formPartes.Mananger = Manager;
             formPartes.setLocationRelativeTo(this);
             if (!formPartes.LoadData()) {
                 formPartes.dispose();

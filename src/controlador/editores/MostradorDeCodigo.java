@@ -30,6 +30,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import principal.Aplicacao;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -79,6 +84,7 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnCopy = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -95,7 +101,7 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 575, Short.MAX_VALUE)
                 .addComponent(btnFechar))
         );
         jPanel2Layout.setVerticalGroup(
@@ -121,7 +127,13 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         jToolBar1.add(btnZmn);
 
         txtZoon.setEditable(false);
+        txtZoon.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtZoon.setText("12");
+        txtZoon.setToolTipText(bundle.getString("MostradorDeCodigo.toolTipText")); // NOI18N
+        txtZoon.setBorder(null);
+        txtZoon.setCaretPosition(0);
+        txtZoon.setMinimumSize(new java.awt.Dimension(30, 14));
+        txtZoon.setPreferredSize(new java.awt.Dimension(140, 14));
         jToolBar1.add(txtZoon);
 
         btnZma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/zoom.png"))); // NOI18N
@@ -137,7 +149,7 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         jToolBar1.add(btnZma);
         jToolBar1.add(jSeparator1);
 
-        btnCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/copy.png"))); // NOI18N
+        btnCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cp.png"))); // NOI18N
         btnCopy.setFocusable(false);
         btnCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCopy.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cpdim_cp.png"))); // NOI18N
@@ -160,6 +172,17 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         });
         jToolBar1.add(btnEditar);
 
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_salvarc.png"))); // NOI18N
+        btnSalvar.setFocusable(false);
+        btnSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalvar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnSalvar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,8 +190,8 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(scrPrincipal)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 514, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,11 +246,36 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         edt.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        String pat = Aplicacao.getDiagramaSelecionado().getArquivo();
+        if (pat != null && !pat.isEmpty()) {
+            pat = (new File(pat)).getParentFile().getAbsolutePath() + File.separator +  Aplicacao.getDiagramaSelecionado().getNome() + ".sql";
+        }
+        File arq = util.Dialogos.ShowDlgSaveAsAny(this.getRootPane(), pat);
+        if (arq == null) {
+            return;
+        }
+        
+        if (arq.exists()) {
+            if (util.Dialogos.ShowMessageConfirm(getRootPane(), Editor.fromConfiguracao.getValor("Controler.MSG_QUESTION_REWRITE")) != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        try {
+            PrintWriter out = new PrintWriter(arq.getAbsoluteFile());
+            out.print(buffer);
+            out.close();
+        } catch (IOException iOException) {
+            util.BrLogger.Logger("ERROR_DIAGRAMA_SAVE_ANY", iOException.getMessage());
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnZma;
     private javax.swing.JButton btnZmn;
     private javax.swing.JPanel jPanel2;
@@ -265,41 +313,35 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
         StringBuilder bu = new StringBuilder();
 
         final String fr = "<font color='red'>";
-        final String fb = "<font color='blue'><b>";
+        final String fb = "<font color='blue'>";
         final String fimR = "</font>";
-        final String fimB = "<b/></font>";
-        int fl = fimB.length();
+        final String fimB = "</font>";
         
         for (String str : subs) {
-            String tmp = " " + str.toUpperCase() + " ";
+            str = " " + str + " ";
+            String tmp = str.toUpperCase();
             for (String rw : dbModel.getDataTypes()) {
                 int p = tmp.indexOf(" " + rw + " ");
+                if (p == -1) p = tmp.indexOf(" " + rw + ",");
                 while (p > -1) {
                     str = injete(str, rw, fb, fimB, p);
-                    tmp = " " + str.toUpperCase() + " ";
-                    p = tmp.indexOf(" " + rw + " ", p + rw.length() + 1 + fl);
-                }
-                p = tmp.indexOf(" " + rw + ",");
-                while (p > -1) {
-                    str = injete(str, rw, fb, fimB, p);
-                    tmp = " " + str.toUpperCase() + " ";
-                    p = tmp.indexOf(" " + rw + ",", p + rw.length() + 1 + fl);
+                    tmp = str.toUpperCase();
+                    p = tmp.indexOf(" " + rw + " ");
+                    if (p == -1) p = tmp.indexOf(" " + rw + ",");
                 }
             }
-            fl = fimR.length();
-            //tmp = " " + str.toUpperCase() + " ";
             for (String rw : dbModel.getReservedWords()) {
                 int p = tmp.indexOf(" " + rw + " ");
-                while (p > -1) {
-                    str = injete(str, rw, fr, fimR, p);
-                    tmp = " " + str.toUpperCase() + " ";
-                    p = tmp.indexOf(" " + rw + " ", p + rw.length() + 1 + fl);
+                if (p == -1) {
+                    p = tmp.indexOf(" " + rw + ",");
                 }
-                p = tmp.indexOf(" " + rw + ",");
                 while (p > -1) {
                     str = injete(str, rw, fr, fimR, p);
-                    tmp = " " + str.toUpperCase() + " ";
-                    p = tmp.indexOf(" " + rw + ",", p + rw.length() + 1 + fl);
+                    tmp = str.toUpperCase();
+                    p = tmp.indexOf(" " + rw + " ");
+                    if (p == -1) {
+                        p = tmp.indexOf(" " + rw + ",");
+                    }
                 }
             }
 
@@ -330,12 +372,13 @@ public class MostradorDeCodigo extends javax.swing.JDialog implements ClipboardO
     public String injete(String origem, String palavra, String inj, String fim, int posi) {
         String res;
         if (posi == 0) {
-            res = inj + origem.substring(0, palavra.length());
+            res = inj + origem.substring(1, palavra.length());
         } else {
-            res = origem.substring(0, posi) + inj + origem.substring(posi, posi + palavra.length());
+            res = origem.substring(0, posi + 1) + inj + origem.substring(posi + 1, posi + 1 + palavra.length());
         }
-        posi += palavra.length();
-        res = res + fim + (posi < origem.length() ? origem.substring(posi) : "");
+        res += fim;
+        posi += (" " + palavra).length();
+        res = res + origem.substring(posi);
         return res;
     }
     

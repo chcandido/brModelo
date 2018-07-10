@@ -21,6 +21,7 @@ import diagramas.conceitual.DiagramaConceitual;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -39,17 +40,25 @@ public class PreEntidade extends FormaRetangular {
     public PreEntidade(Diagrama modelo) {
         super(modelo);
         showOrgDiag = true;
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
-        getAncorasCode().add(CODE_EDT_ATR);
+//        getAncorasCode().add(Ancorador.CODE_ORG_AT);
+//        getAncorasCode().add(CODE_EDT_ATR);
     }
 
     public PreEntidade(Diagrama modelo, String texto) {
         super(modelo, texto);
         showOrgDiag = true;
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
-        getAncorasCode().add(CODE_EDT_ATR);
+//        getAncorasCode().add(Ancorador.CODE_ORG_AT);
+//        getAncorasCode().add(CODE_EDT_ATR);
     }
 
+    @Override
+    public ArrayList<Integer> getAncorasCode() {
+        ArrayList<Integer> res = super.getAncorasCode();
+        Integer[] ancorasCode = new Integer[]{Ancorador.CODE_ORG_AT, CODE_EDT_ATR};
+        res.addAll(Arrays.asList(ancorasCode));
+        return res;
+    }
+    
     @Override
     public boolean CanLiga(Forma forma, Linha lin) {
         if (forma == null) {

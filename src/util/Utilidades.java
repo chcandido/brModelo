@@ -95,6 +95,10 @@ public class Utilidades {
         return res;
     }
 
+    public static boolean IsUpper(String texto) {
+        return texto.toUpperCase().equals(texto);
+    }
+
     public Utilidades() {
         super();
     }
@@ -213,8 +217,8 @@ public class Utilidades {
                 .replace('Ñ', 'N')
                 .replaceAll("!", "")
                 .replaceAll("[\\[\\´\\`\\?!\\@\\#\\$\\%\\¨\\*]", "_")
-                .replaceAll("[\\(\\)\\=\\{\\}\\[\\]\\~\\^\\]]", "_")
-                .replaceAll("[\\.\\;\\-\\_\\+\\'\\ª\\º\\:\\;\\/]", "_")
+                .replaceAll("[\\(\\)\\=\\{\\}\\~\\^\\]]", "_")
+                .replaceAll("[\\.\\;\\-\\+\\'\\ª\\º\\:\\;\\/]", "_")
                 .replaceAll("\\s+","_");
                 
     }

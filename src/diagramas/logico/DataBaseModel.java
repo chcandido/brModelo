@@ -216,6 +216,7 @@ public class DataBaseModel implements Serializable {
         lst.add("FLOAT");
         lst.add("FLOOR");
         lst.add("FOR");
+        lst.add("FOREIGN KEY"); // POR QUESTÃO DE FORMATAÇÃO  - INCLUÍDO POR CHC
         lst.add("FOREIGN");
         lst.add("FREE");
         lst.add("FROM");
@@ -313,6 +314,7 @@ public class DataBaseModel implements Serializable {
         lst.add("POWER");
         lst.add("PRECISION");
         lst.add("PREPARE");
+        lst.add("PRIMARY KEY"); // POR QUESTÃO DE FORMATAÇÃO  - INCLUÍDO POR CHC
         lst.add("PRIMARY");
         lst.add("PROCEDURE");
         lst.add("RANGE");

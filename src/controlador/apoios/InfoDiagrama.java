@@ -207,6 +207,7 @@ public class InfoDiagrama extends Forma {
         setAlinhamento_v(util.XMLGenerate.getValorIntegerFrom(me, "Alinhamento_v"));
         
         getMaster().SetRealce(util.XMLGenerate.getValorBooleanFrom(me, "Realce"));
+        getMaster().LoadVersao(util.XMLGenerate.getValorStringFrom(me, "Versao"));
 
         return getMaster().InfoDiagrama_LoadFromXML(me, colando);
     }
@@ -261,4 +262,6 @@ public class InfoDiagrama extends Forma {
         int tag = getMaster().getEditor().getInspectorEditor().getSelecionado().getTag();
         getMaster().setFromString(str, tag);
     }
+    
+    
 }

@@ -100,6 +100,7 @@ public class XMLGenerate {
             DOMSource source = new DOMSource(doc);
             StringWriter out = new StringWriter();
             StreamResult result = new StreamResult(out);
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(source, result);
             return out;
         } catch (TransformerException ex) {

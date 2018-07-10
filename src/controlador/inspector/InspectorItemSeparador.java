@@ -20,14 +20,16 @@ public class InspectorItemSeparador extends InspectorItemBase {
     public InspectorItemSeparador(Inspector criador) {
         super(criador);
         Color c = getBackground();
-        c = new Color(c.getRed(), c.getGreen(), c.getBlue() + 15);
+        c = new Color(c.getRed(), c.getGreen(),  c.getBlue() - 15);
+        //:BUG CORRIGIDO: Vinicius Oliveira Queiroz.
         setBackground(c);
     }
 
     public InspectorItemSeparador() {
         super();
         Color c = getBackground();
-        c = new Color(c.getRed(), c.getGreen(), c.getBlue() + 15);
+        c = new Color(c.getRed(), c.getGreen(), c.getBlue() - 15);
+        //:BUG CORRIGIDO: Vinicius Oliveira Queiroz.
         setBackground(c);
     }
 

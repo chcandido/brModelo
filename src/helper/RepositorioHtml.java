@@ -16,6 +16,8 @@
  */
 package helper;
 
+import principal.Aplicacao;
+
 /**
  *
  * @author chcan
@@ -31,11 +33,13 @@ public class RepositorioHtml {
                 + "</html>";
         return res;
     }
-    
+    public static String getVersao() {
+        return Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_A;
+    }
     public static String generateSobre() {
         String res = "<html>\n<head>\n<title>Ajuda</title>\n</head>\n<body>\n";
-                res += "<center><h1>BrModelo 3.01 </h1>\nCarlos Henrique Cândido<br>\nOrientador: Dr. Ronaldo dos Santos Mello<br>\nJunho de 2018<br/><br/>"
-                        + "Baixe o arquivo de ajuda em www.sis4.com/brmodelo/ajuda (EM CONSTRUÇÃO)</center>\n</body>\n</html>";
+                res += "<center><h1>BrModelo " + getVersao() + " </h1>\nCarlos Henrique Cândido<br>\nOrientador: Dr. Ronaldo dos Santos Mello<br>\n" + Aplicacao.VERSAO_DATA + "<br/><br/>"
+                        + "Baixe o arquivo de ajuda em http://www.sis4.com/brModelo/Ajuda.html</center>\n</body>\n</html>";
         return res;
     }
 

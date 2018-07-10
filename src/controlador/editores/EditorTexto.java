@@ -104,7 +104,10 @@ public class EditorTexto extends javax.swing.JDialog implements ClipboardOwner {
         jToolBar1.add(btnZmn);
 
         txtZoon.setEditable(false);
+        txtZoon.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtZoon.setText("12");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
+        txtZoon.setToolTipText(bundle.getString("MostradorDeCodigo.toolTipText")); // NOI18N
         jToolBar1.add(txtZoon);
 
         btnZma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/zoom.png"))); // NOI18N
@@ -143,7 +146,6 @@ public class EditorTexto extends javax.swing.JDialog implements ClipboardOwner {
         });
         jToolBar1.add(btnSalvar);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
         btnFechar.setText(bundle.getString("MC.btnFchar")); // NOI18N
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

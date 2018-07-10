@@ -51,6 +51,7 @@ public class DlgExecutor extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnOK = new javax.swing.JButton();
+        btnCopy = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Texto = new javax.swing.JTextArea();
 
@@ -72,12 +73,24 @@ public class DlgExecutor extends javax.swing.JDialog {
             }
         });
 
+        btnCopy.setBackground(new java.awt.Color(255, 255, 255));
+        btnCopy.setForeground(new java.awt.Color(255, 255, 255));
+        btnCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/copy.png"))); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("principal/Formularios_pt_BR"); // NOI18N
+        btnCopy.setToolTipText(bundle.getString("DlgExecutor.toolTipCopy")); // NOI18N
+        btnCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCopyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOK)
@@ -89,7 +102,8 @@ public class DlgExecutor extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
-                    .addComponent(btnOK)))
+                    .addComponent(btnOK)
+                    .addComponent(btnCopy)))
         );
 
         Texto.setColumns(20);
@@ -124,10 +138,17 @@ public class DlgExecutor extends javax.swing.JDialog {
         setVisible(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCopyActionPerformed
+        Texto.selectAll();
+        Texto.copy();
+        Texto.select(0, 0);
+    }//GEN-LAST:event_btnCopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextArea Texto;
     public javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnOK;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

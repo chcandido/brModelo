@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import principal.Aplicacao;
 
 /**
  *
@@ -369,7 +370,7 @@ public class FormPartes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDownActionPerformed
 
-    public Editor Mananger = null;
+    private final Editor Mananger = Aplicacao.fmPrincipal.getEditor();
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
         ParteBtn btn = getBtnSelecionado();

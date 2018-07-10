@@ -204,6 +204,8 @@ public class conversorConceitualParaLogico {
     private boolean recebaEConvertaAtributos(Forma E, Tabela tb, List<Atributo> lst) {
         boolean res = true;
         ArrayList<String> infos = Opcoes.Textos;
+        String pk = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.pk.sufix");
+        String fk = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.sufix");
         for (Atributo a : lst) {
             boolean tmpcardMaxUtil = a.getCardMaxima() > 1 || a.getCardMaxima() == -1;
             if (a.isAtributoComposto() || a.isOpcional() || (a.isMultivalorado() && tmpcardMaxUtil)) {
@@ -255,14 +257,14 @@ public class conversorConceitualParaLogico {
                         setOrigemLigacao(
                                 LinkTable(tb, ntb, (a.isOpcional() ? 0 : (a.isMultivalorado() ? 0 : 1)), (Limitado ? 3 : 1)),
                                 tb);
-                        Campo c = ntb.Add(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.pk.sufix"));
-                        c.setTexto(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.pk.sufix"));
+                        Campo c = ntb.Add(ax + pk);
+                        c.setTexto(ax + pk);
                         c.setKey(true);
                         c.setTipo("INT");
                         c.setComplemento("NOT NULL");
 
-                        Campo c2 = tb.Add(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.sufix"));
-                        c2.setTexto(ax + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.sufix"));
+                        Campo c2 = tb.Add(ax + fk);
+                        c2.setTexto(ax + fk);
                         c2.setFkey(true);
 //#                        c2.setTabelaOrigem(ntb);
 //                        c2.setCampoOrigem(c);
@@ -726,7 +728,7 @@ public class conversorConceitualParaLogico {
                 });
             });
 
-            final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
+            final String pretx = (util.Utilidades.IsUpper(principal.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase()) + principal.getTexto() + "_";
             int opc = Opcoes.OPC;
             switch (opc) {
                 case 0:
@@ -1078,6 +1080,7 @@ public class conversorConceitualParaLogico {
         final PreEntidade ent2;
         final List<Tabela> tabs_origem;
         final List<Tabela> tabs_destino;
+        
 
         if (cards.get(1).ordinal() < cards.get(0).ordinal()) {
             card1 = cards.get(1).ordinal();
@@ -1120,10 +1123,11 @@ public class conversorConceitualParaLogico {
             if (Opcoes.OPC == 0 || (Opcoes.OPC == 1 && card2 == 0)) {
                 
                 if (Opcoes.OPC == 0) {
+                    final String pf = util.Utilidades.IsUpper(ent1.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
                     tabs_origem.forEach(tab1 -> {
                         tabs_destino.forEach(tab2 -> {
                             if (tab1 != tab2) {
-                                ImportaCampoChave(tab1, tab2, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent1.getTexto() + "_");
+                                ImportaCampoChave(tab1, tab2, pf + ent1.getTexto() + "_");
                                 setOrigemLigacao(
                                         LinkTable(tab1, tab2, card1, card2),
                                         tab2);
@@ -1135,10 +1139,11 @@ public class conversorConceitualParaLogico {
                         });
                     });
                 } else {
+                    final String pf = util.Utilidades.IsUpper(ent2.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
                     tabs_destino.forEach(tab2 -> {
                         tabs_origem.forEach(tab1 -> {
                             if (tab1 != tab2) {
-                                ImportaCampoChave(tab2, tab1, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ent2.getTexto() + "_");
+                                ImportaCampoChave(tab2, tab1, pf + ent2.getTexto() + "_");
                                 setOrigemLigacao(
                                         LinkTable(tab2, tab1, card2, card1),
                                         tab1);
@@ -1208,7 +1213,9 @@ public class conversorConceitualParaLogico {
         Tabela prin = (Tabela) CriarTabela(re.getLocation());
         String ax = removerCaracteresEspeciais(re.getTexto().isEmpty() ? ent1.getTexto() + "_" + ent2.getTexto() : re.getTexto());
         prin.SetTexto(ax);
-
+        
+        final String pf = util.Utilidades.IsUpper(prin.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
+        
         ArrayList<Tabela> jaLigada = new ArrayList<>();
         for (Tabela t : tabs_origem) {
             int c2 = card1;
@@ -1222,7 +1229,7 @@ public class conversorConceitualParaLogico {
                         prin);
                 jaLigada.add(t);
             }
-            ImportaCampoChave(t, prin, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t.getTexto() + "_");
+            ImportaCampoChave(t, prin, pf + t.getTexto() + "_");
         }
         for (Tabela t : tabs_destino) {
             int c2 = card2;
@@ -1239,7 +1246,7 @@ public class conversorConceitualParaLogico {
                 if (prin != t) {
                     setOrigemLigacao(LinkTable(prin, t, c2, c1), prin);
                 }
-                ImportaCampoChave(t, prin, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t.getTexto() + "_");
+                ImportaCampoChave(t, prin, pf + t.getTexto() + "_");
             }
         }
 
@@ -1260,8 +1267,10 @@ public class conversorConceitualParaLogico {
 
         List<Campo> camposKey = tab_origen_PK.getCampos().stream().filter(cm -> cm.isKey()).collect(Collectors.toList());
 
+        final String pf = util.Utilidades.IsUpper(tab_recebedora.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
+
         camposKey.forEach(C -> {
-            Campo c = ImportaCampoIgnoreConstrais(tab_recebedora, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + tab_origen_PK.getTexto() + "_");
+            Campo c = ImportaCampoIgnoreConstrais(tab_recebedora, C, pf + tab_origen_PK.getTexto() + "_");
             c.SetFkey(true);
             nova_fk.Add(C, c);
         });
@@ -1378,19 +1387,19 @@ public class conversorConceitualParaLogico {
 
                         List<Campo> oldkeys = principal.getCampos().stream().filter(cam -> cam.isKey()).collect(Collectors.toList());
                         List<Tabela> secundarias = new ArrayList<>();
-                        final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
+                        final String prefx = util.Utilidades.IsUpper(principal.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase()+ principal.getTexto() + "_";
 
                         lst.stream().forEach(pre -> {
                             Links.getLigadosOrigem(pre).stream().filter(o -> o instanceof Tabela).map(o -> (Tabela) o).forEach(s -> {
                                 setOrigemLigacao(LinkTable(principal, s, -1, 0), s);
-                                ImportaCampoChave(principal, s, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_");
+                                ImportaCampoChave(principal, s, prefx);
 
                                 secundarias.add(s);
 
                             });
                         });
 
-                        NormaliseImportacaoKeys(principal, oldkeys, secundarias, pretx);
+                        NormaliseImportacaoKeys(principal, oldkeys, secundarias, prefx);
 
                     });
                     break;
@@ -1418,7 +1427,8 @@ public class conversorConceitualParaLogico {
 
                             });
 
-                            final String pretx = Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + principal.getTexto() + "_";
+                            final String pretx = util.Utilidades.IsUpper(principal.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase()  + principal.getTexto() + "_";
+
                             NormaliseImportacaoKeys(principal, oldkeys, secundarias, pretx);
                         });
                         secundarias.forEach(s -> {
@@ -1473,9 +1483,11 @@ public class conversorConceitualParaLogico {
     private void renomeieFKs() {
         destino.getListaDeTabelas().stream().forEach(tt -> {
             ArrayList<String> nm = new ArrayList<>();
+            
+            final String pf = util.Utilidades.IsUpper(tt.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
+
             tt.getCampos().stream().filter(C -> C.isFkey() && C.getCampoOrigem() != null).forEach(C -> {
-                String ax = removerCaracteresEspeciais(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
-                        + C.getTabelaOrigem().getTexto() + "_" + C.getCampoOrigem().getTexto());
+                String ax = removerCaracteresEspeciais(pf + C.getTabelaOrigem().getTexto() + "_" + C.getCampoOrigem().getTexto());
                 while (nm.indexOf(ax) > -1) {
                     ax += "_";
                 }
@@ -1562,6 +1574,9 @@ public class conversorConceitualParaLogico {
      * @param IR 
      */
     private void condicaoIR(LogicoLinha linha, Tabela tab_fk, Constraint IR) {
+        
+        //O banco Oracle não implementa a RI ON UPDATE. Analisamos as razões e verificamos que faz sentido. Comentamos (abaixo) o uso da RI on update!
+        
         if (linha == null || tab_fk == null || IR == null) {
             return;
         }
@@ -1587,19 +1602,19 @@ public class conversorConceitualParaLogico {
             } else {
                 IR.setDdlOnDelete(CASCADE);
             }
-            IR.setDdlOnUpdate(CASCADE);
+            //IR.setDdlOnUpdate("");
         } else {
             if (cardA == PreCardinalidade.TiposCard.C11) {
                 if (cardB == PreCardinalidade.TiposCard.C0N || cardB == PreCardinalidade.TiposCard.C01) {
                     IR.setDdlOnDelete(CASCADE);
-                    IR.setDdlOnUpdate(CASCADE);
+                    //IR.setDdlOnUpdate(CASCADE);
                 } else {
                     IR.setDdlOnDelete(RESTRICT);
-                    IR.setDdlOnUpdate(RESTRICT);
+                    //IR.setDdlOnUpdate(RESTRICT);
                 }
             } else {
                 IR.setDdlOnDelete(NOACTION);
-                IR.setDdlOnUpdate(NOACTION);
+                //IR.setDdlOnUpdate(NOACTION);
             }
         }
     }
@@ -1613,8 +1628,9 @@ public class conversorConceitualParaLogico {
             Constraint constr_pk = t_pk.getConstraints().stream().filter(c -> c.getTipo() == Constraint.CONSTRAINT_TIPO.tpPK).findFirst().orElse(null);
             if (constr_pk != null) {
                 Tabela t_fk = fk.getTabela();
+                final String pf = util.Utilidades.IsUpper(t_fk.getTexto()) ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase();
                 t_pk.getCampos().stream().filter(cm -> cm.isKey() && (fk.getCamposDeOrigem().indexOf(cm) < 0)).forEach(C -> {
-                    Campo c = ImportaCampoIgnoreConstrais(t_fk, C, Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + t_pk.getTexto() + "_");
+                    Campo c = ImportaCampoIgnoreConstrais(t_fk, C, pf + t_pk.getTexto() + "_");
                     c.SetFkey(true);
                     fk.Add(C, c);
                 });

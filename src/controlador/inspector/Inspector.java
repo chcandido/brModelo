@@ -260,6 +260,24 @@ public class Inspector extends JScrollPane {
         setSelecionado(aThis);
     }
 
+    public void PerformDica() {
+        if (getDicas() != null) {
+            if (this.selecionado != null) {
+                SetTextoDica(selecionado.getPropriedade().dica);
+            } else {
+                SetTextoDica("");
+            }
+        } else {
+            if (editor != null) {
+                if (this.selecionado != null) {
+                    editor.setTextoDica(this, selecionado.getPropriedade().dica);
+                } else {
+                    editor.setTextoDica(this, "");
+                }
+            }
+        }
+    }
+
     /**
      * Evita loop infinito
      */
@@ -424,8 +442,7 @@ public class Inspector extends JScrollPane {
     private ArrayList<InspectorProperty> gerado = null;
 
     /**
-     * Apaga o valor de "gerado" de forma que o próximo PerformInspector carregue os itens. É usado no caso de se clicar no próprio objeto e o clique mudar uma condição de status do objeto que deve
-     * ser mostrada no inspector: exemplo: clique na legenda (no item da legenda).
+     * Apaga o valor de "gerado" de forma que o próximo PerformInspector carregue os itens. É usado no caso de se clicar no próprio objeto e o clique mudar uma condição de status do objeto que deve ser mostrada no inspector: exemplo: clique na legenda (no item da legenda).
      */
     public void ForceFullOnCarregue() {
         gerado.clear();
@@ -617,7 +634,7 @@ public class Inspector extends JScrollPane {
             altura = f + 6;
         }
     }
-    
+
     private double divisor = 0.5;
 
     public double getDivisor() {
@@ -628,7 +645,5 @@ public class Inspector extends JScrollPane {
         this.divisor = divisor;
         DoResize();
     }
-    
-    
-            
+
 }

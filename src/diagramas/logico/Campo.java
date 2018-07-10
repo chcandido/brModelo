@@ -5,6 +5,7 @@
 package diagramas.logico;
 
 import controlador.Editor;
+import controlador.apoios.TreeItem;
 import controlador.inspector.InspectorProperty;
 import desenho.FormaElementar;
 import java.awt.AlphaComposite;
@@ -373,6 +374,9 @@ public class Campo implements Serializable {
         return getTabela().getCampos().indexOf(this);
     }
 
+    private final int DESCE_CAMPO = 1;
+    private final int SOBE_CAMPO = -1;
+
     public ArrayList<InspectorProperty> CompleteGenerateProperty(ArrayList<InspectorProperty> res) {
 
         res.add(InspectorProperty.PropertyFactorySeparador("campo.selecionado"));
@@ -403,16 +407,20 @@ public class Campo implements Serializable {
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdExcluirSubItem.name()));
 
         if (getTabela().getCampos().size() > 1) {
-            res.add(InspectorProperty.PropertyFactorySeparador("tabela.campos.posicao", true));
+            res.add(InspectorProperty.PropertyFactorySeparador("tabela.campos.posicao", false));
             if (!isFirst()) {
-                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.campos.sobe").setTag(-1));
+                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.campos.sobe").setTag(SOBE_CAMPO));
             }
             if (!isLast()) {
-                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.campos.desce").setTag(+1));
+                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.campos.desce").setTag(DESCE_CAMPO));
             }
         }
         return res;
     }
 
     protected transient boolean roqued = false;
+
+    protected void MostreSeParaExibicao(TreeItem root) {
+        root.add(new TreeItem(getTexto() + ": " + getTipo(), getTabela().getID(), this.getClass().getSimpleName()));
+    }
 }

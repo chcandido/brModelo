@@ -16,6 +16,7 @@ import desenho.linhas.SuperLinha;
 import diagramas.conceitual.Atributo;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,12 +32,18 @@ public class PreRelacionamento extends FormaLosangular {
 
     public PreRelacionamento(Diagrama modelo) {
         super(modelo);        
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
     }
 
     public PreRelacionamento(Diagrama modelo, String texto) {
         super(modelo, texto);        
-        getAncorasCode().add(Ancorador.CODE_ORG_AT);
+    }
+
+    @Override
+    public ArrayList<Integer> getAncorasCode() {
+        ArrayList<Integer> res = super.getAncorasCode();
+        Integer[] ancorasCode = new Integer[]{Ancorador.CODE_ORG_AT};
+        res.addAll(Arrays.asList(ancorasCode));
+        return res;
     }
 
     public boolean isAutoRelacionamento() {

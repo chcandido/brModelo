@@ -45,3 +45,5 @@ public class OS {
     }
 
 }
+
+///////???????? Contar linhas (propmt do dos): (for /r %f in (*.java) do @type %f ) | find /c /v ""

@@ -6,6 +6,7 @@ package diagramas.logico;
 
 import controlador.Diagrama;
 import controlador.Editor;
+import controlador.apoios.TreeItem;
 import controlador.inspector.InspectorProperty;
 import desenho.ElementarEvento;
 import desenho.FormaElementar;
@@ -25,6 +26,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,8 +64,20 @@ public class Tabela extends baseDrawerFromForma {
         //setGradienteStartColor(new Color(204, 204, 255));
         showOrgDiag = true;
         INI_ORGDIAG = roundrect / 2;
-        getAncorasCode().add(CODE_EDT_CMP);
-        getAncorasCode().add(CODE_EDT_CMP_TP);
+//        getAncorasCode().add(CODE_EDT_CMP);
+//        getAncorasCode().add(CODE_EDT_CMP_TP);
+//        getAncorasCode().add(CODE_DDL);
+//        getAncorasCode().add(CODE_SOBE);
+//        getAncorasCode().add(CODE_DESCE);
+//        getAncorasCode().add(CODE_DEL_CMP_CONST);
+    }
+
+    @Override
+    public ArrayList<Integer> getAncorasCode() {
+        ArrayList<Integer> res = super.getAncorasCode();
+        Integer[] ancorasCode = new Integer[]{CODE_EDT_CMP, CODE_EDT_CMP_TP, CODE_DDL, CODE_SOBE, CODE_DESCE, CODE_DEL_CMP_CONST};
+        res.addAll(Arrays.asList(ancorasCode));
+        return res;
     }
 
     private ArrayList<Campo> Campos = new ArrayList<>();
@@ -184,6 +198,10 @@ public class Tabela extends baseDrawerFromForma {
     private final int EDITOR_CAMPOS = 200317;
     private final int EDITOR_CAMPOS_TP = 180717;
     private final int PRINT_DDL = 310317;
+    private final int DESCE_CONSTAN = 110417;
+    private final int SOBE_CONSTAN = -110417;
+    private final int DESCE_CAMPO = 1;
+    private final int SOBE_CAMPO = -1;
 
     protected final String COMM_RI = "tabela.constraint";
     protected final String COMM_RI_PK = "constraint.key";
@@ -219,17 +237,21 @@ public class Tabela extends baseDrawerFromForma {
             for (Campo c : getCampos()) {
                 if (!c.isSelecionado()) {
                     res.add(InspectorProperty.PropertyFactoryCommandPlain(nomeComandos.cmdDoAnyThing.name(), "tabela.campo", "[" + c.getTexto() + "]").setTag(i++));
+                } else {
+                    i++;
                 }
             }
         }
 
         if (getConstraints().size() > 1 && getCampoSelecionado() == null) {
             res.add(InspectorProperty.PropertyFactorySeparador("tabela.constraint", true));
-            int i = 11;
+            int i = 1001;
             for (Constraint c : getConstraints()) {
                 if (!c.isSelecionado()) {
                     res.add(InspectorProperty.PropertyFactoryCommandPlain(nomeComandos.cmdDoAnyThing.name(), "tabela.constraint", "["
                             + c.getNomeFormatado() + "]").setTag(i++));
+                } else {
+                    i++;
                 }
             }
         }
@@ -670,7 +692,7 @@ public class Tabela extends baseDrawerFromForma {
         final String utxt = "UNIQUE";
         final String em_branco = "    ";
         if (ddl_pegar == DDL_PEGAR_TUDO || ddl_pegar == DDL_PEGAR_TABELAS) {
-            String tmp = createTable + getTexto() + " (";
+            String tmp = createTable + getPrefixo() + getTexto() + " (";
             texto.add(tmp);
 
             int total_campos = getCampos().size() - 1;
@@ -1004,9 +1026,9 @@ public class Tabela extends baseDrawerFromForma {
             return;
         }
 
-        if ((Tag == 110417 || Tag == -110417) && getConstraintSelecionado() != null) {
+        if ((Tag == DESCE_CONSTAN || Tag == SOBE_CONSTAN) && getConstraintSelecionado() != null) {
             int idxc = getConstraints().indexOf(getConstraintSelecionado());
-            if (Tag == -110417) {
+            if (Tag == SOBE_CONSTAN) {
                 idxc--;
             } else {
                 idxc++;
@@ -1018,35 +1040,38 @@ public class Tabela extends baseDrawerFromForma {
             return;
         }
 
-        if (getCampoSelecionado() != null && (Tag > 10)) {
-            int i = Tag - 11;
-            if (i < getCampos().size()) {
-                setCampoSelectedIndex(i);
-                return;
+        if (Tag > 10 && Tag < 2000) {
+            if (Tag > 10) {
+                int i = Tag - 11;
+                if (i < getCampos().size()) {
+                    setCampoSelectedIndex(i);
+                    return;
+                }
             }
-        }
-        if (getConstraintSelecionado() != null && (Tag > 10)) {
-            int i = Tag - 11;
-            if (i < getConstraints().size()) {
-                setConstraintSelectedIndex(i);
-                return;
+            if (Tag > 1000) {
+                int i = Tag - 1001;
+                if (i < getConstraints().size()) {
+                    setConstraintSelectedIndex(i);
+                    return;
+                }
             }
         }
 
-        if (getCampoSelecionado() == null) {
-            return;
+        if (Tag == SOBE_CAMPO || Tag == DESCE_CAMPO) {
+            if (getCampoSelecionado() == null) {
+                return;
+            }
+            int idx = getCampos().indexOf(getCampoSelecionado());
+            if (Tag == SOBE_CAMPO) {
+                idx--;
+            } else {
+                idx++;
+            }
+            getCampos().remove(getCampoSelecionado());
+            getCampos().add(idx, campoSelecionado);
+            DoMuda();
+            InvalidateArea();
         }
-        int idx = getCampos().indexOf(getCampoSelecionado());
-        if (Tag == -1) {
-            idx--;
-        }
-        if (Tag == 1) {
-            idx++;
-        }
-        getCampos().remove(getCampoSelecionado());
-        getCampos().add(idx, campoSelecionado);
-        DoMuda();
-        InvalidateArea();
     }
 
     @Override
@@ -1146,26 +1171,86 @@ public class Tabela extends baseDrawerFromForma {
     //<editor-fold defaultstate="collapsed" desc="Ancorador">
     public final int CODE_EDT_CMP = 3;
     public final int CODE_EDT_CMP_TP = 5;
+    public final int CODE_DDL = 6;
+    public final int CODE_SOBE = 7;
+    public final int CODE_DESCE = 8;
+    public final int CODE_DEL_CMP_CONST = 9;
 
     @Override
     public void runAncorasCode(int cod) {
         super.runAncorasCode(cod);
-        if (cod == CODE_EDT_CMP) {
-            DoAnyThing(EDITOR_CAMPOS);
-            return;
-        }
-        if (cod == CODE_EDT_CMP_TP) {
-            DoAnyThing(EDITOR_CAMPOS_TP);
+        switch (cod) {
+            case CODE_EDT_CMP:
+                DoAnyThing(EDITOR_CAMPOS);
+                break;
+            case CODE_EDT_CMP_TP:
+                DoAnyThing(EDITOR_CAMPOS_TP);
+                break;
+            case CODE_DDL:
+                DoAnyThing(PRINT_DDL);
+                break;
+            case CODE_DEL_CMP_CONST:
+                ExcluirSubItem(0);
+                break;
+            case CODE_DESCE:
+                if (getCampoSelecionado() != null) {
+                    if (!getCampoSelecionado().isLast()) {
+                        DoAnyThing(DESCE_CAMPO);
+                    }
+                } else if (getConstraintSelecionado() != null) {
+                    if (!getConstraintSelecionado().isLast()) {
+                        DoAnyThing(DESCE_CONSTAN);
+                    }
+                }
+                break;
+            case CODE_SOBE:
+                if (getCampoSelecionado() != null) {
+                    if (!getCampoSelecionado().isFirst()) {
+                        DoAnyThing(SOBE_CAMPO);
+                    }
+                } else if (getConstraintSelecionado() != null) {
+                    if (!getConstraintSelecionado().isFirst()) {
+                        DoAnyThing(SOBE_CONSTAN);
+                    }
+                }
+                break;
         }
     }
 
     @Override
     public String WhatDrawOnAcorador(Integer c) {
-        if (c == CODE_EDT_CMP) {
-            return "diagrama.ancordor.3.img";
+        String res = "";
+        boolean any = getCampoSelecionado() != null || getConstraintSelecionado() != null;
+        switch (c) {
+            case CODE_EDT_CMP:
+                res = "diagrama.ancordor.3.img";
+                break;
+            case CODE_EDT_CMP_TP:
+                res = "diagrama.ancordor.5.img";
+                break;
+            case CODE_DDL:
+                res = "diagrama.ancordor.6.img";
+                break;
+            case CODE_SOBE:
+                if (((getCampoSelecionado() != null) && (!getCampoSelecionado().isFirst())) || ((getConstraintSelecionado() != null) && (!getConstraintSelecionado().isFirst()))) {
+                    res = "diagrama.ancordor.7.img";
+                } else {
+                    res = "diagrama.ancordor.7.0.img";
+                }
+                break;
+            case CODE_DESCE:
+                if (((getCampoSelecionado() != null) && (!getCampoSelecionado().isLast())) || ((getConstraintSelecionado() != null) && (!getConstraintSelecionado().isLast()))) {
+                    res = "diagrama.ancordor.8.img";
+                } else {
+                    res = "diagrama.ancordor.8.0.img";
+                }
+                break;
+            case CODE_DEL_CMP_CONST:
+                res = any ? "diagrama.ancordor.9.img" : "diagrama.ancordor.9.0.img";
+                break;
         }
-        if (c == CODE_EDT_CMP_TP) {
-            return "diagrama.ancordor.5.img";
+        if (!"".equals(res)) {
+            return res;
         }
         return super.WhatDrawOnAcorador(c);
     }
@@ -1344,6 +1429,11 @@ public class Tabela extends baseDrawerFromForma {
         return ((DiagramaLogico) getMaster()).getSeparatorSQL();
     }
 
+    //Versão 3.2!
+    public String getPrefixo() {
+        return ((DiagramaLogico) getMaster()).getPrefixo();
+    }
+
     /**
      * Mostrar constraints na tabela
      */
@@ -1427,6 +1517,7 @@ public class Tabela extends baseDrawerFromForma {
         if (constraintRoqued.getLigacao() != null) {
             constraintRoqued.getLigacao().PerformRoqued(sn);
             constraintRoqued.getLigacao().SetFatorLargura(sn ? 2f : 1f);
+            constraintRoqued.getLigacao().InvalidateArea();
         }
     }
 
@@ -1447,6 +1538,26 @@ public class Tabela extends baseDrawerFromForma {
         } else {
             constraintRoqued = tmp;
             roqueFromMouse(true);
+        }
+    }
+
+    @Override
+    public boolean MostreSeParaExibicao(TreeItem root) {
+        TreeItem t = new TreeItem(getTexto(), getID(), this.getClass().getSimpleName());
+        getCampos().stream().forEach(c -> c.MostreSeParaExibicao(t));
+        getConstraints().stream().forEach(c -> c.MostreSeParaExibicao(t));
+        root.add(t);
+        return true;
+    }
+
+    @Override
+    public void DoSubItemSel(int index) {
+        super.DoSubItemSel(index);
+        if (index < getCampos().size()) {
+            setCampoSelectedIndex(index);
+        } else {
+            index -= getCampos().size();
+            setConstraintSelectedIndex(index);
         }
     }
 }

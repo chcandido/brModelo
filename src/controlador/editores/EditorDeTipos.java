@@ -74,7 +74,7 @@ public class EditorDeTipos extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblMsg = new javax.swing.JLabel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         Principal = new javax.swing.JPanel();
@@ -90,7 +90,7 @@ public class EditorDeTipos extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("EditorDeTipos.tituloTabela"))); // NOI18N
 
-        jLabel1.setText(bundle.getString("EditorDeTipos.info")); // NOI18N
+        lblMsg.setText(bundle.getString("EditorDeTipos.info")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -98,12 +98,12 @@ public class EditorDeTipos extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel1)
+                .addComponent(lblMsg)
                 .addContainerGap(346, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+            .addComponent(lblMsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
         );
 
         jSplitPane1.setDividerLocation(220);
@@ -289,12 +289,12 @@ public class EditorDeTipos extends javax.swing.JDialog {
     private javax.swing.JPanel Principal;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnOK;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
+    public javax.swing.JLabel lblMsg;
     private javax.swing.JTree tree;
     // End of variables declaration//GEN-END:variables
 

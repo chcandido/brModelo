@@ -4,6 +4,7 @@
 
 package principal;
 
+import controlador.Diagrama;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,6 +15,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Aplicacao {
 
     public static FramePrincipal fmPrincipal;
+    public static final String VERSAO_A = "3";
+    public static final String VERSAO_B = "2";
+    public static final String VERSAO_C = "0";
+    public static final String VERSAO_DATA = "Novembro de 2018";
 
     /**
      * @param args the command line arguments
@@ -29,6 +34,14 @@ public class Aplicacao {
                 fmPrincipal.setVisible(true);
             }
         });
+    }
+    
+    //Versao 3.2
+    public static Diagrama getDiagramaSelecionado() {
+        if (fmPrincipal != null) {
+            return fmPrincipal.getEditor().diagramaAtual;
+        }
+        return null;
     }
 
     private static void initLookAndFeel() {

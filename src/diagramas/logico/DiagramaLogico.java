@@ -136,7 +136,10 @@ public class DiagramaLogico extends Diagrama {
 
                     if (cmpO != null && (cmpO.isUnique() || cmpO.isKey())) {
                         if (cmpD == null) {
-                            cmpD = dest.Add(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix") + ori.getTexto() + "_" +  cmpO.getTexto());
+                            cmpD = dest.Add((util.Utilidades.IsUpper(ori.getTexto())
+                                    ? Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
+                                    : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix").toLowerCase())
+                                    + ori.getTexto() + "_" + cmpO.getTexto());
                         }
                         if (!cmpD.isFkey()) { //não é chave estrangeira.
                             cmpD.SetFkey(true);
@@ -386,7 +389,8 @@ public class DiagramaLogico extends Diagrama {
     public void EndProperty(ArrayList<InspectorProperty> res) {
         super.EndProperty(res);
         res.add(InspectorProperty.PropertyFactorySeparador("diagrama.logico.sql"));
-        res.add(InspectorProperty.PropertyFactoryTexto("separadorsql", "setFromString", getSeparatorSQL()).setTag(21042017));
+        res.add(InspectorProperty.PropertyFactoryTexto("diagrama.logico.separadorsql", "setFromString", getSeparatorSQL()).setTag(21042017));
+        res.add(InspectorProperty.PropertyFactoryTexto("diagrama.logico.prefixo", "setFromString", getPrefixo()).setTag(7072018));
         res.add(InspectorProperty.PropertyFactorySeparador(COMM_ORG));
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), COMM_ORG).setTag(ATAG));
         res.add(InspectorProperty.PropertyFactorySeparador(COMM_EDT_CMPS));
@@ -400,6 +404,7 @@ public class DiagramaLogico extends Diagrama {
     public void InfoDiagrama_ToXmlValores(Document doc, Element me) {
         super.InfoDiagrama_ToXmlValores(doc, me);
         me.appendChild(util.XMLGenerate.ValorString(doc, "SeparatorSQL", getSeparatorSQL()));
+        me.appendChild(util.XMLGenerate.ValorString(doc, "Prefixo", getPrefixo()));
     }
 
     @Override
@@ -408,6 +413,7 @@ public class DiagramaLogico extends Diagrama {
             return false;
         }
         setSeparatorSQL(util.XMLGenerate.getValorStringFrom(me, "SeparatorSQL"));
+        setPrefixo(util.XMLGenerate.getValorStringFrom(me, "Prefixo"));
         return true;
     }
 
@@ -416,6 +422,8 @@ public class DiagramaLogico extends Diagrama {
         super.setFromString(str, tag);
         if (tag == 21042017) {
             setSeparatorSQL(str);
+        } else if (tag == 7072018) {
+            setPrefixo(str);
         }
     }
 
@@ -445,7 +453,7 @@ public class DiagramaLogico extends Diagrama {
         if (getListaDeItens().stream().filter(tb -> tb instanceof Tabela).count() == 0) {
             JOptionPane.showMessageDialog(Aplicacao.fmPrincipal,
                     Editor.fromConfiguracao.getValor("Controler.interface.mensagem.sem_campos"),
-                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"),
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -461,7 +469,7 @@ public class DiagramaLogico extends Diagrama {
         if (getListaDeItens().stream().filter(tb -> tb instanceof Tabela).count() == 0) {
             JOptionPane.showMessageDialog(Aplicacao.fmPrincipal,
                     Editor.fromConfiguracao.getValor("Controler.interface.mensagem.sem_campos"),
-                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"),
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -490,19 +498,28 @@ public class DiagramaLogico extends Diagrama {
     }
 
     public boolean ConverterParaFisico() {
-        //util.Dialogos.ShowMessageInform(Aplicacao.fmPrincipal.getRootPane(), "Em construção!");
-
         boolean vai = true;
-        for (Tabela t : getListaDeTabelas()) {
-            if (t.getCampos().stream().anyMatch(cc -> cc.getTipo().isEmpty())) {
-                EditorDeTipos edt = new EditorDeTipos((Frame) (Aplicacao.fmPrincipal.getRootPane()).getParent(), true);
-                edt.setLocationRelativeTo(Aplicacao.fmPrincipal.getRootPane());
-                edt.Inicie(this);
-                edt.setVisible(true);
-                vai = edt.getResultado() == JOptionPane.OK_OPTION;
+        while (getListaDeTabelas().stream().anyMatch(t -> t.getCampos().stream().anyMatch(cc -> cc.getTipo().isEmpty()))) {
+            EditorDeTipos edt = new EditorDeTipos((Frame) (Aplicacao.fmPrincipal.getRootPane()).getParent(), true);
+            edt.setLocationRelativeTo(Aplicacao.fmPrincipal.getRootPane());
+            edt.Inicie(this);
+            edt.setVisible(true);
+            vai = edt.getResultado() == JOptionPane.OK_OPTION;
+            if (!vai) {
                 break;
             }
         }
+
+//        for (Tabela t : getListaDeTabelas()) {
+//            if (t.getCampos().stream().anyMatch(cc -> cc.getTipo().isEmpty())) {
+//                EditorDeTipos edt = new EditorDeTipos((Frame) (Aplicacao.fmPrincipal.getRootPane()).getParent(), true);
+//                edt.setLocationRelativeTo(Aplicacao.fmPrincipal.getRootPane());
+//                edt.Inicie(this);
+//                edt.setVisible(true);
+//                vai = edt.getResultado() == JOptionPane.OK_OPTION;
+//                if (!vai) break;
+//            }
+//        }
         if (!vai) {
             return false;
         }
@@ -647,23 +664,41 @@ public class DiagramaLogico extends Diagrama {
         repaint();
     }
 
+    /**
+     * Versão 3.2 Prefixo do Esquema
+     */
+    private String prefixo = "";
+
+    public String getPrefixo() {
+        return prefixo;
+    }
+
+    public void setPrefixo(String prefixo) {
+        if (this.prefixo.equals(prefixo)) {
+            return;
+        }
+        this.prefixo = prefixo;
+        repaint();
+    }
+
     public void LancarEditorDeCamposTP() {
         if (getListaDeItens().stream().filter(tb -> tb instanceof Tabela).count() == 0) {
             JOptionPane.showMessageDialog(Aplicacao.fmPrincipal,
                     Editor.fromConfiguracao.getValor("Controler.interface.mensagem.sem_campos"),
-                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"),
+                    Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         EditorDeTipos de = new EditorDeTipos(Aplicacao.fmPrincipal, true);
+        de.lblMsg.setText(Editor.fromConfiguracao.getValor("Controler.interface.mensagem.edt_tipos"));
         de.setLocationRelativeTo(Aplicacao.fmPrincipal);
         de.Inicie(this);
         de.SelecioneByDiagramaSelecionado();
         de.setVisible(true);
-        PerformInspector();    
+        PerformInspector();
     }
-    
+
     @Override
     protected void AdicioneSubsFromRealce(ArrayList<FormaElementar> res, FormaElementar item) {
         super.AdicioneSubsFromRealce(res, item);
@@ -673,4 +708,52 @@ public class DiagramaLogico extends Diagrama {
             res.add(lig.getCardB());
         }
     }
+
+    @Override
+    public void OnAfterLoad(boolean isXml) {
+        super.OnAfterLoad(isXml); //To change body of generated methods, choose Tools | Templates.
+        if (prefixo == null) {
+            prefixo = "";
+        }
+//        if (!isXml) {
+//            if (versaoA.endsWith("3") && versaoB.equals("0")) {
+//                getListaDeTabelas().stream().forEach(T -> {
+//                    T.getAncorasCode().add(T.CODE_DDL);
+//                    T.getAncorasCode().add(T.CODE_SOBE);
+//                    T.getAncorasCode().add(T.CODE_DESCE);
+//                    T.getAncorasCode().add(T.CODE_DEL_CMP_CONST);
+//                });
+//            }
+//        }
+    }
+
 }
+/////??? Copyright do brModelo
+/*
+
+============================================================================
+
+Copyright (c) 2018 SIS4.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+The Software shall be used for Good, not Evil.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+ */

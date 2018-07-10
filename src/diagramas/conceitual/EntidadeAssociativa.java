@@ -7,6 +7,7 @@ package diagramas.conceitual;
 
 import controlador.Diagrama;
 import controlador.Editor;
+import controlador.apoios.TreeItem;
 import controlador.inspector.InspectorProperty;
 import desenho.FormaElementar;
 import desenho.formas.Forma;
@@ -154,5 +155,14 @@ public class EntidadeAssociativa extends PreEntidadeAssociativa {
         getMaster().Remove(this, true);
         getMaster().setSelecionado(novo);
         novo.DoMuda();
+    }
+
+    // versão 3.2
+    @Override
+    public boolean MostreSeParaExibicao(TreeItem root) {
+        TreeItem t = new TreeItem(getTexto(), getID(), this.getClass().getSimpleName());
+        t.add(new TreeItem(getInterno().getTexto(), getID(), getInterno().getClass().getSimpleName()));
+        root.add(t);
+        return true;
     }
 }

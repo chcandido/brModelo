@@ -29,29 +29,9 @@ public class FrameTeste extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton5 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
-
-        jRadioButton1.setText("jRadioButton1");
-        getContentPane().add(jRadioButton1);
-
-        jRadioButton2.setText("jRadioButton2");
-        getContentPane().add(jRadioButton2);
-
-        jRadioButton3.setText("jRadioButton3");
-        getContentPane().add(jRadioButton3);
-
-        jRadioButton4.setText("jRadioButton4");
-        getContentPane().add(jRadioButton4);
-
-        jRadioButton5.setText("jRadioButton5");
-        getContentPane().add(jRadioButton5);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -93,10 +73,5 @@ public class FrameTeste extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
     // End of variables declaration//GEN-END:variables
 }

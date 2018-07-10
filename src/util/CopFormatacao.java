@@ -88,6 +88,9 @@ public class CopFormatacao {
                 var.setFont(fonteCopiada);
             }
         }
+        if (copiado.isEmpty()){
+            return;
+        }
         ArrayList<InspectorProperty> dest = Resuma(var.GenerateFullProperty());
         ArrayList<InspectorProperty> aColar = new ArrayList<>();
 

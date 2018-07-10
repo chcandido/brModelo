@@ -55,7 +55,7 @@ public class SuperLinha extends Linha {
     public void SetInteligente(boolean inteligente) {
         boolean md = (this.inteligente != inteligente);
         setInteligente(inteligente);
-        if (md) {
+        if (md && inteligente) {
             Clean();
         } 
     }

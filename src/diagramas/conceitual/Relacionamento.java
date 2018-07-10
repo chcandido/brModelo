@@ -46,17 +46,11 @@ public class Relacionamento extends PreRelacionamento {
     public ArrayList<InspectorProperty> CompleteGenerateProperty(ArrayList<InspectorProperty> GP) {
         ArrayList<InspectorProperty> res = GP;
         res.add(InspectorProperty.PropertyFactoryApenasLeituraSN("relacionamento.autorelacionamento", isAutoRelacionamento()));
+        res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdDoAnyThing.name(), "relacionamento.convertereass").setTag(90816).PropertyForceDisable(isAutoRelacionamento()));
         super.CompleteGenerateProperty(GP);
         return GP;
     }
 
-    @Override
-    public ArrayList<InspectorProperty> GenerateProperty() {
-        ArrayList<InspectorProperty> res = super.GenerateProperty();
-        res.add(InspectorProperty.PropertyFactoryCommand(nomeComandos.cmdDoAnyThing.name(), "relacionamento.convertereass").setTag(90816).PropertyForceDisable(isAutoRelacionamento()));
-        return res;
-    }
-    
     private void ConverteEntAss() {
         Rectangle res = getBounds();
         diagramas.conceitual.Relacionamento interno = new Relacionamento(getMaster());

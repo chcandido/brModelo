@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.w3c.dom.Document;
@@ -39,14 +40,12 @@ public class FormaElementar extends Elementar {
     public FormaElementar(FormaElementar pai) {
         super(pai);
         ID = pai.getMaster().getElementarID();
-        ancorasCode.add(Ancorador.CODE_ANCORAR);
-        ancorasCode.add(Ancorador.CODE_DEL);
     }
 
     public FormaElementar(Diagrama master) {
         ID = master.getElementarID();
-        ancorasCode.add(Ancorador.CODE_ANCORAR);
-        ancorasCode.add(Ancorador.CODE_DEL);
+//        ancorasCode.add(Ancorador.CODE_ANCORAR);
+//        ancorasCode.add(Ancorador.CODE_DEL);
         InitElementar(master);
     }
 
@@ -197,6 +196,15 @@ public class FormaElementar extends Elementar {
      */
     public void setOverMe(boolean b) {
 
+    }
+
+    // Versao 3.2
+    /**
+     * No Tree de navegação, quando seleciona o subitem de um artefato.
+     * @param index 
+     */
+    public void DoSubItemSel(int index) {
+        
     }
 
     public enum nomeComandos {
@@ -615,18 +623,19 @@ public class FormaElementar extends Elementar {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Ancorador">
-    /**
-     * Quais botões âncoras (botões que ficam ao lado do artefato selecionado no diagrama) deverão ser mostrados.
-     */
-    private final ArrayList<Integer> ancorasCode = new ArrayList<>();
+//    /**
+//     * Quais botões âncoras (botões que ficam ao lado do artefato selecionado no diagrama) deverão ser mostrados.
+//     */
+//    private final ArrayList<Integer> ancorasCode = new ArrayList<>();
 
     /**
      * Quais botões âncoras (botões que ficam ao lado do artefato selecionado no diagrama) deverão ser mostrados.
      *
      * @return
      */
-    public final ArrayList<Integer> getAncorasCode() {
-        return ancorasCode;
+    public ArrayList<Integer> getAncorasCode() {
+        Integer[] ancorasCode = new Integer[] {Ancorador.CODE_ANCORAR, Ancorador.CODE_DEL};
+        return new ArrayList<>(Arrays.asList(ancorasCode));
     }
 
     /**

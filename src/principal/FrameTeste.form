@@ -28,31 +28,4 @@
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
     <Property name="axis" type="int" value="3"/>
   </Layout>
-  <SubComponents>
-    <Component class="javax.swing.JRadioButton" name="jRadioButton1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jRadioButton1"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="jRadioButton2">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jRadioButton2"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="jRadioButton3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jRadioButton3"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="jRadioButton4">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jRadioButton4"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="jRadioButton5">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jRadioButton5"/>
-      </Properties>
-    </Component>
-  </SubComponents>
 </Form>

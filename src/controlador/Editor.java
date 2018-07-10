@@ -801,7 +801,8 @@ public class Editor extends BaseControlador implements KeyListener {
         for (Diagrama d : getDiagramas()) {
             if (d.getArquivo().equals(tmp)) {
                 setSelected(d);
-                JOptionPane.showMessageDialog(getParent(), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg01"), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg02"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(getParent(), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg01"), 
+                        Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"), JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
         }
@@ -1143,10 +1144,12 @@ public class Editor extends BaseControlador implements KeyListener {
 
     private void AbrirDiagramaFromFile(File arq) {
         Diagrama res = Diagrama.LoadFromFile(arq, this);
-        ProcessePosOpen(res);
+        if (res != null) {
+        ProcessePosOpen(res, !util.Arquivo.IsbrM3(arq));
+        }
     }
 
-    private void ProcessePosOpen(Diagrama res) {
+    private void ProcessePosOpen(Diagrama res, boolean isXml) {
         if (res != null) {
             res.setMaster(this);
             int idx = -1;
@@ -1162,7 +1165,7 @@ public class Editor extends BaseControlador implements KeyListener {
             } else {
                 historicos.add(diagramaAtual);
             }
-            res.OnAfterLoad();
+            res.OnAfterLoad(isXml);
             prepareDiagramaAtual();
             RePopuleBarraDiagramas(true);
         }
@@ -1883,7 +1886,7 @@ public class Editor extends BaseControlador implements KeyListener {
                             GuardaPadraoBrM seguranca = (GuardaPadraoBrM) inb.readObject();
                             inb.close();
                             Diagrama res = Diagrama.LoadFromBrm(seguranca, this);
-                            ProcessePosOpen(res);
+                            ProcessePosOpen(res, false);
                             res.setMudou(true);
                         } catch (NullPointerException | IOException | ClassNotFoundException iOException) {
                             util.BrLogger.Logger("ERROR_DIAGRAMA_AUTOSAVE_LOAD", "STREAM LENGTH: " + String.valueOf(k.length), iOException.getMessage());

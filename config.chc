@@ -1,6 +1,7 @@
 #Config
-#Wed Jun 13 23:58:12 AMT 2018
-cfg.ancorador=false
+#Mon Oct 01 21:07:29 AMT 2018
+cfg.autosalvarintervalo=1
+cfg.ancorador=true
 cfg.mostrargrade=true
 cfg.location.y=-8
 cfg.location.x=-8
@@ -9,5 +10,5 @@ cfg.gradelargura=23
 cfg.mostrartooltips=false
 cfg.tipodefault=0
 cfg.mostrarids=false
-cfg.recentes=C\:\\Chc\\TMP\\teste.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_sis_risco.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO2.brM3;C\:\\Chc\\TMP\\Conceitual_RISCO2.xml;C\:\\Chc\\TMP\\Conceitual_RISCO2.brM3
+cfg.recentes=C\:\\Chc\\TMP\\L\u00F3gico_1.xml;C\:\\Chc\\TMP\\BigLogico.xml;C\:\\Users\\chcan\\OneDrive\\Chc\\L\u00F3gico_RISCO.brM3;C\:\\Chc\\TMP\\brTestes\\BigLogico.xml;C\:\\Chc\\TMP\\BigLogicoComErro.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_teste.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_RISCO2.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_2.brM3;C\:\\Users\\chcan\\OneDrive\\Chc\\Conceitual_sis_risco.brM3;C\:\\Chc\\Prg\\brModelo\\L\u00F3gico_teste.xml;C\:\\Chc\\TMP\\L\u00F3gico_1.brM3;C\:\\Chc\\TMP\\teste.brM3;C\:\\Chc\\TMP\\Conceitual_RISCO2.xml;C\:\\Chc\\TMP\\Conceitual_RISCO2.brM3
 cfg.location.salvar=true

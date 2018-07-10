@@ -32,6 +32,8 @@ import java.util.ArrayList;
  */
 public class Ancorador extends FormaElementar{
     
+    private static final long serialVersionUID = 7623942990410762612L;
+    
     public Ancorador(Diagrama master) {
         Inicie(master);
     }
@@ -179,8 +181,6 @@ public class Ancorador extends FormaElementar{
     public static final int CODE_ANCORAR = 0;
     public static final int CODE_DEL = 1;
     public static final int CODE_ORG_AT = 2;
-    //public final int CODE_EDT_CMP = 3; // Em Tabela.
-    //public final int CODE_EDT_ATR = 4; // Em PreEntidade
     
     public void Posicione(FormaElementar selecionado) {
         if (selecionado == null || !getMaster().getEditor().isAncorador()) {
@@ -289,5 +289,15 @@ public class Ancorador extends FormaElementar{
         InvalidateArea();
         getMaster().getSelecionado().runAncorasCode(c);
         Posicione(getMaster().getSelecionado());
+    }
+
+    private ArrayList<Integer> ancorasCode = null;
+   
+    @Override
+    public ArrayList<Integer> getAncorasCode() {
+        if (ancorasCode == null) {
+            ancorasCode = new ArrayList<>();
+        }
+        return ancorasCode;
     }
 }

@@ -5,6 +5,7 @@
 package diagramas.logico;
 
 import controlador.Editor;
+import controlador.apoios.TreeItem;
 import controlador.inspector.InspectorProperty;
 import desenho.FormaElementar;
 import java.awt.AlphaComposite;
@@ -284,6 +285,21 @@ public class Constraint implements Serializable {
             }
         }
         setValidado(sn);
+    }
+
+    protected void MostreSeParaExibicao(TreeItem root) {
+        String img;
+        switch (getTipo()) {
+            case tpPK:
+                img = "Constraint_PK";
+                break;
+            case tpFK:
+                img = "Constraint_FK";
+                break;
+            default:
+                img = "Constraint_UN";
+        }
+        root.add(new TreeItem(((isNomeada() && !getNome().isEmpty())? getNome() : Editor.fromConfiguracao.getValor("diagrama.Constraint.nome")), getTabela().getID(), "diagrama." + img + ".img"));
     }
 
     public enum CONSTRAINT_TIPO {
@@ -679,12 +695,12 @@ public class Constraint implements Serializable {
     }
 
     public boolean isFirst() {
-        return (getTabela().getCampos().indexOf(this) == 0);
+        return (getTabela().getConstraints().indexOf(this) == 0);
     }
 
     public boolean isLast() {
-        int tmp = getTabela().getCampos().indexOf(this) + 1;
-        return (tmp == getTabela().getCampos().size());
+        int tmp = getTabela().getConstraints().indexOf(this) + 1;
+        return (tmp == getTabela().getConstraints().size());
     }
 
 //    /**
@@ -698,6 +714,8 @@ public class Constraint implements Serializable {
     public static final int TAG_COMMAND_PK = 120420170;
     public static final int TAG_COMMAND_FK = 120420171;
     public static final int TAG_COMMAND_UN = 120420172;
+    private final int DESCE_CONSTAN = +110417;
+    private final int SOBE_CONSTAN = -110417;
 
     public ArrayList<InspectorProperty> CompleteGenerateProperty(ArrayList<InspectorProperty> res) {
 
@@ -738,12 +756,12 @@ public class Constraint implements Serializable {
         res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdExcluirSubItem.name()));
 
         if (getTabela().getConstraints().size() > 1) {
-            res.add(InspectorProperty.PropertyFactorySeparador("tabela.constraint.posicao", true));
+            res.add(InspectorProperty.PropertyFactorySeparador("tabela.constraint.posicao", false));
             if (!isFirst()) {
-                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.constraint.sobe").setTag(-110417));
+                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.constraint.sobe").setTag(SOBE_CONSTAN));
             }
             if (!isLast()) {
-                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.constraint.desce").setTag(+110417));
+                res.add(InspectorProperty.PropertyFactoryCommand(FormaElementar.nomeComandos.cmdDoAnyThing.name(), "tabela.constraint.desce").setTag(DESCE_CONSTAN));
             }
         }
         return res;
@@ -771,7 +789,7 @@ public class Constraint implements Serializable {
         switch (getTipo()) {
             case tpPK:
                 if (isNomeada() && !getNome().trim().isEmpty()) {
-                    txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
+                    txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getPrefixo() + getNome().trim() + " PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
                     txt += sepa;
                 } else {
                     txt = "PRIMARY KEY " + getCamposStr(getCamposDeOrigem());
@@ -779,15 +797,15 @@ public class Constraint implements Serializable {
                 break;
             case tpUNIQUE:
                 if (isNomeada() && !getNome().trim().isEmpty()) {
-                    txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " UNIQUE " + getCamposStr(getCamposDeOrigem());
+                    txt = "ALTER TABLE "  + getPrefixo() + getTabela().getTexto() + " ADD CONSTRAINT " + getNome().trim() + " UNIQUE " + getCamposStr(getCamposDeOrigem());
                     txt += sepa;
                 } else {
                     txt = "UNIQUE " + getCamposStr(getCamposDeOrigem());
                 }
                 break;
             case tpFK:
-                String nome = (isNomeada() && !getNome().trim().isEmpty()) ? getNome() : Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
-                        + getTabela().getTexto() + "_" + String.valueOf(getTabela().getConstraints().indexOf(this));
+                String nome = (isNomeada() && !getNome().trim().isEmpty()) ?  getPrefixo() + getNome() : getPrefixo() + Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msgcov.fk.prefix")
+                        + getTabela().getTexto() + "_" + String.valueOf(getTabela().getConstraints().indexOf(this) + 1);
 
                 String tmpCD = getCamposStr(getCamposDeOrigem()).replaceAll("\\[\\]", "???");
                 String tmpCO = getCamposStrCheck(getCamposDeDestino());
@@ -799,8 +817,8 @@ public class Constraint implements Serializable {
                         tmpCD = tmpCD.substring(0, tmpCD.length() - 1) + (getCamposDeDestino().size() > 0 ? ", " : "") + "???)";
                     }
                 }
-                txt = "ALTER TABLE " + getTabela().getTexto() + " ADD CONSTRAINT " + nome + "\nFOREIGN KEY " + tmpCO + "\n";
-                txt += "REFERENCES " + (getConstraintOrigem() == null ? "??? (???)" : getConstraintOrigem().getTabela().getTexto() + " " + tmpCD);
+                txt = "ALTER TABLE " + getPrefixo() + getTabela().getTexto() + " ADD CONSTRAINT " + nome + "\nFOREIGN KEY " + tmpCO + "\n";
+                txt += "REFERENCES " + (getConstraintOrigem() == null ? "??? (???)" : getPrefixo() + getConstraintOrigem().getTabela().getTexto() + " " + tmpCD);
                 if (!getDdlOnDelete().isEmpty() && !getDdlOnUpdate().isEmpty()) {
                     txt += "\nON DELETE " + getDdlOnDelete() + " ON UPDATE " + getDdlOnUpdate();
                 } else if (!getDdlOnDelete().isEmpty() || !getDdlOnUpdate().isEmpty()) {
@@ -812,6 +830,11 @@ public class Constraint implements Serializable {
                 break;
         }
         return txt;
+    }
+    
+    //Versão 3.2!
+    public String getPrefixo() {
+        return getTabela().getPrefixo();
     }
 
     public void NotifiqueIR(Constraint cons, int msg, Campo cmp) {
