@@ -355,6 +355,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         MenuSalvarRepo = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         menuAjuda = new javax.swing.JMenuItem();
+        menuVerAtualizacao = new javax.swing.JMenuItem();
         menuSobre = new javax.swing.JMenuItem();
 
         masterPopUp.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
@@ -894,6 +895,15 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         });
         helpMenu.add(menuAjuda);
 
+        menuVerAtualizacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/download.png"))); // NOI18N
+        menuVerAtualizacao.setText(bundle.getString("FramePrincipal.menuVerAtualizacao.text")); // NOI18N
+        menuVerAtualizacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuVerAtualizacaoActionPerformed(evt);
+            }
+        });
+        helpMenu.add(menuVerAtualizacao);
+
         menuSobre.setText(bundle.getString("FramePrincipal.menuSobre.text")); // NOI18N
         menuSobre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1141,6 +1151,13 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         }
     }//GEN-LAST:event_MenuSalvarRepoActionPerformed
 
+    private void menuVerAtualizacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuVerAtualizacaoActionPerformed
+        FormAtualizar fm = new FormAtualizar();
+        fm.setLocationRelativeTo(this);
+        fm.Inicie(Diagrama.VERSAO_A + "." + Diagrama.VERSAO_B + "." + Diagrama.VERSAO_C);
+        fm.setVisible(true);
+    }//GEN-LAST:event_menuVerAtualizacaoActionPerformed
+
     public void ReloadHelp() {
         formAjuda = null;
     }
@@ -1309,6 +1326,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCMD;
     private javax.swing.JMenuItem menuSobre;
+    private javax.swing.JMenuItem menuVerAtualizacao;
     private javax.swing.JPanel panSplitInspectors;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;

@@ -101,9 +101,9 @@ public class Diagrama implements Serializable, ClipboardOwner {
     protected Color pontoCor = Color.BLACK;
     protected Color pontoCorMultSel = Color.GREEN;
     protected FormaElementar infoDiagrama = null;
-    static final String VERSAO_A = "3";
-    static final String VERSAO_B = "2";
-    static final String VERSAO_C = "0";
+    public static final String VERSAO_A = "3";
+    public static final String VERSAO_B = "2";
+    public static final String VERSAO_C = "0";
     protected String versaoA = Diagrama.VERSAO_A;
     protected String versaoB = Diagrama.VERSAO_B;
     protected String versaoC = Diagrama.VERSAO_C;

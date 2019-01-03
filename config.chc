@@ -1,10 +1,10 @@
 #Config
-#Mon Oct 01 23:00:57 AMT 2018
+#Thu Jan 03 12:15:01 AMST 2019
 cfg.autosalvarintervalo=1
 cfg.ancorador=true
 cfg.mostrargrade=true
-cfg.location.y=-8
-cfg.location.x=-8
+cfg.location.y=147
+cfg.location.x=339
 cfg.mostrardimensoesaomover=true
 cfg.gradelargura=23
 cfg.mostrartooltips=false
