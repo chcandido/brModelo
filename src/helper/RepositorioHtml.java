@@ -34,7 +34,7 @@ public class RepositorioHtml {
         return res;
     }
     public static String getVersao() {
-        return Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_A;
+        return Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_B + Aplicacao.VERSAO_C;
     }
     public static String generateSobre() {
         String res = "<html>\n<head>\n<title>Ajuda</title>\n</head>\n<body>\n";
