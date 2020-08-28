@@ -60,6 +60,8 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         lblTabelas = new javax.swing.JLabel();
         comboEntidades = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        txtEntidade = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         Adicionar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
@@ -79,6 +81,8 @@ public class EditorDeAtributos extends javax.swing.JDialog {
 
         comboEntidades.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel1.setText(bundle.getString("EditorDeAtributos.Entidade.selecionada.nome")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -87,14 +91,24 @@ public class EditorDeAtributos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(lblTabelas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboEntidades, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtEntidade, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboEntidades, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblTabelas)
-                .addComponent(comboEntidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTabelas)
+                    .addComponent(comboEntidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtEntidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jToolBar1.setFloatable(false);
@@ -168,10 +182,10 @@ public class EditorDeAtributos extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addGap(17, 17, 17)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
                 .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -219,7 +233,7 @@ public class EditorDeAtributos extends javax.swing.JDialog {
                 } else {
                     tl = selecionada.getListaDeLigacoes().stream().filter(L -> (L.getFormaPontaA() == selecionada ? L.getPontaA().getLado() == 3 : L.getPontaB().getLado() == 3)).count();
                     qtd = (int) tl + 1;
-                    T = selecionada.getTopHeight()- 2;
+                    T = selecionada.getTopHeight() - 2;
                     if (cabe < qtd) {
                         if ((2 * cabe) >= qtd) {
                             rep = -((step / 2) + (cabe * step));
@@ -283,13 +297,13 @@ public class EditorDeAtributos extends javax.swing.JDialog {
 //        getSelecionada().DoMuda();
         Popule(getSelecionada());
     }//GEN-LAST:event_AdbtxtActionPerformed
-    
+
     private int largura = 0;
-    
+
     public void AdicionarPainel(Atributo attr) {
         javax.swing.JPanel ItemPan = new javax.swing.JPanel();
         final int altura = 37;
-        
+
         ItemPan.setSize(largura, altura);
         java.awt.FlowLayout lay = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5);
         ItemPan.setLayout(lay);
@@ -313,7 +327,7 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         lblTipo.setText(bundle.getString("EditorDeAtributos.lbldominio")); // NOI18N
         lblTipo.setSize(new Dimension(24, 14));
         ItemPan.add(lblTipo);
-        
+
         comboTipo.setEditable(true);
         String tipo_txt = attr.getTipoAtributo();
         if (!tipo_txt.trim().isEmpty() && tipos.indexOf(tipo_txt) < 0) {
@@ -395,14 +409,18 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         });
 
         comboTipo.getEditor().addActionListener((ActionEvent e) -> {
-            String txt = comboTipo.getSelectedItem().toString();
-            if (!txt.equals(attr.getTipoAtributo())) {
-                attr.setTipoAtributo(txt);
-                attr.DoMuda();
-                attr.InvalidateArea();
-                if (tipos.indexOf(txt) < 0) {
-                    tipos.add(0, txt);
+            try {
+                String txt = comboTipo.getSelectedItem().toString();
+                if (!txt.equals(attr.getTipoAtributo())) {
+                    attr.setTipoAtributo(txt);
+                    attr.DoMuda();
+                    attr.InvalidateArea();
+                    if (tipos.indexOf(txt) < 0) {
+                        tipos.add(0, txt);
+                    }
                 }
+            } catch (Exception nn) {
+                //BUG: em casos ainda não mapeados, ao fechar o Editor, verifica-se uma exceção neste ponto.
             }
         });
 
@@ -440,16 +458,20 @@ public class EditorDeAtributos extends javax.swing.JDialog {
     private javax.swing.JPanel Principal;
     private javax.swing.JButton btnPronto;
     private javax.swing.JComboBox<String> comboEntidades;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblTabelas;
+    private javax.swing.JTextField txtEntidade;
     // End of variables declaration//GEN-END:variables
 
     DiagramaConceitual diagrama = null;
     List<Forma> entidades = null;
+    
+    boolean stop_comboEntidades = false;
 
     public void Inicie(DiagramaConceitual diag) {
         diagrama = diag;
@@ -495,11 +517,31 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         comboEntidades.setSelectedIndex(idx);
 
         comboEntidades.addItemListener((ItemEvent e) -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+            if ((!stop_comboEntidades) && (e.getStateChange() == ItemEvent.SELECTED)) {
                 setSelecionada(entidades.get(comboEntidades.getSelectedIndex()));
             }
         });
-
+        
+        txtEntidade.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (!txtEntidade.getText().equals(getSelecionada().getTexto())) {
+                    getSelecionada().setTexto(txtEntidade.getText());
+                    getSelecionada().DoMuda();
+                    getSelecionada().InvalidateArea();
+                    int ix = comboEntidades.getSelectedIndex();
+                    stop_comboEntidades = true;
+                    comboEntidades.removeAllItems();
+                    for (int i = 0; i < entidades.size(); i++) {
+                        Forma t = entidades.get(i);
+                        comboEntidades.addItem(String.valueOf(i + 1) + " - " + (t.getPrincipal() != t ? ((Forma) t.getPrincipal()).getTexto() + " -> " + t.getTexto() : t.getTexto()));
+                    }
+                    comboEntidades.setSelectedIndex(ix);
+                    stop_comboEntidades = false;
+                }
+            }
+        });
+        
         setSelecionada((Forma) sel);
     }
 
@@ -525,6 +567,7 @@ public class EditorDeAtributos extends javax.swing.JDialog {
         } else {
             ((PreRelacionamento) sel).getAtributos().stream().forEach(A -> AdicionarPainel(A));
         }
+        txtEntidade.setText(sel.getTexto());
         Principal.repaint();
     }
 }
