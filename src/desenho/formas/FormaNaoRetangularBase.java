@@ -116,7 +116,7 @@ public class FormaNaoRetangularBase extends Forma {
         return direcao;
     }
 
-    protected void setDirecao(Direcao direcao) {
+    protected final void setDirecao(Direcao direcao) {
         if (this.direcao != direcao) {
             this.direcao = direcao;
             setRegiao(null);

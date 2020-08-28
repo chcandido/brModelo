@@ -123,7 +123,7 @@ public class Controler {
 
     public enum menuComandos {
 
-        cmdUndo, cmdRendo, cmdCut, cmdCopy, cmdCopyImg, cmdPaste, cmdCopyFormat, cmdPasteFormat, cmdRealcar, cmdSelProx, cmdSelAnt, cmdSelectAll, cmdBringToFront, cmdSendToBack, cmdDel, cmdDelToSel, //menu edit
+        cmdUndo, cmdRendo, cmdCut, cmdCopy, cmdCopyImg, cmdPaste, cmdCopyFormat, cmdPasteFormat, cmdRealcar, cmdSelProx, cmdSelAnt, cmdSelectAllByType, cmdSelectAll, cmdBringToFront, cmdSendToBack, cmdDel, cmdDelToSel, //menu edit
         cmdNew, cmdOpen, cmdClose, cmdPrint, cmdExport, cmdSave, cmdSaveAs, cmdSaveAll, //menu arquivo
         cmdTreeNavegador, cmdTreeSelect, //comandos diversos
         cmdMicroAjuste0, cmdMicroAjuste1, cmdMicroAjuste2, cmdMicroAjuste3, //micro ajuste.
@@ -288,6 +288,7 @@ public class Controler {
         forMEdt.add(menuComandos.cmdRealcar.toString());
         forMEdt.add(menuComandos.cmdSelProx.toString());
         forMEdt.add(menuComandos.cmdSelAnt.toString());
+        forMEdt.add(menuComandos.cmdSelectAllByType.toString());
         forMEdt.add(menuComandos.cmdSelectAll.toString());
         forMEdt.add(menuComandos.cmdBringToFront.toString());
         forMEdt.add(menuComandos.cmdSendToBack.toString());
@@ -472,6 +473,7 @@ public class Controler {
                     case cmdSelAnt:
                     case cmdBringToFront:
                     case cmdSendToBack:
+                    case cmdSelectAllByType:
                         int tl = editor.diagramaAtual.getItensSelecionados().size();
                         ac.setEnabled(tl == 1);
                         break;

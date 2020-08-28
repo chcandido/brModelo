@@ -39,7 +39,7 @@ public class RepositorioHtml {
     public static String generateSobre() {
         String res = "<html>\n<head>\n<title>Ajuda</title>\n</head>\n<body>\n";
                 res += "<center><h1>BrModelo " + getVersao() + " </h1>\nCarlos Henrique Cândido<br>\nOrientador: Dr. Ronaldo dos Santos Mello<br>\n" + Aplicacao.VERSAO_DATA + "<br/><br/>"
-                        + "Baixe o arquivo de ajuda em http://www.sis4.com/brModelo/Ajuda.html</center>\n</body>\n</html>";
+                        + "Baixe o arquivo de ajuda em http://www.sis4.com/brModelo/Ajuda.html</center><br/><br/>\n</body>\n</html>";
         return res;
     }
 

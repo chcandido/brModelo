@@ -1,5 +1,7 @@
 # brModelo
 
+Atualizado: brModelo 3.3 - correção de bugs e pequenas funcionalidades.
+
 Atualizado: brModelo 3.2 - correção de bugs e pequenas funcionalidades.
 
 brModelo 3.0

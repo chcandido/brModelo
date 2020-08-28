@@ -5,12 +5,15 @@
 package controlador.inspector;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 /**
  *
@@ -28,12 +31,37 @@ public class InspectorExtenderEditor extends JPanel {
         setFocusable(true);
     }
     
+    public static class RoundedBorder implements Border {
+
+        private final int radius;
+
+        RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        @Override
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        @Override
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
+    }
+    
     public InspectorExtenderEditor() {
         super();
         //setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 1, 1));
         btn = new JButton("...");
         btn.setBounds(1,1, 20, 20);
+        btn.setBorder(new RoundedBorder(10));
         //btn.setLocation(1, 1);
         add(btn);//, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, -1, -1));
         validate();
@@ -49,6 +77,17 @@ public class InspectorExtenderEditor extends JPanel {
             setTexto(util.Dialogos.ShowDlgCor(this.getRootPane(), getTexto(), dono.getEditor().diagramaAtual));
         } else if (getAcaoTipo() == TipoDeAcao.tpAcaoDlgTexto) {
             setTexto(util.Dialogos.ShowDlgTexto(this.getRootPane(),getTexto()));
+        }
+        if (dono != null) dono.EndEdit(true, false);
+        invalidate();
+    }
+
+    public final void RunDlg(String temporario) {
+        if (!isEnabled() || !btn.isEnabled()) return;
+        if (getAcaoTipo() == TipoDeAcao.tpAcaoDlgCor) {
+            setTexto(util.Dialogos.ShowDlgCor(this.getRootPane(), temporario, dono.getEditor().diagramaAtual));
+        } else if (getAcaoTipo() == TipoDeAcao.tpAcaoDlgTexto) {
+            setTexto(util.Dialogos.ShowDlgTexto(this.getRootPane(),temporario, getTexto()));
         }
         if (dono != null) dono.EndEdit(true, false);
         invalidate();

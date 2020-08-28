@@ -108,6 +108,8 @@ public class DiagramaFluxo extends Diagrama {
                     Forma pb = linha.getFormaPontaB();
                     prepareLinha(pa, linha);
                     prepareLinha(pb, linha);
+                    linha.reSetBounds();
+                    linha.repaint();
                 }                
                 break;
             case cmdFluxProcesso:

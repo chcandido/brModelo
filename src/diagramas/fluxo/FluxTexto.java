@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package diagramas.fluxo;
 
 import controlador.Diagrama;
 import controlador.Editor;
 import controlador.inspector.InspectorProperty;
 import desenho.preAnyDiagrama.PreTextoApenso;
+import java.awt.BasicStroke;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,10 +46,10 @@ public class FluxTexto extends PreTextoApenso {
         ArrayList<String> sn = new ArrayList<>();
         sn.add(Editor.fromConfiguracao.getValor("Inspector.obj.fluxtexto.positivo"));
         sn.add(Editor.fromConfiguracao.getValor("Inspector.obj.fluxtexto.negativo"));
-        
-        res.add(InspectorProperty.PropertyFactoryMenu("fluxtexto.condicao", "setPositivoByInt", 
+
+        res.add(InspectorProperty.PropertyFactoryMenu("fluxtexto.condicao", "setPositivoByInt",
                 getPositivoByInt(), sn));
-        
+
         res.add(InspectorProperty.PropertyFactoryMenu("texto.alinhamento", "setAlinhamentoByInt", getAlinhamento().ordinal(), Editor.fromConfiguracao.getLstTextoAlin()));
         res.add(InspectorProperty.PropertyFactorySN("texto.alinhamento.v", "setCentrarVertical", isCentrarVertical()));
 
@@ -58,7 +60,6 @@ public class FluxTexto extends PreTextoApenso {
         res.remove(tmp);
 
         //res.add(InspectorProperty.PropertyFactorySN("texto.autosize", "setAutosize", isAutosize()));
-
         res.add(InspectorProperty.PropertyFactorySeparador("texto.atreladoalinha"));
         res.add(InspectorProperty.PropertyFactorySN("texto.movimentacaomanual", "setMovimentacaoManual", isMovimentacaoManual()));
         return res;
@@ -78,15 +79,15 @@ public class FluxTexto extends PreTextoApenso {
             setTexto(Editor.fromConfiguracao.getValor("Inspector.obj.fluxtexto.negativo"));
         }
     }
-    
+
     public int getPositivoByInt() {
-        return (isPositivo()? 0: 1);
+        return (isPositivo() ? 0 : 1);
     }
 
     public void setPositivoByInt(int vl) {
         setPositivo(vl == 0);
     }
-    
+
     @Override
     protected void ToXmlValores(Document doc, Element me) {
         super.ToXmlValores(doc, me);
@@ -107,4 +108,11 @@ public class FluxTexto extends PreTextoApenso {
         return false;
     }
 
+    @Override
+    public void DoPaint(Graphics2D g) {
+        Stroke bkp = g.getStroke();
+        g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{1, 2}, 0));
+        super.DoPaint(g);
+        g.setStroke(bkp);
+    }
 }

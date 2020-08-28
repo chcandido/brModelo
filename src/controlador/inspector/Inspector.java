@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -121,7 +123,6 @@ public class Inspector extends JScrollPane {
                 }
             }
         });
-
         TipoSN.addItemListener(new ItemListener() {
 
             @Override
@@ -152,6 +153,14 @@ public class Inspector extends JScrollPane {
             }
         });
 
+//        TipoMenu.addFocusListener( new FocusAdapter() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                TipoMenu.showPopup();
+//                TipoMenu.setPopupVisible(true);
+//            }
+//
+//        });
         TipoTexto.setBorder(null);
     }
 
@@ -286,6 +295,14 @@ public class Inspector extends JScrollPane {
         if (Itens.isEmpty()) {
             return;
         }
+//
+//        if (selecionado != null && selecionado.getOndeEditar() instanceof JTextField) {
+//            String txt = TipoTexto.getText();;
+//            if (!txt.equals(selecionado.getValor())) {
+//                EndEdit(true, false);
+//            }
+//        }
+
         int p = Itens.indexOf(selecionado);
         if (sobe) {
             p--;
@@ -294,7 +311,7 @@ public class Inspector extends JScrollPane {
             }
 
             InspectorItemBase ib = Itens.get(p);
-            while ((ib instanceof InspectorItemSeparador) || !ib.CanEdit() || !ib.isVisible()) {
+            while ((ib instanceof InspectorItemSeparador) || !ib.CanEdit() || !ib.isVisible() || (ib instanceof InspectorItemMenu)) {
                 p--;
                 if (p < 0) {
                     return;
@@ -310,7 +327,7 @@ public class Inspector extends JScrollPane {
             }
 
             InspectorItemBase ib = Itens.get(p);
-            while ((ib instanceof InspectorItemSeparador) || !ib.CanEdit() || !ib.isVisible()) {
+            while ((ib instanceof InspectorItemSeparador) || !ib.CanEdit() || !ib.isVisible() || (ib instanceof InspectorItemMenu)) {
                 p++;
                 if (p > Itens.size() - 1) {
                     return;
@@ -318,7 +335,6 @@ public class Inspector extends JScrollPane {
                 ib = Itens.get(p);
             }
             PerformSelect(Itens.get(p));
-
         }
 
 //        PerformSelect(Itens.get(p));
@@ -341,7 +357,8 @@ public class Inspector extends JScrollPane {
     private boolean stopEdicao = false;
 
     /**
-     * Ocorre quando termina-se de editar um valor de propriedade (neste caso em um InspectorItemBase)
+     * Ocorre quando termina-se de editar um valor de propriedade (neste caso em
+     * um InspectorItemBase)
      *
      * @param validar o valor deve ser aceito?
      * @param sair sair da edição?
@@ -442,7 +459,10 @@ public class Inspector extends JScrollPane {
     private ArrayList<InspectorProperty> gerado = null;
 
     /**
-     * Apaga o valor de "gerado" de forma que o próximo PerformInspector carregue os itens. É usado no caso de se clicar no próprio objeto e o clique mudar uma condição de status do objeto que deve ser mostrada no inspector: exemplo: clique na legenda (no item da legenda).
+     * Apaga o valor de "gerado" de forma que o próximo PerformInspector
+     * carregue os itens. É usado no caso de se clicar no próprio objeto e o
+     * clique mudar uma condição de status do objeto que deve ser mostrada no
+     * inspector: exemplo: clique na legenda (no item da legenda).
      */
     public void ForceFullOnCarregue() {
         gerado.clear();
@@ -506,8 +526,10 @@ public class Inspector extends JScrollPane {
     }
 
     /**
-     * Dado um Item (sel), verifica se ele é um agrupador, ou seja, se ele agrupa itens que<br/>
-     * serão des/habilitados conforme seu valor atual. Primeiro, pega-se a relação do itens habilitáveis e os habilita.<br/>
+     * Dado um Item (sel), verifica se ele é um agrupador, ou seja, se ele
+     * agrupa itens que<br/>
+     * serão des/habilitados conforme seu valor atual. Primeiro, pega-se a
+     * relação do itens habilitáveis e os habilita.<br/>
      * Depois a dos não habilitáveis e os desabilita.<br/>
      *
      * @param sel
@@ -628,7 +650,8 @@ public class Inspector extends JScrollPane {
         Graphics2D g = (Graphics2D) grphcs;
         int f = g.getFontMetrics().getHeight();
         /**
-         * Corrige a altura do inspector no caso de tamanho de fonte diferente no SO.
+         * Corrige a altura do inspector no caso de tamanho de fonte diferente
+         * no SO.
          */
         if (altura != f + 6) {
             altura = f + 6;
