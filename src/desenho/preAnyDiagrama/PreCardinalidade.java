@@ -44,7 +44,7 @@ public class PreCardinalidade extends FormaTextoBase {
     private void DirectPosicione() {
         int lado = Fixo.getLado();
         int x = 0, y = 0;
-        //# Mudança: com os comentários abaixo, o autoposicionamento da CARD se dará sempre: a direito e acima da linha evitando a sobreposição.
+        //# Mudança: com os comentários abaixo, o autoposicionamento da CARD se dará sempre: à direita e acima da linha evitando a sobreposição.
         //PontoDeLinha outraPonta = Fixo.getDono().getOutraPonta(Fixo);
         int corr = 4;
         switch (lado) {
@@ -284,11 +284,7 @@ public class PreCardinalidade extends FormaTextoBase {
     
     private Linha ligadoA = null;
 
-//        /////////Após ligar à um ponto_de_linha, colocar um evento no ponto de linha (quanod ele mover).
-//        ////////Se selecionado, não mova-se como o ponto de linha!
-//        ///////Ver: talvez não permitir o movimento quando multisselecionado e não for manual!!!!!
-//    }
-    
+   
     public Linha getLigadoA() {
         return ligadoA;
     }

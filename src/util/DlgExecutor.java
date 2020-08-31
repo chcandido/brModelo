@@ -66,7 +66,8 @@ public class DlgExecutor extends javax.swing.JDialog {
             }
         });
 
-        btnOK.setText("OK");
+        btnOK.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnOK.setText("OK (ctrl + enter)");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOKActionPerformed(evt);

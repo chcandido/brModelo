@@ -10,6 +10,8 @@ import controlador.editores.DrawerEditor;
 import controlador.editores.LegendaEditor;
 import controlador.inspector.Inspector;
 import controlador.inspector.InspectorDicas;
+import controlador.inspector.InspectorExtenderEditor;
+import controlador.inspector.InspectorItemBase;
 import controlador.inspector.InspectorProperty;
 import desenho.Elementar;
 import desenho.FormaElementar;
@@ -59,6 +61,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import principal.Aplicacao;
 import util.CopFormatacao;
@@ -311,11 +314,11 @@ public class Editor extends BaseControlador implements KeyListener {
             a = fromConfiguracao.getValor("cfg.mostrarids");
             sn = a.equals("cfg.mostrarids") ? false : Boolean.valueOf(a);
             setMostrarIDs(sn);
-            
+
             a = fromConfiguracao.getValor("cfg.mostrartooltips");
             sn = a.equals("cfg.mostrartooltips") ? false : Boolean.valueOf(a);
             setMostrarTooltips(sn);
-            
+
             a = fromConfiguracao.getValor("cfg.autosalvarintervalo");
             if (a.equals("cfg.autosalvarintervalo")) {
                 a = "5";
@@ -357,6 +360,33 @@ public class Editor extends BaseControlador implements KeyListener {
     //<editor-fold defaultstate="collapsed" desc="Teclas">
     @Override
     public void keyTyped(KeyEvent e) {
+        String letras = " !@#$%&*()-_+='\"[{]},.;:<>|\\/?¬£¢§ªº}";
+        if (diagramaAtual.getSelecionado() != null && (Character.isLetterOrDigit(e.getKeyChar()) || letras.indexOf(e.getKeyChar()) > -1)) {
+            InspectorItemBase ex = getInspectorEditor().FindByProperty("setTexto");
+            if (ex == null && diagramaAtual.getTipo() == Diagrama.TipoDeDiagrama.tpLogico) {
+                ex = getInspectorEditor().FindByProperty("Campo.setTexto");
+            }
+            if (ex != null && ex.CanEdit()) {
+                if (ex.getOndeEditar() instanceof JTextField) {
+                    getInspectorEditor().PerformSelect(ex);
+                    ex.getOndeEditar().requestFocus();
+                    ((JTextField) (ex.getOndeEditar())).setText((isApagarTextoAoEditar() ? String.valueOf(e.getKeyChar()) : ex.getValor() + String.valueOf(e.getKeyChar())));
+                    e.consume();
+                } else {
+                    if (ex.getOndeEditar() instanceof InspectorExtenderEditor) {
+                        InspectorExtenderEditor tmx = (InspectorExtenderEditor) ex.getOndeEditar();
+                        if (tmx.getAcaoTipo() == InspectorExtenderEditor.TipoDeAcao.tpAcaoDlgTexto) {
+                            getInspectorEditor().PerformSelect(ex);
+                            tmx.RunDlg((isApagarTextoAoEditar() ? String.valueOf(e.getKeyChar()) : ex.getValor() + String.valueOf(e.getKeyChar())));
+                            shiftDown = false;
+                            altDown = false;
+                            controlDown = false;
+                            e.consume();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -584,6 +614,9 @@ public class Editor extends BaseControlador implements KeyListener {
         res.add(InspectorProperty.PropertyFactorySN("cfg.mostrarids", "setMostrarIDs", isMostrarIDs()));
         res.add(InspectorProperty.PropertyFactorySN("cfg.mostrartooltips", "setMostrarTooltips", isMostrarTooltips()));
 
+        res.add(InspectorProperty.PropertyFactorySeparador("cfg.edicao", true));
+        res.add(InspectorProperty.PropertyFactorySN("cfg.apagartextoaoeditar", "setApagarTextoAoEditar", isApagarTextoAoEditar()));
+
         return res;
     }
 
@@ -739,7 +772,8 @@ public class Editor extends BaseControlador implements KeyListener {
     }
 
     /**
-     * Último total de itens do modelo. Redesenha o Tree apenas no caso da quantidade de itens mudar
+     * Último total de itens do modelo. Redesenha o Tree apenas no caso da
+     * quantidade de itens mudar
      */
     private int lastTreeCount = -1;
 
@@ -801,7 +835,7 @@ public class Editor extends BaseControlador implements KeyListener {
         for (Diagrama d : getDiagramas()) {
             if (d.getArquivo().equals(tmp)) {
                 setSelected(d);
-                JOptionPane.showMessageDialog(getParent(), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg01"), 
+                JOptionPane.showMessageDialog(getParent(), Editor.fromConfiguracao.getValor("Controler.interface.mensagem.msg01"),
                         Editor.fromConfiguracao.getValor("Controler.interface.mensagem.tit_informacao"), JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
@@ -875,7 +909,8 @@ public class Editor extends BaseControlador implements KeyListener {
     //</editor-fold>
 
     /**
-     * Usado para verificar se o mesmo diagrama já não estar aberto ou se ao Savar Como não se sobrescreveu um dos arquivos do diagrama aberto.
+     * Usado para verificar se o mesmo diagrama já não estar aberto ou se ao
+     * Savar Como não se sobrescreveu um dos arquivos do diagrama aberto.
      *
      * @param Diagrama
      */
@@ -890,8 +925,11 @@ public class Editor extends BaseControlador implements KeyListener {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Outros Editores">
     /**
-     * Quando precisar usar o Inspector para editar propriedades de qualquer outro objeto fora do escopo do configEditor ou InspectorEditor, basta que a classe que efetivará as edições implemente esta
-     * interface. Para o efeito de carregar os itens no Inspector, a própria classe o fará, a exemplo do editor DrawerEditor
+     * Quando precisar usar o Inspector para editar propriedades de qualquer
+     * outro objeto fora do escopo do configEditor ou InspectorEditor, basta que
+     * a classe que efetivará as edições implemente esta interface. Para o
+     * efeito de carregar os itens no Inspector, a própria classe o fará, a
+     * exemplo do editor DrawerEditor
      */
     public interface iParaOutrosInspectors {
 
@@ -943,6 +981,10 @@ public class Editor extends BaseControlador implements KeyListener {
                         break;
                     case cmdDel:
                         diagramaAtual.deleteSelecao();
+                        controler.makeEnableComands();
+                        break;
+                    case cmdSelectAllByType:
+                        diagramaAtual.SelecioneTodosDoTipo();
                         controler.makeEnableComands();
                         break;
                     case cmdSelectAll:
@@ -1145,7 +1187,7 @@ public class Editor extends BaseControlador implements KeyListener {
     private void AbrirDiagramaFromFile(File arq) {
         Diagrama res = Diagrama.LoadFromFile(arq, this);
         if (res != null) {
-        ProcessePosOpen(res, !util.Arquivo.IsbrM3(arq));
+            ProcessePosOpen(res, !util.Arquivo.IsbrM3(arq));
         }
     }
 
@@ -1706,7 +1748,8 @@ public class Editor extends BaseControlador implements KeyListener {
     }
 
     /**
-     * Sempre que o AutoSaveInterval for alterado este método é chamado. Inclusive no início da aplicação.
+     * Sempre que o AutoSaveInterval for alterado este método é chamado.
+     * Inclusive no início da aplicação.
      *
      * @return
      */
@@ -1747,7 +1790,8 @@ public class Editor extends BaseControlador implements KeyListener {
     }
 
     /**
-     * Já executou o autoSave? Sempre que um diagrama mudar, doneAutoSave = false;
+     * Já executou o autoSave? Sempre que um diagrama mudar, doneAutoSave =
+     * false;
      */
     private boolean doneAutoSave = true;
 
@@ -1795,7 +1839,8 @@ public class Editor extends BaseControlador implements KeyListener {
     }
 
     /**
-     * Após salvar ou fechar um diagrama, ele deve ser removido do arquivo de auto-save.
+     * Após salvar ou fechar um diagrama, ele deve ser removido do arquivo de
+     * auto-save.
      */
     public void DoAutoSaveCompleto() {
         if (autoSaveIniciado) {
@@ -1807,8 +1852,10 @@ public class Editor extends BaseControlador implements KeyListener {
     private Temporizador tempoAs;
 
     /**
-     * Auto-salvamento: Apenas uma classe que executa o Timer do auto salvamento, chama o método DoAutoSave do Editor. Status: escreve uma mensagem no campo de status (último campo da barra de status
-     * da janela principal). Pisca a mensagem
+     * Auto-salvamento: Apenas uma classe que executa o Timer do auto
+     * salvamento, chama o método DoAutoSave do Editor. Status: escreve uma
+     * mensagem no campo de status (último campo da barra de status da janela
+     * principal). Pisca a mensagem
      */
     class Temporizador extends TimerTask {
 
@@ -1858,9 +1905,11 @@ public class Editor extends BaseControlador implements KeyListener {
     }
 
     /**
-     * Lê o arquivo de auto-salvamento e verifica se houve o fechamento abrupto do Editor. Se sim, carrega os Diagramas como estavam.
+     * Lê o arquivo de auto-salvamento e verifica se houve o fechamento abrupto
+     * do Editor. Se sim, carrega os Diagramas como estavam.
      *
-     * @return true se carregou algo. O retorno faz disparar uma mensagem de aviso ao usuário.
+     * @return true se carregou algo. O retorno faz disparar uma mensagem de
+     * aviso ao usuário.
      */
     public boolean LoadAutoSave() {
 
@@ -1926,7 +1975,7 @@ public class Editor extends BaseControlador implements KeyListener {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Ancorador">
+    //<editor-fold defaultstate="collapsed" desc="Configs">
     /**
      * Mostar menu do ancorador (ao lado dos artefatos)
      */
@@ -1978,5 +2027,16 @@ public class Editor extends BaseControlador implements KeyListener {
         this.mostrarTooltips = mostrarTooltips;
     }
 
-//</editor-fold>
+    private boolean apagarTextoAoEditar = true;
+    
+    
+    public boolean isApagarTextoAoEditar() {
+        return apagarTextoAoEditar;
+    }
+
+    public void setApagarTextoAoEditar(boolean apagarTextoAoEditar) {
+        this.apagarTextoAoEditar = apagarTextoAoEditar;
+    }
+    
+    //</editor-fold>
 }

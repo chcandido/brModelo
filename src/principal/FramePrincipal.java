@@ -1154,7 +1154,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     private void menuVerAtualizacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuVerAtualizacaoActionPerformed
         FormAtualizar fm = new FormAtualizar();
         fm.setLocationRelativeTo(this);
-        fm.Inicie(Diagrama.VERSAO_A + "." + Diagrama.VERSAO_B + "." + Diagrama.VERSAO_C);
+        fm.Inicie(Aplicacao.VERSAO_A + "." + Aplicacao.VERSAO_B + "." + Aplicacao.VERSAO_C);
         fm.setVisible(true);
     }//GEN-LAST:event_menuVerAtualizacaoActionPerformed
 

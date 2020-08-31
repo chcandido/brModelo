@@ -83,6 +83,19 @@ public class Dialogos {
         return texto;
     }
 
+    public static String ShowDlgTexto(JComponent form, String texto, String original) {
+        DlgExecutor dlg = new DlgExecutor((Frame) form.getParent(), true);
+        dlg.Texto.setText(texto);
+        //dlg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dlg.setLocationRelativeTo(form);
+        dlg.setVisible(true);
+
+        if (dlg.getResultado() == JOptionPane.OK_OPTION) {
+            return dlg.Texto.getText();
+        }
+        return original;
+    }
+
     public static void ShowDlgTextoReadOnly(JComponent form, String texto) {
         DlgExecutor dlg = new DlgExecutor((Frame) form.getParent(), true);
         dlg.Texto.setText(texto);

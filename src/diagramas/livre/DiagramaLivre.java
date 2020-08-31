@@ -206,6 +206,8 @@ public class DiagramaLivre extends Diagrama {
                 }
 
                 linha.Inicie(new Rectangle(pt2.x, pt2.y, pt1.x - pt2.x, pt1.y - pt2.y)); // = 4 pontos
+                linha.reSetBounds();
+                linha.repaint();
                 break;
 
         }

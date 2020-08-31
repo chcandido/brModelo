@@ -54,6 +54,8 @@ public class EditorDeCampos extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         lblTabelas = new javax.swing.JLabel();
         comboTabelas = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        txtTabela = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         Adicionar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
@@ -73,6 +75,8 @@ public class EditorDeCampos extends javax.swing.JDialog {
 
         comboTabelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel1.setText(bundle.getString("EditorDeCampos.Tabela.selecionada.nome")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -81,14 +85,25 @@ public class EditorDeCampos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(lblTabelas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboTabelas, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboTabelas, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(198, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblTabelas)
-                .addComponent(comboTabelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTabelas)
+                    .addComponent(comboTabelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtTabela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jToolBar1.setFloatable(false);
@@ -160,11 +175,11 @@ public class EditorDeCampos extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                 .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -389,16 +404,19 @@ public class EditorDeCampos extends javax.swing.JDialog {
     private javax.swing.JPanel Principal;
     private javax.swing.JButton btnPronto;
     private javax.swing.JComboBox<String> comboTabelas;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblTabelas;
+    private javax.swing.JTextField txtTabela;
     // End of variables declaration//GEN-END:variables
 
     DiagramaLogico diagrama = null;
     List<Tabela> tabelas = null;
+    boolean stop_comboTabelas = false;
 
     public void Inicie(DiagramaLogico diag) {
         diagrama = diag;
@@ -428,11 +446,31 @@ public class EditorDeCampos extends javax.swing.JDialog {
         comboTabelas.setSelectedIndex(idx);
 
         comboTabelas.addItemListener((ItemEvent e) -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+            if ((!stop_comboTabelas) && (e.getStateChange() == ItemEvent.SELECTED)) {
                 setSelecionada(tabelas.get(comboTabelas.getSelectedIndex()));
             }
         });
 
+        txtTabela.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (!txtTabela.getText().equals(getSelecionada().getTexto())) {
+                    getSelecionada().setTexto(txtTabela.getText());
+                    getSelecionada().DoMuda();
+                    getSelecionada().InvalidateArea();
+                    int ix = comboTabelas.getSelectedIndex();
+                    stop_comboTabelas = true;
+                    comboTabelas.removeAllItems();
+                    for (int i = 0; i < tabelas.size(); i++) {
+                        Tabela t = tabelas.get(i);
+                        comboTabelas.addItem(String.valueOf(i + 1) + " - " + t.getTexto());
+                    }
+                    comboTabelas.setSelectedIndex(ix);
+                    stop_comboTabelas = false;
+                }
+            }
+        });
+        
         setSelecionada(sel);
     }
 
@@ -454,6 +492,7 @@ public class EditorDeCampos extends javax.swing.JDialog {
         Principal.validate();
         v = 0;
         sel.getCampos().stream().forEach(c -> AdicionarPainel(c));
+        txtTabela.setText(sel.getTexto());
         Principal.repaint();
     }
 }

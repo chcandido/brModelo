@@ -353,49 +353,6 @@ public class Diagrama implements Serializable, ClipboardOwner {
         }
 
         g.setPaint(bkppaint);
-//        Paint bkppaint = g.getPaint();
-//        g.setColor(new Color(241, 246, 251));
-//        final Rectangle rv = getEditor().getBox().getVisibleRect();
-//        
-//        int w = master.getGridWidth();
-//        int gW = (rv.width / w) + 2;
-//        int gH = (rv.height / w) + 2;
-//        
-//        int le = (rv.x - (rv.x % w));
-//        final int hh = rv.y + rv.height;
-//        for (int i = 0; i < gW; i++) {
-//            g.drawLine(le, rv.y, le, hh);
-//            le+= w;
-//        }
-//
-//        int to = (rv.y - (rv.y % w));
-//        final int ww = rv.x + rv.width;
-//        for (int i = 0; i < gH; i++) {
-//            g.drawLine(rv.x, to, ww, to);
-//            to+= w;
-//        }
-//
-////        int w = master.getGridWidth();
-////        int gW = (getWidth() / w) + 1;
-////        int gH = (getHeight() / w) + 1;
-////        Rectangle rv = getEditor().getBox().getVisibleRect();
-////        
-////        int ww = getWidth();
-////        int hh = getHeight();
-////
-////        Paint bkppaint = g.getPaint();
-////        g.setColor(new Color(241, 246, 251));
-////
-////        for (int i = 1; i < gW; i++) {
-////            
-////            g.drawLine(w * i, 0, w * i, hh);
-////        }
-////
-////        for (int i = 1; i < gH; i++) {
-////            g.drawLine(0, w * i, ww, w * i);
-////        }
-//
-//        g.setPaint(bkppaint);
     }
 
     /**
@@ -1413,9 +1370,20 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
     public void SelecioneTodos() {
         ClearSelect(false);
-        for (FormaElementar it : getListaDeItens()) {
+        getListaDeItens().forEach((it) -> {
             DiagramaDoSelecao(it, false, true);
-        }
+        });
+        PerformInspector();
+    }
+
+    public void SelecioneTodosDoTipo() {
+        FormaElementar sel = getSelecionado();
+        if (sel == null) return;
+        ClearSelect(false);
+        DiagramaDoSelecao(sel, false, true);
+        getListaDeItens().stream().filter(s -> s.getClass() == sel.getClass() && s != sel).forEach((it) -> {
+            DiagramaDoSelecao(it, false, true);
+        });
         PerformInspector();
     }
 
@@ -1701,22 +1669,43 @@ public class Diagrama implements Serializable, ClipboardOwner {
                     par[0] = String.class;
                     vl[0] = valor;
             }
-            final String[] multi = {"setForeColor", "setTipoAtributo"}; //quais propriedades proderão ser editadas em cojunto
+//            final String[] multi = {"setForeColor", "setTipoAtributo"}; //quais propriedades proderão ser editadas em cojunto
+//
+//            if (Arrays.asList(multi).indexOf(propriedade) == -1 || ((ed instanceof Forma) && ((Forma) ed).getPrincipal() != null)) {
+//                Class cl = ed.getClass();
+//                Method mthd = cl.getMethod(propriedade, par);
+//                mthd.invoke(ed, vl);
+//                DoMuda(param);
+//            } else {
+//                //List<FormaElementar> lst =  itensSelecionados.stream().filter(e -> e.getClass().equals(param.getClass())).collect(Collectors.toList());
+//                final List<FormaElementar> lst;
+//                final String[] multi_any = {"setForeColor"}; //de qualquer classe ? (sim, neste array). ELSE: mesma classe do objeto selecionado principal
+//                if (Arrays.asList(multi_any).indexOf(propriedade) > -1) {
+//                    lst = itensSelecionados.stream().collect(Collectors.toList());
+//                } else {
+//                    lst = itensSelecionados.stream().filter(e -> e.getClass().equals(param.getClass())).collect(Collectors.toList());
+//                }
+//                IsStopEvents = true;
+//                for (FormaElementar Ed : lst) {
+//                    Class cl = Ed.getClass();
+//                    Method mthd = cl.getMethod(propriedade, par);
+//                    mthd.invoke(Ed, vl);
+//                }
+//                IsStopEvents = false;
+//                DoMuda(param);
+//            }
 
-            if (Arrays.asList(multi).indexOf(propriedade) == -1 || ((ed instanceof Forma) && ((Forma) ed).getPrincipal() != null)) {
+//            final String[] multi = {"setForeColor", "setTipoAtributo"}; //quais propriedades proderão ser editadas em cojunto
+
+            if (!(ed instanceof FormaElementar) || ((ed instanceof FormaElementar) && (((FormaElementar) ed).isParte()))) {
                 Class cl = ed.getClass();
                 Method mthd = cl.getMethod(propriedade, par);
                 mthd.invoke(ed, vl);
                 DoMuda(param);
             } else {
-                //List<FormaElementar> lst =  itensSelecionados.stream().filter(e -> e.getClass().equals(param.getClass())).collect(Collectors.toList());
                 final List<FormaElementar> lst;
-                final String[] multi_any = {"setForeColor"}; //de qualquer classe ? (sim, neste array). ELSE: mesma classe do objeto selecionado principal
-                if (Arrays.asList(multi_any).indexOf(propriedade) > -1) {
-                    lst = itensSelecionados.stream().collect(Collectors.toList());
-                } else {
-                    lst = itensSelecionados.stream().filter(e -> e.getClass().equals(param.getClass())).collect(Collectors.toList());
-                }
+                lst = itensSelecionados.stream().filter(e -> e.getClass().equals(param.getClass())).collect(Collectors.toList());
+
                 IsStopEvents = true;
                 for (FormaElementar Ed : lst) {
                     Class cl = Ed.getClass();
