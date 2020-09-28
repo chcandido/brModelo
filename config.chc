@@ -1,5 +1,5 @@
 #Config
-#Fri Aug 28 13:04:36 AMT 2020
+#Sun Sep 27 22:08:58 AMT 2020
 cfg.tipodefault=0
 cfg.apagartextoaoeditar=true
 cfg.location.salvar=true
@@ -11,6 +11,6 @@ cfg.mostrartooltips=true
 cfg.mostrardimensoesaomover=true
 cfg.mostrargrade=true
 cfg.propaguedeletetolines=true
-cfg.location.x=-1543
-cfg.location.y=-7
+cfg.location.x=342
+cfg.location.y=174
 cfg.gradelargura=23

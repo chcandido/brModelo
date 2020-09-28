@@ -46,8 +46,8 @@ public class Aplicacao {
     public static FramePrincipal fmPrincipal;
     public static final String VERSAO_A = "3";
     public static final String VERSAO_B = "3";
-    public static final String VERSAO_C = "0";
-    public static final String VERSAO_DATA = "Agosto de 2020";
+    public static final String VERSAO_C = "1";
+    public static final String VERSAO_DATA = "Setembro de 2020";
 
     /**
      * @param args the command line arguments

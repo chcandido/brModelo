@@ -1697,7 +1697,7 @@ public class Diagrama implements Serializable, ClipboardOwner {
 
 //            final String[] multi = {"setForeColor", "setTipoAtributo"}; //quais propriedades proderão ser editadas em cojunto
 
-            if (!(ed instanceof FormaElementar) || ((ed instanceof FormaElementar) && (((FormaElementar) ed).isParte()))) {
+            if ((ed instanceof InfoDiagrama) || !(ed instanceof FormaElementar) || ((ed instanceof FormaElementar) && (((FormaElementar) ed).isParte()))) {
                 Class cl = ed.getClass();
                 Method mthd = cl.getMethod(propriedade, par);
                 mthd.invoke(ed, vl);
