@@ -4,18 +4,18 @@
  */
 package controlador.editores;
 
-import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
 import desenho.formas.Legenda;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
 /**
  *
  * @author ccandido
@@ -29,7 +29,7 @@ public class JListItemParaItemLegenda extends JLabel implements ListCellRenderer
     public JListItemParaItemLegenda(boolean ehLinha) {
         setOpaque(true);
         setIconTextGap(6);
-        setBorder(new DashedBorder(Color.gray));
+        setBorder(BorderFactory.createDashedBorder(Color.gray));
         this.ehLina = ehLinha;
     }
 
