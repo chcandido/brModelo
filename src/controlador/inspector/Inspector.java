@@ -533,7 +533,6 @@ public class Inspector extends JScrollPane {
      * Depois a dos não habilitáveis e os desabilita.<br>
      *
      * @param sel
-     * @param valor
      */
     public void MakeCanEditGrupo(InspectorItemBase sel) {
         InspectorProperty insp = sel.getPropriedade();
