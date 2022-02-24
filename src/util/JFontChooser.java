@@ -60,7 +60,7 @@ import javax.swing.text.Position;
  *      Font font = fontChooser.getSelectedFont(); 
  *      System.out.println("Selected Font : " + font); 
  *   }
- * <pre>
+ * </pre>
  **/
 public class JFontChooser extends JComponent
 {
