@@ -133,7 +133,7 @@ public class FormaNaoRetangularBase extends Forma {
 
     /**
      * Posiciona os pontos das ligações.
-     * <br/>--Poderá ser melhorado!
+     * <br>--Poderá ser melhorado!
      * @param ponto
      */
     @Override

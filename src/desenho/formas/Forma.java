@@ -477,7 +477,7 @@ public class Forma extends FormaElementar {
 
     /**
      * Pinta a texto formatado no Paint
-     * <br/>--Meu padrão para DoPaint
+     * <br>--Meu padrão para DoPaint
      *
      * @param g
      */
@@ -951,9 +951,9 @@ public class Forma extends FormaElementar {
     }
 
     /**
-     * 1 2 3 <br/>
-     * 0 A 4 <br/>
-     * 7 6 5 <br/>
+     * 1 2 3 <br>
+     * 0 A 4 <br>
+     * 7 6 5 <br>
      *
      * @param A - é o A da imagem.
      * @param B
@@ -1139,9 +1139,9 @@ public class Forma extends FormaElementar {
     /**
      * Organiza os elementos em linha Sobrescrever:
      *
-     * public void OrganizeDiagrama() { <br/>
-     *      //OrganizeDiagrama(true, false); <br/>
-     * OrganizeFluxo();<br/> }
+     * public void OrganizeDiagrama() { <br>
+     *      //OrganizeDiagrama(true, false); <br>
+     * OrganizeFluxo();<br> }
      */
     protected void OrganizeFluxo() {
         List<Forma> lst = new ArrayList<>();
