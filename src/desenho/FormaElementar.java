@@ -180,7 +180,7 @@ public class FormaElementar extends Elementar {
     }
 
     /**
-     * Em ordem de criação --> os sub componetes (independente de ser tratado como subitem.
+     * Em ordem de criação: os sub componetes (independente de ser tratado como subitem).
      *
      * @param i: index
      * @return
