@@ -52,7 +52,6 @@ public class Elementar implements ElementarListener, Serializable {
 
     /**
      * Este objeto pode ser apagado?
-     * @return 
      */
     private boolean canBeDeleted = true;
 
@@ -68,7 +67,6 @@ public class Elementar implements ElementarListener, Serializable {
     
     /**
      * Este objeto pode ser apagado?
-     * @return 
      */
     public void setCanBeDeleted(boolean canBeDeleted) {
         this.canBeDeleted = canBeDeleted;
@@ -276,7 +274,7 @@ public class Elementar implements ElementarListener, Serializable {
     }
 
     /**
-     * @param heigth the heigth to set
+     * @param height the heigth to set
      */
     public void setHeight(int height) {
         if (this.height != height) {
@@ -382,11 +380,12 @@ public class Elementar implements ElementarListener, Serializable {
     public void setBounds(Rectangle bounds) {
         setClientRectangle(bounds);
     }
+
+    private FormaElementar criador;
+
     /**
      * @return the criador
      */
-    private FormaElementar criador;
-
     public FormaElementar getCriador() {
         return criador;
     }

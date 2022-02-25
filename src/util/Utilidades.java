@@ -127,7 +127,7 @@ public class Utilidades {
     }
     
     /**
-     * Aumenta ou reduz o tamanho de um retangulo. <br/>
+     * Aumenta ou reduz o tamanho de um retangulo. <br>
      * Conhecendo o retangulo e sabendo que ele não possui valores irreais torna-se mais eficiente que a Rectange.grow().
      * @param rect      Retângulo
      * @param x         ampliação de x
