@@ -1,5 +1,7 @@
 # brModelo
 
+No site sis4.com:  atualizado => brModelo 3.3.2 para contornar o problema do uso de temas escuros no Linux (em breve publicarei aqui).
+
 Atualizado: brModelo 3.3 - correção de bugs e pequenas funcionalidades.
 
 Atualizado: brModelo 3.2 - correção de bugs e pequenas funcionalidades.
