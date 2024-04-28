@@ -527,13 +527,12 @@ public class Inspector extends JScrollPane {
 
     /**
      * Dado um Item (sel), verifica se ele é um agrupador, ou seja, se ele
-     * agrupa itens que<br/>
+     * agrupa itens que<br>
      * serão des/habilitados conforme seu valor atual. Primeiro, pega-se a
-     * relação do itens habilitáveis e os habilita.<br/>
-     * Depois a dos não habilitáveis e os desabilita.<br/>
+     * relação do itens habilitáveis e os habilita.<br>
+     * Depois a dos não habilitáveis e os desabilita.<br>
      *
      * @param sel
-     * @param valor
      */
     public void MakeCanEditGrupo(InspectorItemBase sel) {
         InspectorProperty insp = sel.getPropriedade();

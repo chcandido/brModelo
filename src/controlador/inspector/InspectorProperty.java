@@ -78,21 +78,21 @@ public class InspectorProperty {
     public int Tag = 0;
     
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como desabilitada, porém, é sabido que deve estar habilitado.
      * Ainda não 100% testado.
      */
     private boolean forceDisable = false;
 
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como habilitada, porém, é sabido que deve estar desabilitado.
      * Ainda não 100% testado.
      */
     private boolean forceEnable = false;
 
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como desabilitada, porém, é sabido que deve estar habilitado.
      * Ainda não 100% testado.
      */
@@ -101,7 +101,7 @@ public class InspectorProperty {
     }
 
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceDisable seja true, ele ficará desabilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como desabilitada, porém, é sabido que deve estar habilitado.
      * Ainda não 100% testado.
      */
@@ -111,7 +111,7 @@ public class InspectorProperty {
     }
 
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como habilitada, porém, é sabido que deve estar desabilitado.
      * Ainda não 100% testado.
      */
@@ -120,7 +120,7 @@ public class InspectorProperty {
     }
 
     /**
-     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br/>
+     * Independentemente da organização de uma propriedade no Inspector, caso forceEnable seja true, ele ficará habilitado <br>
      * É especialmente útil quanto a condição principal leva a propriedade a figurar como habilitada, porém, é sabido que deve estar desabilitado.
      * Ainda não 100% testado.
      */

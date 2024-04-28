@@ -180,7 +180,7 @@ public class FormaElementar extends Elementar {
     }
 
     /**
-     * Em ordem de criação --> os sub componetes (independente de ser tratado como subitem.
+     * Em ordem de criação: os sub componetes (independente de ser tratado como subitem).
      *
      * @param i: index
      * @return
@@ -390,7 +390,6 @@ public class FormaElementar extends Elementar {
     /**
      * Métdo responsável por lançar o MouseDblClick sem a necessidade de usar o método principal. Padrão próprio: evitar reescrever ou mexer nos métodos principais.
      *
-     * @param dbl o clique é duplo
      * @param e Mouse.
      */
     protected void ProcessaDblClick(MouseEvent e) {
