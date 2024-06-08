@@ -53,6 +53,9 @@ public class Aplicacao {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("apple.awt.application.name", "brModelo");
+
         initLookAndFeel();
         JFrame.setDefaultLookAndFeelDecorated(true);
 
